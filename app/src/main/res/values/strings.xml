@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">2040 game</string>
     <string name="logo">2048 game</string>
     <string name="newGame">Новая игра</string>
     <string name="settings">Настройки</string>

@@ -1,12 +1,12 @@
 package com.example.game.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 
-import com.example.myapplication.R;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.game.R;
 
 public class SettingsActivity extends AppCompatActivity {
 

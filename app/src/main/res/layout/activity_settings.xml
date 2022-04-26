@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.game.ui.SettingsActivity">
+    tools:context="com.example.game.ui.SettingsActivity"
+    android:background="@color/white">
 
 
     <TextView
@@ -16,6 +17,7 @@
         android:text="@string/settings"
         android:textAlignment="center"
         android:textSize="30sp"
+        android:textColor="@color/gray"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton

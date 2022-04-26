@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
         settings.setOnClickListener(view -> {
             Intent settingsActivity = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(settingsActivity);
+            overridePendingTransition(R.anim.from_right, R.anim.to_left);
             finish();
         });
 

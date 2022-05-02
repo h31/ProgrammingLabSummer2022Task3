@@ -150,4 +150,16 @@ public class GameTest extends TestCase {
         exceptedField.put(new Coordinate(3, 0), 4);
         assertEquals(exceptedField, game.getSquares());
     }
+
+    public void testSpawnSquare() {
+        final int fieldSize = 4;
+        Game game = new Game(fieldSize);
+        for (int i = 0; i < fieldSize * fieldSize; i++) {
+            Pair<Coordinate, Integer> spawnedSquare = game.spawnSquare();
+            assertNotNull(spawnedSquare);
+            assertNotNull(game.getSquares().get(spawnedSquare.first));
+            assertEquals(spawnedSquare.second, game.getSquares().get(spawnedSquare.first));
+        }
+        assertNull(game.spawnSquare());
+    }
 }

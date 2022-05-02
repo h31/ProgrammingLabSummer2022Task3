@@ -83,6 +83,35 @@ public class Game {
     }
 
     /**
+     * @return возвращает лист пустых координат
+     **/
+    private List<Coordinate> getEmptySquares() {
+        List<Coordinate> emptySquares = new LinkedList<>();
+        for (int y = 0; y < FIELD_SIZE; y++)
+            for (int x = 0; x < FIELD_SIZE; x++) {
+                Coordinate coordinate = new Coordinate(x, y);
+                if (squares.get(coordinate) != null) continue;
+                emptySquares.add(coordinate);
+            }
+        return emptySquares;
+    }
+
+    /**
+     * Функция для создания новой клеточки (90% - 2, 10% - 4)
+     *
+     * @return коориданты созданной клетки и значение,
+     * null если места для создания нет.
+     */
+    public Pair<Coordinate, Integer> spawnSquare() {
+        List<Coordinate> emptySquares = getEmptySquares();
+        if (emptySquares.size() == 0) return null;
+        Coordinate coordinateNewSquare = emptySquares.get((int) (Math.random() * emptySquares.size()));
+        int number = Math.random() < 0.9 ? 2 : 4;
+        squares.put(coordinateNewSquare, number);
+        return Pair.create(coordinateNewSquare, number);
+    }
+
+    /**
      * Функция исключительно для тестирования, добавляет новую цифру на поле
      *
      * @param square координаты цифры

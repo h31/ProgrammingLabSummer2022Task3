@@ -93,7 +93,9 @@ public class Game {
     }
 
     /**
-     * Функция исключительно для тестирования, возвращает мапу координат
+     * Функция исключительно для тестирования
+     *
+     * @return мапа из (координата -> значение)
      **/
     Map<Coordinate, Integer> getSquares() {
         return new HashMap<>(squares);

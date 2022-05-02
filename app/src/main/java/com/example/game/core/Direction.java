@@ -16,7 +16,8 @@ public enum Direction {
                 return new Vector(0, -1);
             case DOWN:
                 return new Vector(0, 1);
+            default:
+                throw new IllegalStateException("Unexpected value: " + this);
         }
-        return null;
     }
 }

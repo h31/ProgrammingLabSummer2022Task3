@@ -13,23 +13,44 @@ public class Coordinate {
         this.y = y;
     }
 
-    public Coordinate(@NonNull Coordinate coordinate) {
+    private Coordinate(@NonNull Coordinate coordinate) {
         this.x = coordinate.x;
         this.y = coordinate.y;
     }
 
+    /**
+     * Создает копию объекта
+     * */
     public Coordinate copy() {
         return new Coordinate(this);
     }
 
+    /**
+     * Функция для перемещения на vector
+     *
+     * @param vector вектор перемещения
+     * @return новая координата
+     * */
     public Coordinate move(@NonNull Vector vector) {
         return new Coordinate(x + vector.x, y + vector.y);
     }
 
+    /**
+     * Функция для перемещения на vector назад
+     *
+     * @param vector вектор перемещения
+     * @return новая координата
+     * */
     public Coordinate moveBack(@NonNull Vector vector) {
         return new Coordinate(x - vector.x, y - vector.y);
     }
 
+    /**
+     * Функция проверки корректности координаты
+     *
+     * @param fieldSize размеры поля, для проверки, что координата не за пределами поля
+     * @return true/false если координата корретна/не корректна
+     * */
     public boolean checkCorrect(int fieldSize) {
         return x < fieldSize && x >= 0 &&
                 y < fieldSize && y >= 0;

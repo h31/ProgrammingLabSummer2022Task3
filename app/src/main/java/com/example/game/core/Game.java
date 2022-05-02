@@ -31,6 +31,25 @@ public class Game {
     }
 
     /**
+     * Возвращает перемещение клетки до препядствия/конца карты
+     *
+     * @param square клетка, которая передвигается
+     * @param vector вектор перемещения
+     * @return Перемещение (если остается на месте, то в перемещении 2 одинаковые координаты)
+     **/
+    Coordinate.Move findNewPosition(Coordinate square, Vector vector) {
+        Coordinate newSquare = square.copy();
+        while ((newSquare = newSquare.move(vector)).checkCorrect(FIELD_SIZE)) {
+            Integer targetNum = squares.get(newSquare);
+            if (targetNum == null) continue;
+            if (targetNum.equals(squares.get(square)))
+                return new Coordinate.Move(square, newSquare);
+            break;
+        }
+        return new Coordinate.Move(square, newSquare.moveBack(vector));
+    }
+
+    /**
      * TODO
      *
      * @param direction TODO
@@ -42,8 +61,21 @@ public class Game {
         List<Coordinate.Move> moves = new LinkedList<>();
         for (int y : traversals.second)
             for (int x : traversals.first) {
-                // TODO
+                Coordinate square = new Coordinate(x, y);
+                if (squares.get(square) != null) {
+                    // TODO
+                }
             }
         return moves;
+    }
+
+    /**
+     * Функция исключительно для тестирования, добавляет новую цифру на поле
+     *
+     * @param square координаты цифры
+     * @param number значение цифры
+     **/
+    void setSquare(Coordinate square, int number) {
+        squares.put(square, number);
     }
 }

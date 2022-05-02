@@ -63,7 +63,7 @@ public class Game {
             for (int x : traversals.first) {
                 Coordinate square = new Coordinate(x, y);
                 if (squares.get(square) != null) {
-                    // TODO
+                    //TODO
                 }
             }
         return moves;

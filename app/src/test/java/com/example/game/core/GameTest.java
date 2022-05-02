@@ -33,8 +33,31 @@ public class GameTest extends TestCase {
                 game.buildTraversals(Direction.UP.getVector()));
     }
 
-    // Проверка, что функция возращает корректные рельсы
+    // Проверка, что функция возращает корректные рельсы на разных размерах поля
     public void testBuildTraversals() {
         for (int i = 3; i < 10; i++) testBuildTraversals(i);
+    }
+
+    // Проверка, что функция возвращает корректную новую позицию в разных условиях
+    public void testFindNewPosition() {
+        final int fieldSize = 5;
+        Game game = new Game(fieldSize);
+        Coordinate firstSquare = new Coordinate(0, 0);
+        Coordinate secondSquare = new Coordinate(0, 3);
+        game.setSquare(firstSquare, 2);
+        game.setSquare(secondSquare, 2);
+        assertEquals(new Coordinate.Move(secondSquare, firstSquare),
+                game.findNewPosition(secondSquare, Direction.UP.getVector()));
+        assertEquals(new Coordinate.Move(firstSquare, secondSquare),
+                game.findNewPosition(firstSquare, Direction.DOWN.getVector()));
+        assertEquals(new Coordinate.Move(secondSquare, new Coordinate(secondSquare.x, fieldSize - 1)),
+                game.findNewPosition(secondSquare, Direction.DOWN.getVector()));
+        assertEquals(new Coordinate.Move(secondSquare, new Coordinate(0, secondSquare.y)),
+                game.findNewPosition(secondSquare, Direction.LEFT.getVector()));
+        assertEquals(new Coordinate.Move(firstSquare, new Coordinate(fieldSize - 1, firstSquare.y)),
+                game.findNewPosition(firstSquare, Direction.RIGHT.getVector()));
+        game.setSquare(secondSquare, 4);
+        assertEquals(new Coordinate.Move(secondSquare, new Coordinate(0, 1)),
+                game.findNewPosition(secondSquare, Direction.UP.getVector()));
     }
 }

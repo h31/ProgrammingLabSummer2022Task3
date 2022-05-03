@@ -1,5 +1,7 @@
 package com.example.game.core;
 
+import static java.lang.Math.pow;
+
 import junit.framework.TestCase;
 
 import androidx.core.util.Pair;
@@ -162,5 +164,24 @@ public class GameTest extends TestCase {
             assertEquals(spawnedSquare.second, game.getSquares().get(spawnedSquare.first));
         }
         assertNull(game.spawnSquare());
+    }
+
+    // Проверка фунции gameIsLost
+    public void testGameIsLost() {
+        final int fieldSize = 4;
+        Game game = new Game(fieldSize);
+        int counter;
+        for (int y = 0; y < fieldSize; y++) {
+            counter = (int) pow(2, y + 1);
+            for (int x = 0; x < fieldSize; x++) {
+                game.setSquare(new Coordinate(x, y), counter);
+                counter += counter;
+            }
+        }
+        assertTrue(game.gameIsLost());
+        game.removeSquare(new Coordinate(0,0));
+        assertFalse(game.gameIsLost());
+        game.setSquare(new Coordinate(0,0),4);
+        assertFalse(game.gameIsLost());
     }
 }

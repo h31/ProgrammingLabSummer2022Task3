@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class Game {
@@ -121,6 +122,25 @@ public class Game {
     }
 
     /**
+     * Функция, проверяющая, проиграна ли игра
+     *
+     * @return true если програна false если можно продолжать
+     */
+    public boolean gameIsLost() {
+        if (squares.size() != FIELD_SIZE * FIELD_SIZE) return false;
+        for (int y = 0; y < FIELD_SIZE - 1; y++)
+            for (int x = 0; x < FIELD_SIZE - 1; x++) {
+                int numInCoordinate = Objects.requireNonNull(squares.get(new Coordinate(x, y)));
+                // Если снизу или справа от клетки совпадает число, тогда их можно совместить
+                // А значит игра не проиграна
+                if (numInCoordinate == Objects.requireNonNull(squares.get(new Coordinate(x, y + 1)))
+                        || numInCoordinate == Objects.requireNonNull(squares.get(new Coordinate(x + 1, y))))
+                    return false;
+            }
+        return true;
+    }
+
+    /**
      * Функция исключительно для тестирования, добавляет новую цифру на поле
      *
      * @param square координаты цифры
@@ -128,6 +148,15 @@ public class Game {
      **/
     void setSquare(@NonNull Coordinate square, int number) {
         squares.put(square, number);
+    }
+
+    /**
+     * Функция исключительно для тестирования, удаляет цифру с поля
+     *
+     * @param square координаты цифры
+     **/
+    void removeSquare(@NonNull Coordinate square) {
+        squares.remove(square);
     }
 
     /**

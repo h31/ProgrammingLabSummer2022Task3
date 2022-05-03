@@ -13,6 +13,7 @@ import java.util.Set;
 public class Game {
     private final int FIELD_SIZE;
     private final Map<Coordinate, Integer> squares = new HashMap<>();
+    private int score;
 
     public Game(int fieldSize) {
         FIELD_SIZE = fieldSize;
@@ -76,6 +77,7 @@ public class Game {
                 // Смена цифры в клетке, если в новой координате есть цифра
                 Integer targetNumber = squares.get(move.to);
                 squares.put(move.to, number + (targetNumber == null ? 0 : targetNumber));
+                if (targetNumber != null) score += number + targetNumber;
                 // Удаление фигуры с координаты исходника
                 squares.remove(square);
             }
@@ -109,6 +111,13 @@ public class Game {
         int number = Math.random() < 0.9 ? 2 : 4;
         squares.put(coordinateNewSquare, number);
         return Pair.create(coordinateNewSquare, number);
+    }
+
+    /**
+     * Функция для получения текущих очков
+     */
+    public int getScore() {
+        return score;
     }
 
     /**

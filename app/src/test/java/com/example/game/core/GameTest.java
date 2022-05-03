@@ -151,6 +151,7 @@ public class GameTest extends TestCase {
         assertEquals(exceptedField, game.getSquares());
     }
 
+    // Проверка функции SpawnSquare на работу
     public void testSpawnSquare() {
         final int fieldSize = 4;
         Game game = new Game(fieldSize);

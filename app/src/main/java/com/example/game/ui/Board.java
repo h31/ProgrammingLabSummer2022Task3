@@ -1,4 +1,5 @@
 package com.example.game.ui;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -16,12 +17,18 @@ public class Board extends View {
         super(context, attrs);
     }
 
+    private void drawRoundRect(Canvas canvas, int x, int y, int size, String color) {
+        @SuppressLint("DrawAllocation") Paint paint = new Paint();
+        paint.setColor(Color.parseColor(color));
+        @SuppressLint("DrawAllocation") RectF rect = new RectF();
+        rect.set(x, y, x + size, y + size);
+        canvas.drawRoundRect(rect, (float) (getWidth() * 0.05), (float) (getWidth() * 0.05), paint);
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
-        @SuppressLint("DrawAllocation") Paint paint = new Paint();
-        paint.setColor(Color.parseColor("#bbada0"));
-        @SuppressLint("DrawAllocation") RectF rect = new RectF();
-        rect.set(0, 0, getWidth(), getWidth());
-        canvas.drawRoundRect(rect, 100, 100, paint);
+        int indent = (int) (getWidth() * 0.05);
+        drawRoundRect(canvas, indent, getHeight() - getWidth(), getWidth() - indent * 2, "#bbada0");
+
     }
 }

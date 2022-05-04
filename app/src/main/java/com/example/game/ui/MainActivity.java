@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         newGame.setOnClickListener(view -> {
             Intent gameActivity = new Intent(MainActivity.this, GameActivity.class);
             startActivity(gameActivity);
-            overridePendingTransition(R.anim.from_right, R.anim.to_left);
+            overridePendingTransition(R.anim.from_top, R.anim.no_anim);
             finish();
         });
 

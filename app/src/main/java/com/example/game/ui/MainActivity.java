@@ -20,6 +20,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setViews();
 
+        newGame.setOnClickListener(view -> {
+            Intent gameActivity = new Intent(MainActivity.this, GameActivity.class);
+            startActivity(gameActivity);
+            overridePendingTransition(R.anim.from_right, R.anim.to_left);
+            finish();
+        });
+
         settings.setOnClickListener(view -> {
             Intent settingsActivity = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(settingsActivity);

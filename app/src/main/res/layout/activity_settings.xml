@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.game.ui.SettingsActivity"
-    android:background="@color/white">
+    android:background="@color/background">
 
 
     <TextView
@@ -25,7 +25,7 @@
         android:layout_width="50sp"
         android:layout_height="50sp"
         android:layout_marginTop="35sp"
-        android:background="@color/white"
+        android:background="@color/background"
         android:src="@drawable/ic_back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.027"

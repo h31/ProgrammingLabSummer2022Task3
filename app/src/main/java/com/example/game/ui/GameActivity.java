@@ -24,7 +24,6 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         setViews();
-        layout.addView(board = new Board(this));
         board.postDelayed(() -> {
             game = new Game(Board.BOARD_SIZE);
             spawnSquare();
@@ -50,6 +49,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void setViews() {
-        layout = (ConstraintLayout) findViewById(R.id.layout);
+        layout = findViewById(R.id.layout);
+        board = findViewById(R.id.board);
     }
 }

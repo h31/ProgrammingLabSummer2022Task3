@@ -61,6 +61,7 @@ public class Piece extends StackPane {
 
     }
 
+
     public void move(int x, int y) {
         oldX = x * TILE_SIZE;
         oldY = y * TILE_SIZE;

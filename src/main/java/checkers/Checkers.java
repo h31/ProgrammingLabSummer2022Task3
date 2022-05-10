@@ -19,6 +19,7 @@ public class Checkers extends Application {
     public static final int WIDTH = 8;
     public static final int HEIGHT = 8;
     private final Tile[][] board = new Tile[WIDTH][HEIGHT];
+    public static boolean turn = false; // False - ход белых, True - ход чёрных
 
     private final Group tileGroup = new Group();
     private final Group pieceGroup = new Group();
@@ -27,11 +28,12 @@ public class Checkers extends Application {
         Pane root = new Pane();
         BorderPane bp = new BorderPane();
         bp.setStyle("-fx-background-color: #3B4248");
+        root.setStyle("-fx-background-color: red");
 
 
         bp.setCenter(tileGroup);
         root.setPrefSize(WIDTH * TILE_SIZE, HEIGHT * TILE_SIZE);
-        root.setMaxSize((WIDTH + 2) * TILE_SIZE, (HEIGHT + 2) * TILE_SIZE );
+        root.setMaxSize(WIDTH * TILE_SIZE, HEIGHT * TILE_SIZE);
 
         root.getChildren().addAll(tileGroup, pieceGroup);
 
@@ -67,29 +69,6 @@ public class Checkers extends Application {
 
         bp.setCenter(root);
 
-        VBox vbox = new VBox();
-        vbox.setAlignment(Pos.TOP_CENTER);
-        VBox vbox1 = new VBox();
-        vbox1.setAlignment(Pos.BOTTOM_CENTER);
-
-        Label label1 = new Label("Игрок 1");
-        label1.setFont(Font.font("Arial", FontWeight.BOLD, 36));
-        label1.setTextFill(Color.ORANGE);
-
-        Label label2 = new Label("Игрок 2");
-        label2.setFont(Font.font("Arial", FontWeight.BOLD, 36));
-        label2.setTextFill(Color.ORANGE);
-
-        vbox.getChildren().addAll(label1);
-        bp.setLeft(vbox);
-
-
-        vbox1.getChildren().add(label2);
-        bp.setRight(vbox1);
-
-        bp.setPadding(new Insets(10, 10, 10, 10));
-        vbox.setSpacing(20);
-
 
         return bp;
     }
@@ -117,37 +96,48 @@ public class Checkers extends Application {
             int newX = toBoard(piece.getLayoutX());
             int newY = toBoard((piece.getLayoutY()));
 
-            MoveResult result = tryMove(piece, newX, newY); //Вернёт результат шага и новыe координаты
 
-            int x0 = toBoard(piece.getOldX());
-            int y0 = toBoard(piece.getOldY());
-            switch (result.getMoveType()){
-                case NONE:
-                    piece.abortMove();
-                    break;
-                case NORMAL:
-                    piece.move(newX, newY);
-                    board[x0][y0].setPiece(null); // Очищаем предыдущую клетку
-                    board[newX][newY].setPiece(piece); //Ставим на новую
+            if (newX >= 0 && newX <= WIDTH // Проверка на нахождение шашки в пределах игрового поля
+                    && newY >= 0 && newY <= HEIGHT) {
 
-                    break;
-                case KILL: //Перешли через шашку
-                    piece.move(newX, newY);
-                    board[x0][y0].setPiece(null); // Очищаем предыдущую клетку
-                    board[newX][newY].setPiece(piece); //Ставим на новую
+                MoveResult result = tryMove(piece, newX, newY); //Вернёт результат шага и новыe координаты
 
-                    Piece killedPiece = result.getPiece(); //
-                    board[toBoard(killedPiece.getOldX())][toBoard(killedPiece.getOldY())].setPiece(null);
-                    pieceGroup.getChildren().remove(killedPiece);
-                    break;
-            }
+                int x0 = toBoard(piece.getOldX());
+                int y0 = toBoard(piece.getOldY());
+                switch (result.getMoveType()) {
+                    case NONE:
+                        piece.abortMove();
+                        break;
+                    case NORMAL:
+                        piece.move(newX, newY);
+                        board[x0][y0].setPiece(null); // Очищаем предыдущую клетку
+                        board[newX][newY].setPiece(piece);//Ставим на новую
+                        turn = !turn; //Смена хода
+
+                        break;
+                    case KILL: //Перешли через шашку
+                        piece.move(newX, newY);
+                        board[x0][y0].setPiece(null); // Очищаем предыдущую клетку
+                        board[newX][newY].setPiece(piece); //Ставим на новую
+
+                        Piece killedPiece = result.getPiece(); //
+                        board[toBoard(killedPiece.getOldX())][toBoard(killedPiece.getOldY())].setPiece(null);
+                        pieceGroup.getChildren().remove(killedPiece);
+
+                        turn = !turn;//Смена хода
+                        break;
+                }
+            } else piece.abortMove();
+
         });
 
         return piece;
     }
 
     private MoveResult tryMove(Piece piece, int newX, int newY) {
-        if (board[newX][newY].hasPiece() || (newX + newY) % 2 == 0) {
+        if (board[newX][newY].hasPiece() || (newX + newY) % 2 == 0
+                || turn && piece.getPieceType() == PieceType.WHITE
+                || !turn && piece.getPieceType() == PieceType.BLACK) {
             return new MoveResult(MoveType.NONE);
         }
         int x0 = toBoard(piece.getOldX());

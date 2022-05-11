@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.util.Pair;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.widget.TextView;
 
 import com.example.game.R;
 import com.example.game.core.Coordinate;
@@ -20,11 +22,9 @@ import com.example.game.core.Game;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -32,7 +32,8 @@ public class GameActivity extends AppCompatActivity {
     private Board board;
     private Game game;
     private View swipeDetector;
-    private final int durationAnimations = 100;
+    private TextView score;
+    private final int durationAnimations = 50;
     private final Map<Coordinate, Square> squares = new HashMap<>();
     private final String TAG = this.getClass().getSimpleName();
 
@@ -42,6 +43,7 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         setViews();
+        score.setText("0");
         swipesOff();
         // Ждет пока пройдет анимация появления поля
         board.postDelayed(() -> {
@@ -116,6 +118,7 @@ public class GameActivity extends AppCompatActivity {
             spawnSquare();
             layout.postDelayed(this::swipesOn, durationAnimations);
         }, durationAnimations);
+        updateScore();
         Log.d(TAG, "\tBoard after move:" + squares + "\n" + squares.size());
     }
 
@@ -141,6 +144,18 @@ public class GameActivity extends AppCompatActivity {
     }
 
     /**
+     * Функция для красивой анимации смены числа
+     */
+    private void updateScore() {
+        ValueAnimator valueAnimator =
+                ValueAnimator.ofInt(Integer.parseInt(String.valueOf(score.getText())), game.getScore());
+        valueAnimator.setDuration(durationAnimations*2);
+        valueAnimator.addUpdateListener(animatorValue ->
+                score.setText(animatorValue.getAnimatedValue().toString()));
+        valueAnimator.start();
+    }
+
+    /**
      * Включает View, отвечающий за считывание свайпов
      */
     private void swipesOn() {
@@ -161,5 +176,6 @@ public class GameActivity extends AppCompatActivity {
         layout = findViewById(R.id.layout);
         board = findViewById(R.id.board);
         swipeDetector = findViewById(R.id.swipeDetector);
+        score = findViewById(R.id.scoreNumber);
     }
 }

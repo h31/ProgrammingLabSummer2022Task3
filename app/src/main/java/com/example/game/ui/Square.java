@@ -94,6 +94,6 @@ public class Square extends View {
     @NonNull
     @Override
     public String toString() {
-        return "{" + this.getX() + ", " + this.getY() + "}=" + number + ";";
+        return number;
     }
 }

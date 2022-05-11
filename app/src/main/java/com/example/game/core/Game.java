@@ -5,13 +5,12 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 public class Game {
     private final int FIELD_SIZE;
@@ -66,10 +65,10 @@ public class Game {
      * @param direction направление перемещения
      * @return set с перемещениями цифр
      **/
-    public Set<Coordinate.Move> doMove(@NonNull Direction direction) {
+    public List<Coordinate.Move> doMove(@NonNull Direction direction) {
         Vector vector = direction.getVector();
         Pair<List<Integer>, List<Integer>> traversals = buildTraversals(vector);
-        Set<Coordinate.Move> moves = new HashSet<>();
+        List<Coordinate.Move> moves = new ArrayList<>();
         for (int y : traversals.second)
             for (int x : traversals.first) {
                 Coordinate square = new Coordinate(x, y);
@@ -94,6 +93,7 @@ public class Game {
             i.getValue().second = false;
             Log.d(TAG, "\t\t" + i.getKey() + " = " + i.getValue().first);
         }
+        Log.d(TAG, "\t\t" + squares.size());
         return moves;
     }
 

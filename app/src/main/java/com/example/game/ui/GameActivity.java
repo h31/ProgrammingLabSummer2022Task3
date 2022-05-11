@@ -18,8 +18,10 @@ import com.example.game.core.Coordinate;
 import com.example.game.core.Direction;
 import com.example.game.core.Game;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -73,11 +75,11 @@ public class GameActivity extends AppCompatActivity {
         });
     }
 
-    private void doIteration(@NonNull Set<Coordinate.Move> moves) {
+    private void doIteration(@NonNull List<Coordinate.Move> moves) {
         Log.i(TAG, "\tMoves:" + moves);
         if (moves.isEmpty()) return;
         swipesOff();
-        Set<Pair<Square, Square>> mergedSquares = new HashSet<>();
+        List<Pair<Square, Square>> mergedSquares = new ArrayList<>();
         Log.i(TAG, "\tSquares to merge:");
         for (Coordinate.Move move : moves) {
             // Координаты и фигура, которая двигается
@@ -114,6 +116,7 @@ public class GameActivity extends AppCompatActivity {
             spawnSquare();
             layout.postDelayed(this::swipesOn, durationAnimations);
         }, durationAnimations);
+        Log.d(TAG, "\tBoard after move:" + squares + "\n" + squares.size());
     }
 
     private void spawnSquare() {

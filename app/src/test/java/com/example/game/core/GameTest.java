@@ -6,12 +6,11 @@ import junit.framework.TestCase;
 
 import androidx.core.util.Pair;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class GameTest extends TestCase {
 
@@ -76,7 +75,7 @@ public class GameTest extends TestCase {
         Coordinate secondSquare = new Coordinate(0, 3);
         game.setSquare(firstSquare, 2);
         game.setSquare(secondSquare, 2);
-        Set<Coordinate.Move> movesExpectedFirst = new HashSet<>();
+        List<Coordinate.Move> movesExpectedFirst = new ArrayList<>();
         movesExpectedFirst.add(new Coordinate.Move(secondSquare, firstSquare));
         assertEquals(movesExpectedFirst, game.doMove(Direction.UP));
         Map<Coordinate, Integer> exceptedFieldFirst = new HashMap<>();
@@ -84,7 +83,7 @@ public class GameTest extends TestCase {
         assertEquals(exceptedFieldFirst, game.getSquares());
         // Создание цифры 2 и проверка, что она не соединится с 4
         game.setSquare(secondSquare, 2);
-        Set<Coordinate.Move> movesExpectedSecond = new HashSet<>();
+        List<Coordinate.Move> movesExpectedSecond = new ArrayList<>();
         movesExpectedSecond.add(new Coordinate.Move(secondSquare,
                 firstSquare.moveBack(Direction.UP.getVector())));
         assertEquals(movesExpectedSecond, game.doMove(Direction.UP));
@@ -103,7 +102,7 @@ public class GameTest extends TestCase {
         Coordinate secondSquare = new Coordinate(0, 3);
         game.setSquare(firstSquare, 2);
         game.setSquare(secondSquare, 2);
-        Set<Coordinate.Move> movesExpected = new HashSet<>();
+        List<Coordinate.Move> movesExpected = new ArrayList<>();
         movesExpected.add(new Coordinate.Move(firstSquare, new Coordinate(fieldSize - 1, 0)));
         movesExpected.add(new Coordinate.Move(secondSquare, new Coordinate(fieldSize - 1, 3)));
         assertEquals(movesExpected, game.doMove(Direction.RIGHT));
@@ -112,7 +111,7 @@ public class GameTest extends TestCase {
         exceptedField.put(new Coordinate(fieldSize - 1, 3), 2);
         assertEquals(exceptedField, game.getSquares());
         // Повтор хода к границе, чтоб проверить, что фигуры не двигались
-        assertEquals(new HashSet<>(), game.doMove(Direction.RIGHT));
+        assertEquals(new ArrayList<>(), game.doMove(Direction.RIGHT));
         assertEquals(exceptedField, game.getSquares());
     }
 
@@ -125,9 +124,9 @@ public class GameTest extends TestCase {
         Coordinate secondSquare = new Coordinate(1, 2);
         game.setSquare(firstSquare, 2);
         game.setSquare(secondSquare, 2);
-        Set<Coordinate.Move> movesExpected = new HashSet<>();
-        movesExpected.add(new Coordinate.Move(firstSquare, new Coordinate(1, fieldSize - 1)));
+        List<Coordinate.Move> movesExpected = new ArrayList<>();
         movesExpected.add(new Coordinate.Move(secondSquare, new Coordinate(1, fieldSize - 1)));
+        movesExpected.add(new Coordinate.Move(firstSquare, new Coordinate(1, fieldSize - 1)));
         assertEquals(movesExpected, game.doMove(Direction.DOWN));
         Map<Coordinate, Integer> exceptedField = new HashMap<>();
         exceptedField.put(new Coordinate(1, fieldSize - 1), 4);
@@ -142,10 +141,10 @@ public class GameTest extends TestCase {
         for (int x = 0; x < fieldSize; x++) {
             game.setSquare(new Coordinate(x, 0), 2);
         }
-        Set<Coordinate.Move> movesExpected = new HashSet<>();
-        movesExpected.add(new Coordinate.Move(new Coordinate(0, 0), new Coordinate(2, 0)));
-        movesExpected.add(new Coordinate.Move(new Coordinate(1, 0), new Coordinate(2, 0)));
+        List<Coordinate.Move> movesExpected = new ArrayList<>();
         movesExpected.add(new Coordinate.Move(new Coordinate(2, 0), new Coordinate(3, 0)));
+        movesExpected.add(new Coordinate.Move(new Coordinate(1, 0), new Coordinate(2, 0)));
+        movesExpected.add(new Coordinate.Move(new Coordinate(0, 0), new Coordinate(2, 0)));
         assertEquals(movesExpected, game.doMove(Direction.RIGHT));
         Map<Coordinate, Integer> exceptedField = new HashMap<>();
         exceptedField.put(new Coordinate(2, 0), 4);
@@ -161,9 +160,9 @@ public class GameTest extends TestCase {
         game.setSquare(new Coordinate(0, 0), 4);
         game.setSquare(new Coordinate(2, 0), 2);
         game.setSquare(new Coordinate(3, 0), 2);
-        Set<Coordinate.Move> movesExpected = new HashSet<>();
-        movesExpected.add(new Coordinate.Move(new Coordinate(0, 0), new Coordinate(2, 0)));
+        List<Coordinate.Move> movesExpected = new ArrayList<>();
         movesExpected.add(new Coordinate.Move(new Coordinate(2, 0), new Coordinate(3, 0)));
+        movesExpected.add(new Coordinate.Move(new Coordinate(0, 0), new Coordinate(2, 0)));
         assertEquals(movesExpected, game.doMove(Direction.RIGHT));
         Map<Coordinate, Integer> exceptedField = new HashMap<>();
         exceptedField.put(new Coordinate(2, 0), 4);

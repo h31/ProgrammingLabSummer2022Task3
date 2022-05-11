@@ -136,11 +136,13 @@ public class GameActivity extends AppCompatActivity {
             spawnSquare();
             int finalMaxNumber = maxNumber;
             layout.postDelayed(() -> {
-                if (finalMaxNumber == 2048)
-                    Log.d(TAG, "Win");
-                else if (game.gameIsLost())
-                    Log.d(TAG, "Lose");
-                else
+                if (finalMaxNumber == 2048) {
+                    // TODO меню с победой
+                    Log.i(TAG, "Win");
+                } else if (game.gameIsLost()) {
+                    // TODO меню с проигрышом
+                    Log.i(TAG, "Lose");
+                } else
                     swipesOn();
             }, durationAnimations);
         }, durationAnimations);

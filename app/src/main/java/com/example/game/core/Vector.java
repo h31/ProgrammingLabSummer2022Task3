@@ -1,6 +1,6 @@
 package com.example.game.core;
 
-public class Vector {
+class Vector {
     public int x;
     public int y;
 

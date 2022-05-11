@@ -153,6 +153,24 @@ public class GameTest extends TestCase {
         assertEquals(exceptedField, game.getSquares());
     }
 
+    // Проверка интересного частного случая, когда фигуры должны объединиться
+    // и опуститься до границы поля сразу две пары (т.е. 4 0 2 2 -> 0 0 4 4 при движение вправо)
+    public void testDoMoveOtherThird() {
+        final int fieldSize = 4;
+        Game game = new Game(fieldSize);
+        game.setSquare(new Coordinate(0, 0), 4);
+        game.setSquare(new Coordinate(2, 0), 2);
+        game.setSquare(new Coordinate(3, 0), 2);
+        Set<Coordinate.Move> movesExpected = new HashSet<>();
+        movesExpected.add(new Coordinate.Move(new Coordinate(0, 0), new Coordinate(2, 0)));
+        movesExpected.add(new Coordinate.Move(new Coordinate(2, 0), new Coordinate(3, 0)));
+        assertEquals(movesExpected, game.doMove(Direction.RIGHT));
+        Map<Coordinate, Integer> exceptedField = new HashMap<>();
+        exceptedField.put(new Coordinate(2, 0), 4);
+        exceptedField.put(new Coordinate(3, 0), 4);
+        assertEquals(exceptedField, game.getSquares());
+    }
+
     // Проверка функции SpawnSquare на работу
     public void testSpawnSquare() {
         final int fieldSize = 4;

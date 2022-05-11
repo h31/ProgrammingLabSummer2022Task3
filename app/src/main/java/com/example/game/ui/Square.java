@@ -36,6 +36,10 @@ public class Square extends View {
         this.size = size;
     }
 
+    public int getNumber() {
+        return Integer.parseInt(number);
+    }
+
     private String getColor() {
         switch (number) {
             case "2":
@@ -75,7 +79,7 @@ public class Square extends View {
             rect.set(0, 0, size, size);
             canvas.drawRoundRect(rect, (float) (getWidth() * 0.03), (float) (getWidth() * 0.03), paint);
             // Рисование текста
-            paint.setTypeface(ResourcesCompat.getFont(getContext(),R.font.clear_sans_bold));
+            paint.setTypeface(ResourcesCompat.getFont(getContext(), R.font.clear_sans_bold));
             paint.setColor(Color.parseColor(Integer.parseInt(number) < 8 ? "#776e65" : "#f9f6f2"));
             paint.setTextSize((int) (size * 0.6) - (int) (size * (number.length() - 1) * 0.1));
             // Для получения высоты текста
@@ -84,5 +88,10 @@ public class Square extends View {
             canvas.drawText(number, (float) size / 2 - paint.measureText(number) / 2,
                     (float) size / 2 + (float) textBounds.height() / 2, paint);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Square{number='" + number + '}';
     }
 }

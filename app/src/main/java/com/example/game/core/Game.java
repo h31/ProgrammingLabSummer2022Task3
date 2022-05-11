@@ -13,7 +13,8 @@ import java.util.Set;
 
 public class Game {
     private final int FIELD_SIZE;
-    private final Map<Coordinate, Integer> squares = new HashMap<>();
+    // Координата фигуры -> (Цифра, Было ли совмещение на этой итерации)
+    private final Map<Coordinate, Square> squares = new HashMap<>();
     private int score;
 
     public Game(int fieldSize) {
@@ -45,10 +46,11 @@ public class Game {
      **/
     Coordinate.Move findNewPosition(@NonNull Coordinate square, @NonNull Vector vector) {
         Coordinate newSquare = square.copy();
+        int numOnSquare = Objects.requireNonNull(squares.get(square)).first;
         while ((newSquare = newSquare.move(vector)).checkCorrect(FIELD_SIZE)) {
-            Integer targetNum = squares.get(newSquare);
+            Square targetNum = squares.get(newSquare);
             if (targetNum == null) continue;
-            if (targetNum.equals(squares.get(square)))
+            if (targetNum.first.equals(numOnSquare) && !targetNum.second)
                 return new Coordinate.Move(square, newSquare);
             break;
         }
@@ -59,7 +61,7 @@ public class Game {
      * Функция для перемещения всех цифр
      *
      * @param direction направление перемещения
-     * @return лист с перемещениями цифр
+     * @return set с перемещениями цифр
      **/
     public Set<Coordinate.Move> doMove(@NonNull Direction direction) {
         Vector vector = direction.getVector();
@@ -68,7 +70,7 @@ public class Game {
         for (int y : traversals.second)
             for (int x : traversals.first) {
                 Coordinate square = new Coordinate(x, y);
-                Integer number = squares.get(square);
+                Square number = squares.get(square);
                 // Проверка, что в клетке фигура существует
                 if (number == null) continue;
                 Coordinate.Move move = findNewPosition(square, vector);
@@ -76,12 +78,17 @@ public class Game {
                 if (move.from.equals(move.to)) continue;
                 moves.add(move);
                 // Смена цифры в клетке, если в новой координате есть цифра
-                Integer targetNumber = squares.get(move.to);
-                squares.put(move.to, number + (targetNumber == null ? 0 : targetNumber));
-                if (targetNumber != null) score += number + targetNumber;
+                Square targetNumber = squares.get(move.to);
+                squares.put(move.to, Square.create(
+                        number.first + (targetNumber == null ? 0 : targetNumber.first),
+                        targetNumber != null));
+                if (targetNumber != null) score += number.first + targetNumber.first;
                 // Удаление фигуры с координаты исходника
                 squares.remove(square);
             }
+        for (Map.Entry<Coordinate, Square> i : squares.entrySet()) {
+            i.getValue().second = false;
+        }
         return moves;
     }
 
@@ -110,7 +117,7 @@ public class Game {
         if (emptySquares.size() == 0) return null;
         Coordinate coordinateNewSquare = emptySquares.get((int) (Math.random() * emptySquares.size()));
         int number = Math.random() < 0.9 ? 2 : 4;
-        squares.put(coordinateNewSquare, number);
+        squares.put(coordinateNewSquare, Square.create(number, false));
         return Pair.create(coordinateNewSquare, number);
     }
 
@@ -130,11 +137,11 @@ public class Game {
         if (squares.size() != FIELD_SIZE * FIELD_SIZE) return false;
         for (int y = 0; y < FIELD_SIZE - 1; y++)
             for (int x = 0; x < FIELD_SIZE - 1; x++) {
-                int numInCoordinate = Objects.requireNonNull(squares.get(new Coordinate(x, y)));
+                int numInCoordinate = Objects.requireNonNull(squares.get(new Coordinate(x, y))).first;
                 // Если снизу или справа от клетки совпадает число, тогда их можно совместить
                 // А значит игра не проиграна
-                if (numInCoordinate == Objects.requireNonNull(squares.get(new Coordinate(x, y + 1)))
-                        || numInCoordinate == Objects.requireNonNull(squares.get(new Coordinate(x + 1, y))))
+                if (numInCoordinate == Objects.requireNonNull(Objects.requireNonNull(squares.get(new Coordinate(x, y + 1))).first)
+                        || numInCoordinate == Objects.requireNonNull(squares.get(new Coordinate(x + 1, y))).first)
                     return false;
             }
         return true;
@@ -147,7 +154,7 @@ public class Game {
      * @param number значение цифры
      **/
     void setSquare(@NonNull Coordinate square, int number) {
-        squares.put(square, number);
+        squares.put(square, Square.create(number, false));
     }
 
     /**
@@ -165,6 +172,10 @@ public class Game {
      * @return мапа из (координата -> значение)
      **/
     Map<Coordinate, Integer> getSquares() {
-        return new HashMap<>(squares);
+        Map<Coordinate, Integer> map = new HashMap<>();
+        for (Map.Entry<Coordinate, Square> i : squares.entrySet()) {
+            map.put(i.getKey(), i.getValue().first);
+        }
+        return map;
     }
 }

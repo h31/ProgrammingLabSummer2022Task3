@@ -49,7 +49,6 @@ public class Board extends View {
     }
 
     public Pair<Integer, Integer> getCoordinate(int x, int y) {
-        System.out.println(map);
         return map.get(Pair.create(x, y));
     }
 
@@ -59,7 +58,6 @@ public class Board extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        System.out.println("Hello");
         int indent = (int) (getWidth() * 0.04);
         int sizeBoard = getWidth() - indent * 2;
         drawRoundRect(canvas, indent, getHeight() - getWidth(), sizeBoard, "#bbada0");

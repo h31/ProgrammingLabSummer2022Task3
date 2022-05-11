@@ -6,7 +6,7 @@ public enum Direction {
     DOWN,
     LEFT;
 
-    public Vector getVector() {
+    Vector getVector() {
         switch (this) {
             case LEFT:
                 return new Vector(-1, 0);

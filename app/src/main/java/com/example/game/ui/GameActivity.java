@@ -119,7 +119,7 @@ public class GameActivity extends AppCompatActivity {
             layout.postDelayed(this::swipesOn, durationAnimations);
         }, durationAnimations);
         updateScore();
-        Log.d(TAG, "\tBoard after move:" + squares + "\n" + squares.size());
+        Log.d(TAG, "\tBoard after move:" + squares + squares.size());
     }
 
     private void spawnSquare() {
@@ -149,7 +149,7 @@ public class GameActivity extends AppCompatActivity {
     private void updateScore() {
         ValueAnimator valueAnimator =
                 ValueAnimator.ofInt(Integer.parseInt(String.valueOf(score.getText())), game.getScore());
-        valueAnimator.setDuration(durationAnimations*2);
+        valueAnimator.setDuration(durationAnimations * 2);
         valueAnimator.addUpdateListener(animatorValue ->
                 score.setText(animatorValue.getAnimatedValue().toString()));
         valueAnimator.start();

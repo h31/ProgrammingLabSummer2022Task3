@@ -11,4 +11,5 @@
     <color name="textColorHint">#CCCC</color>
     <color name="background">#faf8ef</color>
     <color name="board">#bbada0</color>
+    <color name="text">#776e65</color>
 </resources>

@@ -1,5 +1,7 @@
 package com.example.game.core;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
@@ -15,6 +17,7 @@ public class Game {
     private final int FIELD_SIZE;
     // Координата фигуры -> (Цифра, Было ли совмещение на этой итерации)
     private final Map<Coordinate, Square> squares = new HashMap<>();
+    private final String TAG = this.getClass().getSimpleName();
     private int score;
 
     public Game(int fieldSize) {
@@ -86,8 +89,10 @@ public class Game {
                 // Удаление фигуры с координаты исходника
                 squares.remove(square);
             }
+        Log.d(TAG, "\tBoard after move:");
         for (Map.Entry<Coordinate, Square> i : squares.entrySet()) {
             i.getValue().second = false;
+            Log.d(TAG, "\t\t" + i.getKey() + " = " + i.getValue().first);
         }
         return moves;
     }

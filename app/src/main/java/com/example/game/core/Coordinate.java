@@ -20,7 +20,7 @@ public class Coordinate {
 
     /**
      * Создает копию объекта
-     * */
+     */
     public Coordinate copy() {
         return new Coordinate(this);
     }
@@ -30,7 +30,7 @@ public class Coordinate {
      *
      * @param vector вектор перемещения
      * @return новая координата
-     * */
+     */
     public Coordinate move(@NonNull Vector vector) {
         return new Coordinate(x + vector.x, y + vector.y);
     }
@@ -40,7 +40,7 @@ public class Coordinate {
      *
      * @param vector вектор перемещения
      * @return новая координата
-     * */
+     */
     public Coordinate moveBack(@NonNull Vector vector) {
         return new Coordinate(x - vector.x, y - vector.y);
     }
@@ -50,7 +50,7 @@ public class Coordinate {
      *
      * @param fieldSize размеры поля, для проверки, что координата не за пределами поля
      * @return true/false если координата корретна/не корректна
-     * */
+     */
     public boolean checkCorrect(int fieldSize) {
         return x < fieldSize && x >= 0 &&
                 y < fieldSize && y >= 0;
@@ -72,10 +72,7 @@ public class Coordinate {
     @NonNull
     @Override
     public String toString() {
-        return "Coordinate{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+        return "{" + x + ", " + y + "}";
     }
 
     public static class Move {
@@ -103,10 +100,7 @@ public class Coordinate {
         @NonNull
         @Override
         public String toString() {
-            return "Move{" +
-                    "from=" + from +
-                    ", to=" + to +
-                    '}';
+            return "from " + from + ", to " + to;
         }
     }
 }

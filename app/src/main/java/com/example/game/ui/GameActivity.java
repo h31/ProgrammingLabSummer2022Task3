@@ -7,6 +7,7 @@ import androidx.core.util.Pair;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
@@ -31,6 +32,7 @@ public class GameActivity extends AppCompatActivity {
     private View swipeDetector;
     private final int durationAnimations = 100;
     private final Map<Coordinate, Square> squares = new HashMap<>();
+    private final String TAG = this.getClass().getSimpleName();
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -42,34 +44,41 @@ public class GameActivity extends AppCompatActivity {
         // Ждет пока пройдет анимация появления поля
         board.postDelayed(() -> {
             game = new Game(Board.BOARD_SIZE);
+            Log.i(TAG, "Game started");
             spawnSquare();
             // Возвращает возможность свайпать после спавна квадрата
-            layout.postDelayed((Runnable) this::swipesOn, durationAnimations);
+            layout.postDelayed(this::swipesOn, durationAnimations);
         }, durationAnimations);
         // Устанавливает считывание свайпов
         swipeDetector.setOnTouchListener(new OnSwipeTouchListener(GameActivity.this) {
             public void onSwipeTop() {
+                Log.i(TAG, "Top swipe");
                 doIteration(game.doMove(Direction.UP));
             }
 
             public void onSwipeRight() {
+                Log.i(TAG, "Right swipe");
                 doIteration(game.doMove(Direction.RIGHT));
             }
 
             public void onSwipeLeft() {
+                Log.i(TAG, "Left swipe");
                 doIteration(game.doMove(Direction.LEFT));
             }
 
             public void onSwipeBottom() {
+                Log.i(TAG, "Down swipe");
                 doIteration(game.doMove(Direction.DOWN));
             }
         });
     }
 
     private void doIteration(@NonNull Set<Coordinate.Move> moves) {
+        Log.i(TAG, "\tMoves:" + moves);
         if (moves.isEmpty()) return;
         swipesOff();
         Set<Pair<Square, Square>> mergedSquares = new HashSet<>();
+        Log.i(TAG, "\tSquares to merge:");
         for (Coordinate.Move move : moves) {
             // Координаты и фигура, которая двигается
             Square squareFrom = squares.get(move.from);
@@ -82,9 +91,11 @@ public class GameActivity extends AppCompatActivity {
             // В любом случае убираем объект, который двигался
             squares.remove(move.from);
             // Если произошло слияние, то оставляем на потом, если нет, то просто добовляем фигуру в сет
-            if (squareTarget != null)
+            if (squareTarget != null) {
+                Log.i(TAG, "\t\t" + move.from + "=" + squareFrom.getNumber() +
+                        "; " + move.to + "=" + squareFrom.getNumber());
                 mergedSquares.add(Pair.create(squareFrom, squareTarget));
-            else {
+            } else {
                 squares.put(move.to, squareFrom);
             }
         }
@@ -122,6 +133,8 @@ public class GameActivity extends AppCompatActivity {
         layout.addView(square);
         squares.put(squareCoordinate.first, square);
         square.startAnimation(animation);
+        Log.i(TAG, "\tSquare " + squareCoordinate.second +
+                " spawned at: " + squareCoordinate.first);
     }
 
     /**

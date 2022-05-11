@@ -10,6 +10,7 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 
@@ -90,8 +91,9 @@ public class Square extends View {
         }
     }
 
+    @NonNull
     @Override
     public String toString() {
-        return "Square{number='" + number + '}';
+        return "{" + this.getX() + ", " + this.getY() + "}=" + number + ";";
     }
 }

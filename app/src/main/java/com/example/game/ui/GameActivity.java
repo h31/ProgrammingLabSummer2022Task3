@@ -116,6 +116,7 @@ public class GameActivity extends AppCompatActivity {
         }
         // Запускаем после всех анимаций перемещения
         layout.postDelayed(() -> {
+            int maxNumber = 0;
             for (Pair<Square, Square> square : mergedSquares) {
                 // Удаляем один из совмещенных квадратов
                 layout.removeView(square.first);
@@ -128,10 +129,20 @@ public class GameActivity extends AppCompatActivity {
                 scaleAnimation.setRepeatCount(1);
                 square.second.startAnimation(scaleAnimation);
                 // Меняем цифру на квадрате
+                int newNumber = square.second.getNumber() * 2;
+                maxNumber = Math.max(maxNumber, newNumber);
                 square.second.setNumber(square.second.getNumber() * 2);
             }
             spawnSquare();
-            layout.postDelayed(this::swipesOn, durationAnimations);
+            int finalMaxNumber = maxNumber;
+            layout.postDelayed(() -> {
+                if (finalMaxNumber == 2048)
+                    Log.d(TAG, "Win");
+                else if (game.gameIsLost())
+                    Log.d(TAG, "Lose");
+                else
+                    swipesOn();
+            }, durationAnimations);
         }, durationAnimations);
         updateScore();
         Log.d(TAG, "\tBoard after move:" + squares + squares.size());

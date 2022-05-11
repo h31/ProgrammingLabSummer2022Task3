@@ -8,6 +8,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
+/**
+ * Слушатель для свайпов пользователя
+ * Взято отсюда:
+ * https://stackoverflow.com/questions/4139288/android-how-to-handle-right-to-left-swipe-gestures
+ */
 public class OnSwipeTouchListener implements OnTouchListener {
 
     private final GestureDetector gestureDetector;

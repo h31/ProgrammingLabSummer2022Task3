@@ -33,8 +33,13 @@ public class GameActivity extends AppCompatActivity {
     private Game game;
     private View swipeDetector;
     private TextView score;
-    private final int durationAnimations = 50;
+
+    // Пары {Координата на поле, View на этой координате}
     private final Map<Coordinate, Square> squares = new HashMap<>();
+
+    // Константа для отсчета длительностей анимаций
+    private final int durationAnimations = 50;
+    // Тег для логирования
     private final String TAG = this.getClass().getSimpleName();
 
     @SuppressLint("ClickableViewAccessibility")
@@ -43,6 +48,7 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         setViews();
+        // Устанавливает значение очков на 0
         score.setText("0");
         swipesOff();
         // Ждет пока пройдет анимация появления поля
@@ -80,32 +86,40 @@ public class GameActivity extends AppCompatActivity {
     private void doIteration(@NonNull List<Coordinate.Move> moves) {
         Log.i(TAG, "\tMoves:" + moves);
         if (moves.isEmpty()) return;
+        // Отключаем возможность движения
         swipesOff();
+        // Лист квадратов, которые совместились
         List<Pair<Square, Square>> mergedSquares = new ArrayList<>();
         Log.i(TAG, "\tSquares to merge:");
         for (Coordinate.Move move : moves) {
-            // Координаты и фигура, которая двигается
+            // Координаты на поле и квадрат, который двигается
             Square squareFrom = squares.get(move.from);
-            // Координаты и фигура, на которую двигаются
+            // Координаты на поле и клетка, на которую двигаются
             Square squareTarget = squares.get(move.to);
+            // Координаты на layout клетки, на которую двигают
             Pair<Integer, Integer> squareTargetCoordinate = board.getCoordinate(move.to.x, move.to.y);
             // Анимация перемещения к таргету
             Objects.requireNonNull(squareFrom).animate().x(squareTargetCoordinate.first).
                     y(squareTargetCoordinate.second).setDuration(durationAnimations);
-            // В любом случае убираем объект, который двигался
+            // Убираем из мапы координаты с которых двигалась фигура
             squares.remove(move.from);
-            // Если произошло слияние, то оставляем на потом, если нет, то просто добовляем фигуру в сет
+            // Проверка, было ли слияние
             if (squareTarget != null) {
                 Log.i(TAG, "\t\t" + move.from + "=" + squareFrom.getNumber() +
                         "; " + move.to + "=" + squareFrom.getNumber());
+                // Добавляем в лист квадратов, которые совместились
                 mergedSquares.add(Pair.create(squareFrom, squareTarget));
             } else {
+                // Просто поменяли координату клетки
                 squares.put(move.to, squareFrom);
             }
         }
+        // Запускаем после всех анимаций перемещения
         layout.postDelayed(() -> {
             for (Pair<Square, Square> square : mergedSquares) {
+                // Удаляем один из совмещенных квадратов
                 layout.removeView(square.first);
+                // Анимируем второй, чтоб он увеличился и обратно уменьшился
                 Animation scaleAnimation = new ScaleAnimation(1.0f, 1.2f, 1.0f, 1.2f,
                         square.second.getX() + (float) board.getSquareSize() / 2,
                         square.second.getY() + (float) board.getSquareSize() / 2);
@@ -113,6 +127,7 @@ public class GameActivity extends AppCompatActivity {
                 scaleAnimation.setRepeatMode(Animation.REVERSE);
                 scaleAnimation.setRepeatCount(1);
                 square.second.startAnimation(scaleAnimation);
+                // Меняем цифру на квадрате
                 square.second.setNumber(square.second.getNumber() * 2);
             }
             spawnSquare();
@@ -122,29 +137,39 @@ public class GameActivity extends AppCompatActivity {
         Log.d(TAG, "\tBoard after move:" + squares + squares.size());
     }
 
+    /**
+     * Создает новую Square с координатами из game.spawnSquare().
+     * Длительность анимации durationAnimations * 6, ожидать анимацию не обязателньно
+     */
     private void spawnSquare() {
         Square square = new Square(this);
         Pair<Coordinate, Integer> squareCoordinate = game.spawnSquare();
         Pair<Integer, Integer> squarePosition =
                 board.getCoordinate(squareCoordinate.first.x, squareCoordinate.first.y);
+        // Поставили клетку в правильное положение на доску
         square.setX(squarePosition.first);
         square.setY(squarePosition.second);
+        // Установили клетке размер
         square.setSize(board.getSquareSize());
+        // Установили цифру
         square.setNumber(squareCoordinate.second);
+        // Создание анимации
         Animation animation = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f,
                 squarePosition.first + (float) board.getSquareSize() / 2,
                 squarePosition.second + (float) board.getSquareSize() / 2);
-        animation.setDuration(300);
+        animation.setDuration(durationAnimations * 6);
         animation.setInterpolator(new AccelerateInterpolator());
+        // Добавляем квадрат на поле
         layout.addView(square);
         squares.put(squareCoordinate.first, square);
+        // Запуск анимации
         square.startAnimation(animation);
         Log.i(TAG, "\tSquare " + squareCoordinate.second +
                 " spawned at: " + squareCoordinate.first);
     }
 
     /**
-     * Функция для красивой анимации смены числа
+     * Функция для смены счета
      */
     private void updateScore() {
         ValueAnimator valueAnimator =

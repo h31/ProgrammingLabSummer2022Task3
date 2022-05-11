@@ -4,6 +4,7 @@ import static java.lang.Math.pow;
 
 import junit.framework.TestCase;
 
+import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class GameTest extends TestCase {
     /**
      * @return возврщает лист, заполненный числами от a до b
      **/
+    @NonNull
     private List<Integer> fromAtoB(int a, int b) {
         List<Integer> list = new LinkedList<>();
         while (a != b) list.add(a > b ? --a : a++);

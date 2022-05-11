@@ -7,7 +7,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+
 import androidx.core.util.Pair;
+
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -17,12 +19,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * View, который рисует поле для игры в самом низу экрана (с поправкой на отступы).
+ * Хранит в себе полезную информацию о расположении фигур на поле
+ */
 public class Board extends View {
-
+    // Размер поля
     final static public int BOARD_SIZE = 4;
+    // Пары координат на поле и координат на layout
     final private Map<Pair<Integer, Integer>, Pair<Integer, Integer>> map = new HashMap<>();
-
-    private int squareSize = 0;
+    // Размер клетки
+    private int squareSize;
 
     public Board(Context context) {
         super(context);
@@ -39,7 +46,7 @@ public class Board extends View {
      * @param y     координата y левого врехнего угла
      * @param size  длинна грани
      * @param color цвет квадрата
-     **/
+     */
     private void drawRoundRect(@NonNull Canvas canvas, int x, int y, int size, @NonNull String color) {
         @SuppressLint("DrawAllocation") Paint paint = new Paint();
         paint.setColor(Color.parseColor(color));
@@ -48,14 +55,21 @@ public class Board extends View {
         canvas.drawRoundRect(rect, (float) (getWidth() * 0.03), (float) (getWidth() * 0.03), paint);
     }
 
+    /**
+     * @return координаты на layout по коориданатам на поле
+     */
     public Pair<Integer, Integer> getCoordinate(int x, int y) {
         return map.get(Pair.create(x, y));
     }
 
+    /**
+     * @return размер клетки
+     */
     public int getSquareSize() {
         return squareSize;
     }
 
+    // Функция для рисования самого поля
     @Override
     protected void onDraw(Canvas canvas) {
         int indent = (int) (getWidth() * 0.04);

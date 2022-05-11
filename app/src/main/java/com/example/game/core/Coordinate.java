@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 
 import java.util.Objects;
 
+/**
+ * Координаты на поле
+ */
 public class Coordinate {
     public int x;
     public int y;
@@ -75,6 +78,9 @@ public class Coordinate {
         return "{" + x + ", " + y + "}";
     }
 
+    /**
+     * Перемещение на на поле из from в to
+     */
     public static class Move {
         public Coordinate from;
         public Coordinate to;

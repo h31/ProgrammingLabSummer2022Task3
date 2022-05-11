@@ -16,9 +16,14 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.example.game.R;
 
+/**
+ * Квадрат, который отображается на поле
+ */
 public class Square extends View {
 
+    // Число на квадрате
     private String number = null;
+    // Размер самого квадрата для рисования
     private int size = 0;
 
     public Square(Context context, @Nullable AttributeSet attrs) {
@@ -29,18 +34,30 @@ public class Square extends View {
         super(context);
     }
 
+    /**
+     * @param number число, которое будет на клетке
+     */
     public void setNumber(int number) {
         this.number = String.valueOf(number);
     }
 
+    /**
+     * @param size размер стороны квадрата
+     */
     public void setSize(int size) {
         this.size = size;
     }
 
+    /**
+     * @return значение на квадрате
+     */
     public int getNumber() {
         return Integer.parseInt(number);
     }
 
+    /**
+     * @return цвет, которого должен быть квадрат с числами (2-2^11)
+     */
     private String getColor() {
         switch (number) {
             case "2":
@@ -85,6 +102,7 @@ public class Square extends View {
             paint.setTextSize((int) (size * 0.6) - (int) (size * (number.length() - 1) * 0.1));
             // Для получения высоты текста
             @SuppressLint("DrawAllocation") Rect textBounds = new Rect();
+            // Отрисовка самого цвета
             paint.getTextBounds(number, 0, number.length(), textBounds);
             canvas.drawText(number, (float) size / 2 - paint.measureText(number) / 2,
                     (float) size / 2 + (float) textBounds.height() / 2, paint);

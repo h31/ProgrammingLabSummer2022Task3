@@ -1,18 +1,26 @@
 package com.example.game.core;
 
+import androidx.annotation.NonNull;
+
 import java.util.Objects;
 
+/**
+ * Цифра и информация, перемещалась ли клетка на итерации
+ */
 class Square {
-    public Integer first;
-    public Boolean second;
+    public Integer number;
+    public Boolean isUsed;
 
-    public Square(Integer first, Boolean second) {
-        this.first = first;
-        this.second = second;
+    public Square(Integer number, Boolean isUsed) {
+        this.number = number;
+        this.isUsed = isUsed;
     }
 
-    static public Square create(Integer first, Boolean second) {
-        return new Square(first, second);
+    /**
+     * Создаем новый квадрат
+     */
+    static public Square create(Integer number, Boolean isUsed) {
+        return new Square(number, isUsed);
     }
 
     @Override
@@ -20,19 +28,20 @@ class Square {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Square square = (Square) o;
-        return Objects.equals(first, square.first) && Objects.equals(second, square.second);
+        return Objects.equals(number, square.number) && Objects.equals(isUsed, square.isUsed);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(first, second);
+        return Objects.hash(number, isUsed);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Square{" +
-                "first=" + first +
-                ", second=" + second +
+                "first=" + number +
+                ", second=" + isUsed +
                 '}';
     }
 }

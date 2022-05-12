@@ -84,6 +84,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void doIteration(@NonNull List<Coordinate.Move> moves) {
+        // TODO - разбить на 2 метода
         Log.i(TAG, "\tMoves:" + moves);
         if (moves.isEmpty()) return;
         // Отключаем возможность движения

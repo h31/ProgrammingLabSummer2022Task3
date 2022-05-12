@@ -52,6 +52,7 @@ public class Square extends View {
      * @return значение на квадрате
      */
     public int getNumber() {
+        // TODO - переделать в int
         return Integer.parseInt(number);
     }
 
@@ -90,6 +91,7 @@ public class Square extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         if (number != null) {
+            // TODO - вынести в 2 блока
             // Рисование прямоугольника
             @SuppressLint("DrawAllocation") Paint paint = new Paint();
             paint.setColor(Color.parseColor(getColor()));

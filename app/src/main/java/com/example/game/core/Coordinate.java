@@ -8,24 +8,12 @@ import java.util.Objects;
  * Координаты на поле
  */
 public class Coordinate {
-    public int x;
-    public int y;
+    public final int x;
+    public final int y;
 
     public Coordinate(int x, int y) {
         this.x = x;
         this.y = y;
-    }
-
-    private Coordinate(@NonNull Coordinate coordinate) {
-        this.x = coordinate.x;
-        this.y = coordinate.y;
-    }
-
-    /**
-     * Создает копию объекта
-     */
-    public Coordinate copy() {
-        return new Coordinate(this);
     }
 
     /**

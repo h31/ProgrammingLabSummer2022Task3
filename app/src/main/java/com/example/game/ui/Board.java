@@ -27,6 +27,7 @@ public class Board extends View {
     // Размер поля
     final static public int BOARD_SIZE = 4;
     // Пары координат на поле и координат на layout
+    // TODO - переделать map в отдельный метод
     final private Map<Pair<Integer, Integer>, Pair<Integer, Integer>> map = new HashMap<>();
     // Размер клетки
     private int squareSize;

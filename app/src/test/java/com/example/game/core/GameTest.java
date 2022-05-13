@@ -30,14 +30,14 @@ public class GameTest extends TestCase {
      **/
     private void testBuildTraversals(int fieldSize) {
         Game game = new Game(fieldSize);
-        assertEquals(fromAtoB(0, fieldSize), game.buildTraversals(Direction.LEFT.getVector().x));
-        assertEquals(fromAtoB(0, fieldSize), game.buildTraversals(Direction.LEFT.getVector().y));
-        assertEquals(fromAtoB(fieldSize, 0), game.buildTraversals(Direction.RIGHT.getVector().x));
-        assertEquals(fromAtoB(0, fieldSize), game.buildTraversals(Direction.RIGHT.getVector().y));
-        assertEquals(fromAtoB(0, fieldSize), game.buildTraversals(Direction.DOWN.getVector().x));
-        assertEquals(fromAtoB(fieldSize, 0), game.buildTraversals(Direction.DOWN.getVector().y));
-        assertEquals(fromAtoB(0, fieldSize), game.buildTraversals(Direction.UP.getVector().x));
-        assertEquals(fromAtoB(0, fieldSize), game.buildTraversals(Direction.UP.getVector().y));
+        assertEquals(fromAtoB(0, fieldSize), game.buildTraversal(Direction.LEFT.getVector().x));
+        assertEquals(fromAtoB(0, fieldSize), game.buildTraversal(Direction.LEFT.getVector().y));
+        assertEquals(fromAtoB(fieldSize, 0), game.buildTraversal(Direction.RIGHT.getVector().x));
+        assertEquals(fromAtoB(0, fieldSize), game.buildTraversal(Direction.RIGHT.getVector().y));
+        assertEquals(fromAtoB(0, fieldSize), game.buildTraversal(Direction.DOWN.getVector().x));
+        assertEquals(fromAtoB(fieldSize, 0), game.buildTraversal(Direction.DOWN.getVector().y));
+        assertEquals(fromAtoB(0, fieldSize), game.buildTraversal(Direction.UP.getVector().x));
+        assertEquals(fromAtoB(0, fieldSize), game.buildTraversal(Direction.UP.getVector().y));
     }
 
     // Проверка, что функция возращает корректные рельсы на разных размерах поля
@@ -54,18 +54,18 @@ public class GameTest extends TestCase {
         game.setSquare(firstSquare, 2);
         game.setSquare(secondSquare, 2);
         assertEquals(new Coordinate.Move(secondSquare, firstSquare),
-                game.findNewPosition(secondSquare, Direction.UP.getVector()));
+                game.findNewPosition(secondSquare, Direction.UP.getVector(), new ArrayList<>()));
         assertEquals(new Coordinate.Move(firstSquare, secondSquare),
-                game.findNewPosition(firstSquare, Direction.DOWN.getVector()));
+                game.findNewPosition(firstSquare, Direction.DOWN.getVector(), new ArrayList<>()));
         assertEquals(new Coordinate.Move(secondSquare, new Coordinate(secondSquare.x, fieldSize - 1)),
-                game.findNewPosition(secondSquare, Direction.DOWN.getVector()));
+                game.findNewPosition(secondSquare, Direction.DOWN.getVector(), new ArrayList<>()));
         assertEquals(new Coordinate.Move(secondSquare, new Coordinate(0, secondSquare.y)),
-                game.findNewPosition(secondSquare, Direction.LEFT.getVector()));
+                game.findNewPosition(secondSquare, Direction.LEFT.getVector(), new ArrayList<>()));
         assertEquals(new Coordinate.Move(firstSquare, new Coordinate(fieldSize - 1, firstSquare.y)),
-                game.findNewPosition(firstSquare, Direction.RIGHT.getVector()));
+                game.findNewPosition(firstSquare, Direction.RIGHT.getVector(), new ArrayList<>()));
         game.setSquare(secondSquare, 4);
         assertEquals(new Coordinate.Move(secondSquare, new Coordinate(0, 1)),
-                game.findNewPosition(secondSquare, Direction.UP.getVector()));
+                game.findNewPosition(secondSquare, Direction.UP.getVector(), new ArrayList<>()));
     }
 
     // Проверка что 2 одинаковых числа соединились, а разных нет

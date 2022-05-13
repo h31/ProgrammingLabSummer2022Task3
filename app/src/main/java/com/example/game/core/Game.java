@@ -42,6 +42,7 @@ public class Game {
         Vector vector = direction.getVector();
         List<Integer> traversalX = buildTraversal(vector.x);
         List<Integer> traversalY = buildTraversal(vector.y);
+        // Клетки, которые уже подверглись слиянию
         List<Coordinate> combinedSquares = new ArrayList<>();
         // Все перемещения. ВАЖЕН ПОРЯДОК!
         List<Coordinate.Move> moves = new ArrayList<>();
@@ -98,6 +99,7 @@ public class Game {
      * @return Перемещение (если остается на месте, то в перемещении 2 одинаковые координаты)
      */
     Coordinate.Move findNewPosition(@NonNull Coordinate square, @NonNull Vector vector, List<Coordinate> combinedSquares) {
+        // TODO глобально подумать и переделать полностью
         Coordinate newSquare = square;
         int numOnSquare = Objects.requireNonNull(squares.get(square));
         while ((newSquare = newSquare.move(vector)).checkCorrect(fieldSize)) {
@@ -130,7 +132,7 @@ public class Game {
      **/
     @NonNull
     private List<Coordinate> getEmptySquares() {
-        List<Coordinate> emptySquares = new LinkedList<>();
+        List<Coordinate> emptySquares = new ArrayList<>();
         for (int y = 0; y < fieldSize; y++)
             for (int x = 0; x < fieldSize; x++) {
                 Coordinate coordinate = new Coordinate(x, y);
@@ -157,8 +159,7 @@ public class Game {
         for (int y = 0; y < fieldSize - 1; y++)
             for (int x = 0; x < fieldSize - 1; x++) {
                 int numInCoordinate = Objects.requireNonNull(squares.get(new Coordinate(x, y)));
-                // Если снизу или справа от клетки совпадает число, тогда их можно совместить
-                // А значит игра не проиграна
+                // Если снизу или справа от клетки совпадает число, тогда их можно совместить а значит игра не проиграна
                 if (numInCoordinate == Objects.requireNonNull(squares.get(new Coordinate(x, y + 1)))
                         || numInCoordinate == Objects.requireNonNull(squares.get(new Coordinate(x + 1, y))))
                     return false;

@@ -108,7 +108,6 @@ public class Game {
             break;
         }
         return new Coordinate.Move(square, newSquare.moveBack(vector));
-        // TODO - избавиться от moveBack()
     }
 
     /**

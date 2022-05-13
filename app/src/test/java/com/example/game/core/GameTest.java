@@ -30,14 +30,14 @@ public class GameTest extends TestCase {
      **/
     private void testBuildTraversals(int fieldSize) {
         Game game = new Game(fieldSize);
-        assertEquals(new Pair<>(fromAtoB(0, fieldSize), fromAtoB(0, fieldSize)),
-                game.buildTraversals(Direction.LEFT.getVector()));
-        assertEquals(new Pair<>(fromAtoB(fieldSize, 0), fromAtoB(0, fieldSize)),
-                game.buildTraversals(Direction.RIGHT.getVector()));
-        assertEquals(new Pair<>(fromAtoB(0, fieldSize), fromAtoB(fieldSize, 0)),
-                game.buildTraversals(Direction.DOWN.getVector()));
-        assertEquals(new Pair<>(fromAtoB(0, fieldSize), fromAtoB(0, fieldSize)),
-                game.buildTraversals(Direction.UP.getVector()));
+        assertEquals(fromAtoB(0, fieldSize), game.buildTraversals(Direction.LEFT.getVector().x));
+        assertEquals(fromAtoB(0, fieldSize), game.buildTraversals(Direction.LEFT.getVector().y));
+        assertEquals(fromAtoB(fieldSize, 0), game.buildTraversals(Direction.RIGHT.getVector().x));
+        assertEquals(fromAtoB(0, fieldSize), game.buildTraversals(Direction.RIGHT.getVector().y));
+        assertEquals(fromAtoB(0, fieldSize), game.buildTraversals(Direction.DOWN.getVector().x));
+        assertEquals(fromAtoB(fieldSize, 0), game.buildTraversals(Direction.DOWN.getVector().y));
+        assertEquals(fromAtoB(0, fieldSize), game.buildTraversals(Direction.UP.getVector().x));
+        assertEquals(fromAtoB(0, fieldSize), game.buildTraversals(Direction.UP.getVector().y));
     }
 
     // Проверка, что функция возращает корректные рельсы на разных размерах поля
@@ -198,9 +198,9 @@ public class GameTest extends TestCase {
             }
         }
         assertTrue(game.gameIsLost());
-        game.removeSquare(new Coordinate(0,0));
+        game.removeSquare(new Coordinate(0, 0));
         assertFalse(game.gameIsLost());
-        game.setSquare(new Coordinate(0,0),4);
+        game.setSquare(new Coordinate(0, 0), 4);
         assertFalse(game.gameIsLost());
     }
 }

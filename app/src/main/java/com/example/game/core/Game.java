@@ -39,11 +39,12 @@ public class Game {
     public List<Coordinate.Move> doMove(@NonNull Direction direction) {
         Vector vector = direction.getVector();
         // TODO - заменить на локальную isUsed
-        Pair<List<Integer>, List<Integer>> traversals = buildTraversals(vector);
+        List<Integer> traversalX = buildTraversals(vector.x);
+        List<Integer> traversalY = buildTraversals(vector.y);
         // Все перемещения. ВАЖЕН ПОРЯДОК!
         List<Coordinate.Move> moves = new ArrayList<>();
-        for (int y : traversals.second)
-            for (int x : traversals.first) {
+        for (int y : traversalY)
+            for (int x : traversalX) {
                 // Получаем фигуру на координатах
                 Coordinate square = new Coordinate(x, y);
                 Square number = squares.get(square);
@@ -75,20 +76,16 @@ public class Game {
     /**
      * Возвращает способ обхода поля
      *
-     * @param vector направление обхода
-     * @return Пару из координат по x и y, по которым обходить поле
+     * @param coefficient направление обхода по оси
+     * @return Рельсу (лист) в каком направлении обходить поле
      **/
-    Pair<List<Integer>, List<Integer>> buildTraversals(@NonNull Vector vector) {
-        Pair<List<Integer>, List<Integer>> traversals =
-                new Pair<>(new ArrayList<>(), new ArrayList<>());
-        // TODO - заменить на 1 рельсу
+    List<Integer> buildTraversals(int coefficient) {
+        List<Integer> traversal = new ArrayList<>();
         for (int i = 0; i < fieldSize; i++) {
-            traversals.first.add(i);
-            traversals.second.add(i);
+            traversal.add(i);
         }
-        if (vector.x == 1) Collections.reverse(traversals.first);
-        if (vector.y == 1) Collections.reverse(traversals.second);
-        return traversals;
+        if (coefficient == 1) Collections.reverse(traversal);
+        return traversal;
     }
 
     /**

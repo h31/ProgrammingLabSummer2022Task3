@@ -1,11 +1,14 @@
 package checkers;
 
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+
+import static checkers.Logic.TILE_SIZE;
 
 public class Tile extends Rectangle {
     private Piece piece;
@@ -15,9 +18,9 @@ public class Tile extends Rectangle {
     {
         try {
             imgBlack = new Image(new FileInputStream(
-                    "C:\\ProgrammingLabSummer2022Task3\\src\\main\\resources\\blackTile.jpg"));
+                    "C:\\ProgrammingLabSummer2022Task3\\src\\main\\resources\\blackTile2.jpg"));
             imgWhite = new Image(new FileInputStream(
-                    "C:\\ProgrammingLabSummer2022Task3\\src\\main\\resources\\whiteTile.jpg"));
+                    "C:\\ProgrammingLabSummer2022Task3\\src\\main\\resources\\whiteTile2.jpg"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -36,10 +39,10 @@ public class Tile extends Rectangle {
     }
 
     public Tile(boolean light, int x, int y) {
-        setWidth(Checkers.TILE_SIZE);
-        setHeight(Checkers.TILE_SIZE);
+        setWidth(TILE_SIZE);
+        setHeight(TILE_SIZE);
 
-        relocate(x * Checkers.TILE_SIZE, y * Checkers.TILE_SIZE);
+        relocate(x * TILE_SIZE, y * TILE_SIZE);
         setFill(light ? new ImagePattern(imgWhite): new ImagePattern(imgBlack));
 
     }

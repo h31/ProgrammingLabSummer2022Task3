@@ -26,11 +26,12 @@ import java.util.Objects;
 public class Board extends View {
     // Размер поля
     final static public int BOARD_SIZE = 4;
-    // Пары координат на поле и координат на layout
-    // TODO - переделать map в отдельный метод
-    final private Map<Pair<Integer, Integer>, Pair<Integer, Integer>> map = new HashMap<>();
     // Размер клетки
     private int squareSize;
+    // Отступ от краёв экрана
+    private int indent;
+    // Отсуп между квадратиками
+    private int indentSquares;
 
     public Board(Context context) {
         super(context);
@@ -60,7 +61,8 @@ public class Board extends View {
      * @return координаты на layout по коориданатам на поле
      */
     public Pair<Integer, Integer> getCoordinate(int x, int y) {
-        return map.get(Pair.create(x, y));
+        return Pair.create(indent + indentSquares * (x + 1) + squareSize * x,
+                getHeight() - getWidth() + indentSquares * (y + 1) + squareSize * y);
     }
 
     /**
@@ -73,17 +75,14 @@ public class Board extends View {
     // Функция для рисования самого поля
     @Override
     protected void onDraw(Canvas canvas) {
-        int indent = (int) (getWidth() * 0.04);
+        indent = (int) (getWidth() * 0.04);
         int sizeBoard = getWidth() - indent * 2;
         drawRoundRect(canvas, indent, getHeight() - getWidth(), sizeBoard, "#bbada0");
-        int indentSquares = (int) (sizeBoard * 0.03);
+        indentSquares = (int) (sizeBoard * 0.03);
         squareSize = (sizeBoard - indentSquares * (BOARD_SIZE + 1)) / BOARD_SIZE;
         for (int y = 0; y < BOARD_SIZE; y++)
-            for (int x = 0; x < BOARD_SIZE; x++) {
-                map.put(Pair.create(x, y), Pair.create(indent + indentSquares * (x + 1) + squareSize * x,
-                        getHeight() - getWidth() + indentSquares * (y + 1) + squareSize * y));
-                drawRoundRect(canvas, Objects.requireNonNull(map.get(Pair.create(x, y))).first,
-                        Objects.requireNonNull(map.get(Pair.create(x, y))).second, squareSize, "#cdc1b4");
-            }
+            for (int x = 0; x < BOARD_SIZE; x++)
+                drawRoundRect(canvas, getCoordinate(x, y).first, getCoordinate(x, y).second,
+                        squareSize, "#cdc1b4");
     }
 }

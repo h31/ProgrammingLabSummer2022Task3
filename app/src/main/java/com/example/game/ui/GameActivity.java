@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.game.R;
@@ -36,6 +37,8 @@ public class GameActivity extends AppCompatActivity {
     private View swipeDetector;
     private TextView score;
     private TextView time;
+    private Button quick;
+    private Button restart;
     // Пары {Координата на поле, View на этой координате}
     private final Map<Coordinate, Square> squares = new HashMap<>();
 
@@ -50,29 +53,7 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         setViews();
-        // Устанавливает значение очков на 0
-        score.setText("0");
-        time.setText("00:00");
-        swipesOff();
-        // Ждет пока пройдет анимация появления поля
-        board.postDelayed(() -> {
-            game = new Game(Board.BOARD_SIZE);
-            Log.i(TAG, "Game started");
-            spawnSquare();
-            // Возвращает возможность свайпать после спавна квадрата
-            layout.postDelayed(this::swipesOn, durationAnimations);
-            new Timer().schedule(new TimerTask() {
-                private int timeNow = 0;
-
-                @SuppressLint("DefaultLocale")
-                @Override
-                public void run() {
-                    timeNow++;
-                    if (timeNow > 6000) timeNow = 0;
-                    time.setText(String.format("%02d:%02d", timeNow / 60, timeNow % 60));
-                }
-            }, 1000, 1000);
-        }, durationAnimations);
+        quick.setOnClickListener(view -> finish());
         // Устанавливает считывание свайпов
         swipeDetector.setOnTouchListener(new OnSwipeTouchListener(GameActivity.this) {
             public void onSwipeTop() {
@@ -95,6 +76,29 @@ public class GameActivity extends AppCompatActivity {
                 doIteration(game.doMove(Direction.DOWN));
             }
         });
+
+        // Устанавливает значение очков на 0
+        score.setText("0");
+        time.setText("00:00");
+        // Ждет пока пройдет анимация появления поля
+        board.postDelayed(() -> {
+            game = new Game(Board.BOARD_SIZE);
+            Log.i(TAG, "Game started");
+            spawnSquare();
+            // Возвращает возможность свайпать после спавна квадрата
+            layout.postDelayed(this::swipesOn, durationAnimations);
+            new Timer().schedule(new TimerTask() {
+                private int timeNow = 0;
+
+                @SuppressLint("DefaultLocale")
+                @Override
+                public void run() {
+                    timeNow++;
+                    if (timeNow > 6000) timeNow = 0;
+                    time.setText(String.format("%02d:%02d", timeNow / 60, timeNow % 60));
+                }
+            }, 1000, 1000);
+        }, durationAnimations);
     }
 
     private void doIteration(@NonNull List<Coordinate.Move> moves) {
@@ -230,5 +234,7 @@ public class GameActivity extends AppCompatActivity {
         swipeDetector = findViewById(R.id.swipeDetector);
         score = findViewById(R.id.scoreNumber);
         time = findViewById(R.id.timeNumber);
+        quick = findViewById(R.id.quick);
+        restart = findViewById(R.id.restart);
     }
 }

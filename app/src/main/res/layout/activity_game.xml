@@ -22,6 +22,7 @@
         android:id="@+id/swipeDetector"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -29,6 +30,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
+        android:id="@+id/gamePanel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -46,9 +48,9 @@
                 android:id="@+id/quick"
                 android:layout_width="145sp"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#f75e3e"
+                android:backgroundTint="@color/backgroundButton"
                 android:text="@string/quick"
-                android:textColor="#F9FBE7"
+                android:textColor="@color/textButton"
                 android:textSize="20sp"
                 tools:ignore="TextContrastCheck,DuplicateSpeakableTextCheck" />
 
@@ -61,24 +63,23 @@
                 android:id="@+id/restart"
                 android:layout_width="145sp"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#f75e3e"
+                android:backgroundTint="@color/backgroundButton"
                 android:text="@string/restart"
-                android:textColor="#F9FBE7"
+                android:textColor="@color/textButton"
                 android:textSize="20sp"
                 tools:ignore="TextContrastCheck" />
         </LinearLayout>
 
         <LinearLayout
-            android:paddingTop="10sp"
-            android:id="@+id/gamePanel"
             android:layout_width="378sp"
             android:layout_height="194sp"
+            android:paddingTop="10sp"
             tools:ignore="UselessParent">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#3d3a33"
+                android:background="@color/backgroundMenu"
                 android:orientation="vertical">
 
                 <TextView
@@ -87,7 +88,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/score"
-                    android:textColor="#f9f6f1"
+                    android:textColor="@color/textMenu"
                     android:textSize="40sp" />
 
                 <TextView
@@ -96,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text=""
-                    android:textColor="#f9f6f1"
+                    android:textColor="@color/textMenu"
                     android:textSize="30sp" />
 
             </LinearLayout>
@@ -109,7 +110,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#3d3a33"
+                android:background="@color/backgroundMenu"
                 android:orientation="vertical">
 
                 <TextView
@@ -118,7 +119,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/time"
-                    android:textColor="#f9f6f1"
+                    android:textColor="@color/textMenu"
                     android:textSize="40sp" />
 
                 <TextView
@@ -127,11 +128,30 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text=""
-                    android:textColor="#f9f6f1"
+                    android:textColor="@color/textMenu"
                     android:textSize="30sp" />
             </LinearLayout>
 
         </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/endGame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/endGameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/text"
+            android:textSize="40sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

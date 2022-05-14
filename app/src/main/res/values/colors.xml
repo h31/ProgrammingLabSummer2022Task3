@@ -12,4 +12,8 @@
     <color name="background">#faf8ef</color>
     <color name="board">#bbada0</color>
     <color name="text">#776e65</color>
+    <color name="textMenu">#f9f6f1</color>
+    <color name="backgroundMenu">#3d3a33</color>
+    <color name="textButton">#F9FBE7</color>
+    <color name="backgroundButton">#f75e3e</color>
 </resources>

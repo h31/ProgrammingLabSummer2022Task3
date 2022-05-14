@@ -53,7 +53,10 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         setViews();
-        quick.setOnClickListener(view -> finish());
+        quick.setOnClickListener(view -> {
+            Log.i(TAG, "Quick button pressed");
+            finish();
+        });
         // Устанавливает считывание свайпов
         swipeDetector.setOnTouchListener(new OnSwipeTouchListener(GameActivity.this) {
             public void onSwipeTop() {
@@ -107,6 +110,21 @@ public class GameActivity extends AppCompatActivity {
         // Отключаем возможность движения
         swipesOff();
         // Лист квадратов, которые совместились
+        List<Pair<Square, Square>> mergedSquares = moveSquares(moves);
+        // Запускаем после всех анимаций перемещения
+        layout.postDelayed(() -> mergeSquares(mergedSquares), durationAnimations);
+        updateScore();
+        Log.d(TAG, "\tBoard after move:" + squares + squares.size());
+    }
+
+    /**
+     * Перемещение квадратов на поле
+     *
+     * @param moves лист перемещений
+     * @return лист с квадратами, которые совместились
+     */
+    @NonNull
+    private List<Pair<Square, Square>> moveSquares(@NonNull List<Coordinate.Move> moves) {
         List<Pair<Square, Square>> mergedSquares = new ArrayList<>();
         Log.i(TAG, "\tSquares to merge:");
         for (Coordinate.Move move : moves) {
@@ -132,45 +150,50 @@ public class GameActivity extends AppCompatActivity {
                 squares.put(move.to, squareFrom);
             }
         }
-        // Запускаем после всех анимаций перемещения
+        return mergedSquares;
+    }
+
+    /**
+     * Совмещение квадратов на поле
+     *
+     * @param mergedSquares лист квадратов, которые необходимо совместить
+     */
+    private void mergeSquares(@NonNull List<Pair<Square, Square>> mergedSquares) {
+        int maxNumber = 0;
+        for (Pair<Square, Square> square : mergedSquares) {
+            // Удаляем один из совмещенных квадратов
+            layout.removeView(square.first);
+            // Анимируем второй, чтоб он увеличился и обратно уменьшился
+            Animation scaleAnimation = new ScaleAnimation(1.0f, 1.2f, 1.0f, 1.2f,
+                    square.second.getX() + (float) board.getSquareSize() / 2,
+                    square.second.getY() + (float) board.getSquareSize() / 2);
+            scaleAnimation.setDuration(durationAnimations / 2);
+            scaleAnimation.setRepeatMode(Animation.REVERSE);
+            scaleAnimation.setRepeatCount(1);
+            square.second.startAnimation(scaleAnimation);
+            // Меняем цифру на квадрате
+            int newNumber = square.second.getNumber() * 2;
+            maxNumber = Math.max(maxNumber, newNumber);
+            square.second.setNumber(square.second.getNumber() * 2);
+        }
+        spawnSquare();
+        int finalMaxNumber = maxNumber;
+        // Запускаем после всех объединений
         layout.postDelayed(() -> {
-            int maxNumber = 0;
-            for (Pair<Square, Square> square : mergedSquares) {
-                // Удаляем один из совмещенных квадратов
-                layout.removeView(square.first);
-                // Анимируем второй, чтоб он увеличился и обратно уменьшился
-                Animation scaleAnimation = new ScaleAnimation(1.0f, 1.2f, 1.0f, 1.2f,
-                        square.second.getX() + (float) board.getSquareSize() / 2,
-                        square.second.getY() + (float) board.getSquareSize() / 2);
-                scaleAnimation.setDuration(durationAnimations / 2);
-                scaleAnimation.setRepeatMode(Animation.REVERSE);
-                scaleAnimation.setRepeatCount(1);
-                square.second.startAnimation(scaleAnimation);
-                // Меняем цифру на квадрате
-                int newNumber = square.second.getNumber() * 2;
-                maxNumber = Math.max(maxNumber, newNumber);
-                square.second.setNumber(square.second.getNumber() * 2);
-            }
-            spawnSquare();
-            int finalMaxNumber = maxNumber;
-            layout.postDelayed(() -> {
-                if (finalMaxNumber == 2048) {
-                    // TODO меню с победой
-                    Log.i(TAG, "Win");
-                } else if (game.gameIsLost()) {
-                    // TODO меню с проигрышом
-                    Log.i(TAG, "Lose");
-                } else
-                    swipesOn();
-            }, durationAnimations);
+            if (finalMaxNumber == 2048) {
+                // TODO меню с победой
+                Log.i(TAG, "Win");
+            } else if (game.gameIsLost()) {
+                // TODO меню с проигрышом
+                Log.i(TAG, "Lose");
+            } else
+                swipesOn();
         }, durationAnimations);
-        updateScore();
-        Log.d(TAG, "\tBoard after move:" + squares + squares.size());
     }
 
     /**
      * Создает новую Square с координатами из game.spawnSquare().
-     * Длительность анимации durationAnimations * 6, ожидать анимацию не обязателньно
+     * Длительность анимации durationAnimations * 2, ожидать анимацию не обязателньно
      */
     private void spawnSquare() {
         Square square = new Square(this);
@@ -188,7 +211,7 @@ public class GameActivity extends AppCompatActivity {
         Animation animation = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f,
                 squarePosition.first + (float) board.getSquareSize() / 2,
                 squarePosition.second + (float) board.getSquareSize() / 2);
-        animation.setDuration(durationAnimations * 6);
+        animation.setDuration(durationAnimations * 2);
         animation.setInterpolator(new AccelerateInterpolator());
         // Добавляем квадрат на поле
         layout.addView(square);

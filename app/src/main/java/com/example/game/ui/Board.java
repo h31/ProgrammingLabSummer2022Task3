@@ -15,10 +15,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
 /**
  * View, который рисует поле для игры в самом низу экрана (с поправкой на отступы).
  * Хранит в себе полезную информацию о расположении фигур на поле

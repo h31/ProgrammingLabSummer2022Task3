@@ -28,28 +28,110 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/scoreText"
-        android:layout_width="145sp"
-        android:layout_height="70sp"
-        android:layout_marginTop="16sp"
-        android:text="@string/score"
-        android:textColor="@color/text"
-        android:textSize="50sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.066"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/scoreNumber"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
-        android:textColor="@color/text"
-        android:textSize="50sp"
-        app:layout_constraintBottom_toBottomOf="@+id/scoreText"
-        app:layout_constraintStart_toEndOf="@+id/scoreText"
-        app:layout_constraintTop_toTopOf="@+id/scoreText" />
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="30sp">
+
+            <Button
+                android:id="@+id/quick"
+                android:layout_width="145sp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#f75e3e"
+                android:text="@string/quick"
+                android:textColor="#F9FBE7"
+                android:textSize="20sp"
+                tools:ignore="TextContrastCheck,DuplicateSpeakableTextCheck" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/restart"
+                android:layout_width="145sp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#f75e3e"
+                android:text="@string/restart"
+                android:textColor="#F9FBE7"
+                android:textSize="20sp"
+                tools:ignore="TextContrastCheck" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:paddingTop="10sp"
+            android:id="@+id/gamePanel"
+            android:layout_width="378sp"
+            android:layout_height="194sp"
+            tools:ignore="UselessParent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#3d3a33"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/scoreText"
+                    android:layout_width="145sp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/score"
+                    android:textColor="#f9f6f1"
+                    android:textSize="40sp" />
+
+                <TextView
+                    android:id="@+id/scoreNumber"
+                    android:layout_width="145sp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="#f9f6f1"
+                    android:textSize="30sp" />
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#3d3a33"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/timeText"
+                    android:layout_width="145sp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/time"
+                    android:textColor="#f9f6f1"
+                    android:textSize="40sp" />
+
+                <TextView
+                    android:id="@+id/timeNumber"
+                    android:layout_width="145sp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="#f9f6f1"
+                    android:textSize="30sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

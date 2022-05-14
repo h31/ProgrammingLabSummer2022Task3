@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -33,16 +35,16 @@ public class GameActivity extends AppCompatActivity {
     private Game game;
     private View swipeDetector;
     private TextView score;
-
+    private TextView time;
     // Пары {Координата на поле, View на этой координате}
     private final Map<Coordinate, Square> squares = new HashMap<>();
 
     // Константа для отсчета длительностей анимаций
-    private final int durationAnimations = 50;
+    private final int durationAnimations = 100;
     // Тег для логирования
     private final String TAG = this.getClass().getSimpleName();
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +52,7 @@ public class GameActivity extends AppCompatActivity {
         setViews();
         // Устанавливает значение очков на 0
         score.setText("0");
+        time.setText("00:00");
         swipesOff();
         // Ждет пока пройдет анимация появления поля
         board.postDelayed(() -> {
@@ -58,6 +61,17 @@ public class GameActivity extends AppCompatActivity {
             spawnSquare();
             // Возвращает возможность свайпать после спавна квадрата
             layout.postDelayed(this::swipesOn, durationAnimations);
+            new Timer().schedule(new TimerTask() {
+                private int timeNow = 0;
+
+                @SuppressLint("DefaultLocale")
+                @Override
+                public void run() {
+                    timeNow++;
+                    if (timeNow > 6000) timeNow = 0;
+                    time.setText(String.format("%02d:%02d", timeNow / 60, timeNow % 60));
+                }
+            }, 1000, 1000);
         }, durationAnimations);
         // Устанавливает считывание свайпов
         swipeDetector.setOnTouchListener(new OnSwipeTouchListener(GameActivity.this) {
@@ -84,7 +98,6 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void doIteration(@NonNull List<Coordinate.Move> moves) {
-        // TODO - разбить на 2 метода
         Log.i(TAG, "\tMoves:" + moves);
         if (moves.isEmpty()) return;
         // Отключаем возможность движения
@@ -216,5 +229,6 @@ public class GameActivity extends AppCompatActivity {
         board = findViewById(R.id.board);
         swipeDetector = findViewById(R.id.swipeDetector);
         score = findViewById(R.id.scoreNumber);
+        time = findViewById(R.id.timeNumber);
     }
 }

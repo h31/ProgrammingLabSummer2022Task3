@@ -45,6 +45,7 @@ public class Piece extends StackPane {
         }
     }
 
+
     public PieceType getPieceType() {
         return pieceType;
     }
@@ -155,6 +156,7 @@ public class Piece extends StackPane {
                                 turn = !turn;//Смена хода
                             }
                             changingTurn();
+                            deadPiece(killedPiece);
 
                             break;
                     }
@@ -180,6 +182,7 @@ public class Piece extends StackPane {
                             break;
                     }
                 }
+                eatAlarm();
             } else this.abortMove(); //Если не в пределах доски - сброс
 
         });

@@ -1,11 +1,8 @@
 package checkers;
 
-import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
-import static checkers.Checkers.topText;
+import static checkers.Checkers.*;
+
 
 
 public class Logic {
@@ -39,6 +36,7 @@ public class Logic {
                             canKill(piece, x, y)
                                     && (piece.getPieceType() == Piece.PieceType.WHITE && !turn))) {
                         setKillNeed(true);
+
                         piece.setKiller(true);
 
                     } else piece.setKiller(false);
@@ -159,9 +157,29 @@ public class Logic {
     }
 
     public static void changingTurn(){
-        topText.setText(turn ? "Чёрные ходят" : "Белые ходят");
+        getTopText().setText(turn ? "Чёрные ходят" : "Белые ходят");
 
     }
+
+    public static void deadPiece(Piece piece){
+
+        if ((piece.getPieceType() == Piece.PieceType.WHITE)) {
+            getEatenWhitePieces().getChildren().addAll(piece);
+        } else {
+            getEatenBlackPieces().getChildren().add(piece);
+        }
+    }
+
+    public static void eatAlarm(){
+        if(isKillNeed()){
+            getUnderTopText().setText(turn? getBlackEat().getText() : getWhiteEat().getText());
+        } else {
+            getUnderTopText().setText("");
+        }
+    }
+
+
+
 
 
 

@@ -185,10 +185,7 @@ public class GameTest extends TestCase {
         assertNull(game.spawnSquare());
     }
 
-    // Проверка фунции gameIsLost
-    public void testGameIsLost() {
-        final int fieldSize = 4;
-        Game game = new Game(fieldSize);
+    private void fillFieldForLose(Game game, int fieldSize) {
         int counter;
         for (int y = 0; y < fieldSize; y++) {
             counter = (int) pow(2, y + 1);
@@ -197,10 +194,29 @@ public class GameTest extends TestCase {
                 counter += counter;
             }
         }
+    }
+
+    // Проверка фунции gameIsLost
+    public void testGameIsLostFirs() {
+        final int fieldSize = 4;
+        Game game = new Game(fieldSize);
+        fillFieldForLose(game, fieldSize);
         assertTrue(game.gameIsLost());
         game.removeSquare(new Coordinate(0, 0));
         assertFalse(game.gameIsLost());
         game.setSquare(new Coordinate(0, 0), 4);
+        assertFalse(game.gameIsLost());
+    }
+
+    // Тест чтоб баг не повторился
+    public void testGameIsLostSecond() {
+        final int fieldSize = 4;
+        Game game = new Game(fieldSize);
+        fillFieldForLose(game, fieldSize);
+        assertTrue(game.gameIsLost());
+        game.removeSquare(new Coordinate(fieldSize - 1, fieldSize - 1));
+        game.setSquare(new Coordinate(fieldSize - 1, fieldSize - 1),
+                (int) pow(pow(2, fieldSize - 2), (fieldSize - 1)));
         assertFalse(game.gameIsLost());
     }
 }

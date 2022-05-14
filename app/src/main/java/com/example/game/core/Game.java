@@ -156,12 +156,12 @@ public class Game {
      */
     public boolean gameIsLost() {
         if (squares.size() != fieldSize * fieldSize) return false;
-        for (int y = 0; y < fieldSize - 1; y++)
-            for (int x = 0; x < fieldSize - 1; x++) {
+        for (int y = 0; y < fieldSize; y++)
+            for (int x = 0; x < fieldSize; x++) {
                 int numInCoordinate = Objects.requireNonNull(squares.get(new Coordinate(x, y)));
                 // Если снизу или справа от клетки совпадает число, тогда их можно совместить а значит игра не проиграна
-                if (numInCoordinate == Objects.requireNonNull(squares.get(new Coordinate(x, y + 1)))
-                        || numInCoordinate == Objects.requireNonNull(squares.get(new Coordinate(x + 1, y))))
+                if ((y + 1 < fieldSize && numInCoordinate == Objects.requireNonNull(squares.get(new Coordinate(x, y + 1))))
+                        || (x + 1 < fieldSize && numInCoordinate == Objects.requireNonNull(squares.get(new Coordinate(x + 1, y)))))
                     return false;
             }
         return true;

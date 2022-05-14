@@ -14,6 +14,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.game.R;
@@ -30,16 +31,24 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity {
-
+    // Основные поля
     private ConstraintLayout layout;
     private Board board;
-    private Game game;
     private View swipeDetector;
+    private LinearLayout scoreBoard;
+    // Текст на экране
     private TextView score;
     private TextView time;
+    // Копки
     private Button quick;
     private Button restart;
+    // Таймер
     private Timer timer;
+    // Текст при конце игры
+    private TextView endGameText;
+    // Само игровое поле
+    private Game game;
+    private boolean gameIsEnd;
     // Пары {Координата на поле, View на этой координате}
     private final Map<Coordinate, Square> squares = new HashMap<>();
 
@@ -168,11 +177,11 @@ public class GameActivity extends AppCompatActivity {
         // Запускаем после всех объединений
         layout.postDelayed(() -> {
             if (finalMaxNumber == 2048) {
-                // TODO меню с победой
                 Log.i(TAG, "Win");
+                endGame("You won game!");
             } else if (game.gameIsLost()) {
-                // TODO меню с проигрышом
                 Log.i(TAG, "Lose");
+                endGame("You lost game!");
             } else
                 interactionsOn();
         }, durationAnimations);
@@ -210,10 +219,27 @@ public class GameActivity extends AppCompatActivity {
     }
 
     /**
+     * Опускает вниз score panel
+     *
+     * @param text текст, который вывод над опущенной score panel
+     */
+    private void endGame(String text) {
+        timer.cancel();
+        scoreBoard.animate().y((float) (scoreBoard.getY() + layout.getHeight() * 0.12)).
+                setDuration(durationAnimations * 3);
+        layout.postDelayed(() -> {
+            endGameText.setText(text);
+            gameIsEnd = true;
+            restart.setClickable(true);
+        }, durationAnimations * 3);
+    }
+
+    /**
      * Делает подготовления для старта игры
      */
     @SuppressLint("SetTextI18n")
     private void start() {
+        gameIsEnd = false;
         // Устанавливает значение очков на 0
         score.setText("0");
         // Устанавливает время на 00:00
@@ -240,8 +266,16 @@ public class GameActivity extends AppCompatActivity {
         }, durationAnimations);
     }
 
+    /**
+     * Зануляет необходимые вещи перед рестартом
+     */
     private void restart() {
         interactionsOff();
+        if (gameIsEnd) {
+            scoreBoard.animate().y((float) (scoreBoard.getY() - layout.getHeight() * 0.12)).
+                    setDuration(durationAnimations * 3);
+            endGameText.setText("");
+        }
         for (Map.Entry<Coordinate, Square> i : squares.entrySet())
             layout.removeView(i.getValue());
         squares.clear();
@@ -262,7 +296,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     /**
-     * Включает View, отвечающий за считывание свайпов
+     * Включает View, отвечающий за считывание свайпов. Включает кнопку рестарта.
      */
     private void interactionsOn() {
         restart.setClickable(true);
@@ -270,7 +304,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     /**
-     * Отключает View, отвечающий за считывание свайпов
+     * Отключает View, отвечающий за считывание свайпов. Отключает кнопку рестарта.
      */
     private void interactionsOff() {
         restart.setClickable(false);
@@ -288,5 +322,7 @@ public class GameActivity extends AppCompatActivity {
         time = findViewById(R.id.timeNumber);
         quick = findViewById(R.id.quick);
         restart = findViewById(R.id.restart);
+        scoreBoard = findViewById(R.id.scoreBoard);
+        endGameText = findViewById(R.id.endGameText);
     }
 }

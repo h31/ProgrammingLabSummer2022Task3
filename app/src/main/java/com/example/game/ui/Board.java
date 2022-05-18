@@ -37,6 +37,20 @@ public class Board extends View {
         super(context, attrs);
     }
 
+    // Функция для рисования самого поля
+    @Override
+    protected void onDraw(Canvas canvas) {
+        indent = (int) (getWidth() * 0.04);
+        int sizeBoard = getWidth() - indent * 2;
+        drawRoundRect(canvas, indent, getHeight() - getWidth(), sizeBoard, "#bbada0");
+        indentSquares = (int) (sizeBoard * 0.03);
+        squareSize = (sizeBoard - indentSquares * (BOARD_SIZE + 1)) / BOARD_SIZE;
+        for (int y = 0; y < BOARD_SIZE; y++)
+            for (int x = 0; x < BOARD_SIZE; x++)
+                drawRoundRect(canvas, getCoordinate(x, y).first, getCoordinate(x, y).second,
+                        squareSize, "#cdc1b4");
+    }
+
     /**
      * Рисует квадрат с закругленными краями
      *
@@ -68,17 +82,7 @@ public class Board extends View {
         return squareSize;
     }
 
-    // Функция для рисования самого поля
-    @Override
-    protected void onDraw(Canvas canvas) {
-        indent = (int) (getWidth() * 0.04);
-        int sizeBoard = getWidth() - indent * 2;
-        drawRoundRect(canvas, indent, getHeight() - getWidth(), sizeBoard, "#bbada0");
-        indentSquares = (int) (sizeBoard * 0.03);
-        squareSize = (sizeBoard - indentSquares * (BOARD_SIZE + 1)) / BOARD_SIZE;
-        for (int y = 0; y < BOARD_SIZE; y++)
-            for (int x = 0; x < BOARD_SIZE; x++)
-                drawRoundRect(canvas, getCoordinate(x, y).first, getCoordinate(x, y).second,
-                        squareSize, "#cdc1b4");
+    public int getYOfBoard() {
+        return getHeight() - getWidth();
     }
 }

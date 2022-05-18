@@ -224,10 +224,10 @@ public class GameActivity extends AppCompatActivity {
      * @param text текст, который вывод над опущенной score panel
      */
     private void endGame(String text) {
-        // TODO сделать нормальное маштабирование
         timer.cancel();
-        scoreBoard.animate().y((float) (scoreBoard.getY() + layout.getHeight() * 0.12)).
-                setDuration(durationAnimations * 3);
+        scoreBoard.animate()
+                .y((float) (board.getYOfBoard() - scoreBoard.getHeight() - layout.getHeight() * 0.02))
+                .setDuration(durationAnimations * 3);
         layout.postDelayed(() -> {
             endGameText.setText(text);
             gameIsEnd = true;

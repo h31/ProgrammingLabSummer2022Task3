@@ -1,14 +1,13 @@
-package checkers;
+package checkers.ui;
 
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import static checkers.Logic.TILE_SIZE;
+import static checkers.logic.Logic.TILE_SIZE;
 
 public class Tile extends Rectangle {
     private Piece piece;

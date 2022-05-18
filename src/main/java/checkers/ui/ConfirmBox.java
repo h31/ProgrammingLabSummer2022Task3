@@ -1,4 +1,4 @@
-package checkers;
+package checkers.ui;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

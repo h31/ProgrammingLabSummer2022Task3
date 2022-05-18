@@ -1,4 +1,6 @@
-package checkers;
+package checkers.logic;
+
+import checkers.ui.Piece;
 
 public class MoveResult {
 

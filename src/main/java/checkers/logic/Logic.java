@@ -1,25 +1,71 @@
-package checkers;
+package checkers.logic;
 
 
-import static checkers.Checkers.*;
+import checkers.ui.Piece;
+import checkers.ui.Tile;
 
+import java.util.ArrayList;
+import java.util.Stack;
+
+import static checkers.ui.ContentCreator.*;
 
 
 public class Logic {
     public static final int TILE_SIZE = 75;
     public static final int WIDTH = 8;
     public static final int HEIGHT = 8;
-    public static final Tile[][] board = new Tile[WIDTH][HEIGHT];
+    private static Tile[][] board = new Tile[WIDTH][HEIGHT];
+    //    private static final Stack<Board> history = new Stack<>(); //История состояний доски
+    private static final Stack<Step> stepsStack = new Stack<>();
+
+    private static Stack<Piece> eatenPieces = new Stack<>();
+
     public static boolean turn = false; // False - ход белых, True - ход чёрных
     private static boolean killNeed = false; //Какая-то из шашек должна съесть ещё
+    private static Piece lastKiller;
+    private static int killCount;
 
-    //Следующий ход должен быть KILL
+    public static Stack<Piece> getEatenPieces() {
+        return eatenPieces;
+    }
+
+    public static Tile[][] getBoard() {
+        return board;
+    }
+
+    public static void setBoard(Tile[][] board) {
+        Logic.board = board;
+    }
+
+//    public static Stack<Board> getHistory() {
+//        return history;
+//    }
 
 
+    public static Stack<Step> getStepsStack() {
+        return stepsStack;
+    }
 
-    public static void setKillNeed(boolean b){
+    public static Piece getLastKiller() {
+        return lastKiller;
+    }
+
+    public static int getKillCount() {
+        return killCount;
+    }
+
+    public static void setKillCount(int killCount) {
+        Logic.killCount = killCount;
+    }
+
+    public static void setLastKiller(Piece lastKiller) {
+        Logic.lastKiller = lastKiller;
+    }
+
+    public static void setKillNeed(boolean b) {
         killNeed = b;
     }
+
     public static boolean isKillNeed() {
         return killNeed;
     }
@@ -75,6 +121,12 @@ public class Logic {
                 return new MoveResult(MoveType.NONE); //Неправильное движения 1) На клетке стоит шашка;
                 // 2) Выбрана светлая клетка; 3) и 4) Несоблюдение очереди. Ходит другая сторона
             }
+
+            if (getKillCount() > 0 && getLastKiller() != piece) { //Если нужны убийства подряд и совершала их другая шашка
+                return new MoveResult(MoveType.NONE);
+            }
+
+
             int x0 = toBoard(piece.getOldX());
             int y0 = toBoard(piece.getOldY());
 
@@ -103,6 +155,10 @@ public class Logic {
                     || !turn && piece.getPieceType() == Piece.PieceType.BLACK) {
                 return new MoveResult(MoveType.NONE); //Неправильное движения 1) На клетке стоит шашка;
                 // 2) Выбрана светлая клетка; 3) и 4) Несоблюдение очереди. Ходит другая сторона
+            }
+
+            if (getKillCount() > 0 && getLastKiller() != piece) { //Если нужны убийства подряд и совершала их другая шашка
+                return new MoveResult(MoveType.NONE);
             }
             int x0 = toBoard(piece.getOldX());
             int y0 = toBoard(piece.getOldY());
@@ -152,36 +208,31 @@ public class Logic {
 
     }
 
-    static int toBoard(double pixel) { //Перевод координаты приложения в координаты поля
+    public static int toBoard(double pixel) { //Перевод координаты приложения в координаты поля
         return (int) (pixel + TILE_SIZE / 2) / TILE_SIZE;
     }
 
-    public static void changingTurn(){
+    public static void changingTurn() {
         getTopText().setText(turn ? "Чёрные ходят" : "Белые ходят");
 
     }
 
-    public static void deadPiece(Piece piece){
+    public static void deadPiece(Piece piece) {
 
         if ((piece.getPieceType() == Piece.PieceType.WHITE)) {
-            getEatenWhitePieces().getChildren().addAll(piece);
+            getRight().getChildren().add(piece);
         } else {
-            getEatenBlackPieces().getChildren().add(piece);
+            getLeft().getChildren().add(piece);
         }
     }
 
-    public static void eatAlarm(){
-        if(isKillNeed()){
-            getUnderTopText().setText(turn? getBlackEat().getText() : getWhiteEat().getText());
+    public static void eatAlarm() {
+        if (isKillNeed()) {
+            getUnderTopText().setText(turn ? getBlackEat().getText() : getWhiteEat().getText());
         } else {
             getUnderTopText().setText("");
         }
     }
-
-
-
-
-
 
 
 }

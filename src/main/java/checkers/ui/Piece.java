@@ -12,6 +12,8 @@ import java.io.FileNotFoundException;
 
 import static checkers.logic.Listeners.*;
 import static checkers.logic.Logic.*;
+import static checkers.ui.ContentCreator.getLeft;
+import static checkers.ui.ContentCreator.getRight;
 
 public class Piece extends StackPane {
     private final PieceType pieceType;
@@ -132,6 +134,14 @@ public class Piece extends StackPane {
 
     public void abortMove() { //Отмена движения
         relocate(oldX, oldY);
+    }
+    public static void deadPiece(Piece piece) {
+
+        if ((piece.getPieceType() == Piece.PieceType.WHITE)) {
+            getRight().getChildren().add(piece);
+        } else {
+            getLeft().getChildren().add(piece);
+        }
     }
 
 

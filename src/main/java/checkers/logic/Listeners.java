@@ -1,23 +1,21 @@
 package checkers.logic;
 
-import checkers.Checkers;
-import checkers.ui.ContentCreator;
+
 import checkers.ui.Piece;
 import checkers.ui.StepBackDrawer;
-import checkers.ui.Tile;
+
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 
-import java.util.Arrays;
-
 import static checkers.logic.Logic.*;
-import static checkers.logic.Logic.eatAlarm;
+
 import static checkers.ui.ConfirmBox.confirmation;
 import static checkers.ui.ContentCreator.*;
-import static java.util.Arrays.copyOf;
+import static checkers.ui.Piece.deadPiece;
+
 
 public class Listeners{
 
@@ -67,6 +65,7 @@ public class Listeners{
                         break;
 
                     case KILL: //Перешли через шашку
+//                        getStepSound().play();
                         piece.move(newX, newY);
                         getBoard()[x0][y0].setPiece(null); // Очищаем предыдущую клетку
                         getBoard()[newX][newY].setPiece(piece); //Ставим на новую
@@ -90,8 +89,7 @@ public class Listeners{
                             // появляется флаг killer и ход не переходит
                             piece.setKiller(true);
                             setKillCount(getKillCount() + 1);
-                            getEatenPieces().push(killedPiece);
-                            System.out.println(getEatenPieces().size());
+
 
                         } else {
                             setKillNeed(false);
@@ -143,21 +141,35 @@ public class Listeners{
 
     public static EventHandler<MouseEvent> stepBack() {
         return e -> {
-            Step step = getStepsStack().pop();
+            if (getStepsStack().size()!=0) {
+                Step step = getStepsStack().pop();
 
-//            //Удаляем последнее состояние
-//            getHistory().pop();
-//            setBoard(getHistory().peek().getBoardState()); //Достаю состояние доски и присваиваю как текущее
-//            turn = !turn; //Каждый ход - ход разных команд
-//            //Передаем предыдущее состояние доски в отрисовщик
-//            boardPainter(getHistory().peek(), false);
-//            System.out.println(getHistory().size());
-            switch (step.getMoveResult().getMoveType()){
-                case NORMAL:
-                    StepBackDrawer.normalMove(step.getX(), step.getY(), step.getPiece());
-                    break;
-                case KILL:
-                    StepBackDrawer.killMove(step.getX(), step.getY(), step.getMoveResult());
+                switch (step.getMoveResult().getMoveType()) {
+                    case NORMAL:
+                        //Очищаем клетку
+                        getBoard()[toBoard(step.getPiece().getOldX())][toBoard(step.getPiece().getOldY())].setPiece(null);
+                        turn = !turn;
+                        StepBackDrawer.normalMove(step.getX(), step.getY(), step.getPiece());
+                        setKillNeed(false);
+                        break;
+                    case KILL:
+
+                        Piece killedPiece = step.getMoveResult().getPiece();
+                        //Восстанавливаем убитого
+                        getBoard()[toBoard(killedPiece.getOldX())][toBoard(killedPiece.getOldY())].setPiece(killedPiece);
+                        //Очищаем клетку занимаемую убившим
+                        getBoard()[toBoard(getLastKiller().getOldX())][toBoard(getLastKiller().getOldY())].setPiece(null);
+                        //Возвращаем шашку в предыдущую клетку
+                        getBoard()[step.getX()][step.getY()].setPiece(getLastKiller());
+
+                        turn = ((getKillCount() > 0) == turn); //Смена хода, если шашка ела подряд и не завершила,
+                        // то не меняем ход
+                        setKillNeed(true);
+                        setKillCount(getKillCount()>0 ? getKillCount() -1 : 0);
+
+                        StepBackDrawer.killMove(step.getX(), step.getY(), step.getMoveResult());
+
+                }
             }
 
         };
@@ -168,7 +180,7 @@ public class Listeners{
         return e -> {
             String message = turn ? "\nПоражение чёрных" : "\n Поражение белых";
             if (confirmation("Surrender", "Вы точно хотите сдаться?" + message)) {
-                boardPainter(null, true);
+                boardPainter();
                 changingTurn();
             }
 

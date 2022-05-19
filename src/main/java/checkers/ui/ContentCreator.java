@@ -1,6 +1,5 @@
 package checkers.ui;
 
-import checkers.logic.Board;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -15,6 +14,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
 import javafx.scene.text.Font;
@@ -22,7 +23,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-import javax.swing.*;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -38,6 +39,8 @@ public class ContentCreator {
     private static final Group tileGroup = new Group();//Сюда будут наноситься клетки
     private static final Group pieceGroup = new Group(); //Сюда будут наноситься шашки
     private static final Pane root = new Pane();
+    private static Media sound;
+    private static MediaPlayer stepSound;
 
     private static final VBox top = new VBox();
     private static final Label topText = new Label(), underTopText = new Label(); //Текст для хода
@@ -47,7 +50,7 @@ public class ContentCreator {
             blackEat = new Text("Чёрные должны есть");
 
     private static final Button undoButton = new Button(), surrenderButton = new Button();
-    private static Image imgUndoButton;
+    private static Image imgUndoButton, icon;
     private static final HBox bottom = new HBox(surrenderButton, undoButton);
 
 
@@ -62,13 +65,15 @@ public class ContentCreator {
         return right;
     }
 
-
-
-
-
+    public static MediaPlayer getStepSound() {
+        return stepSound;
+    }
 
     static {
         try {
+//            sound = new Media("C:\\ProgrammingLabSummer2022Task3\\src\\main\\resources\\sound.mp3");
+//            stepSound = new MediaPlayer(sound);
+            icon = new Image("C:\\ProgrammingLabSummer2022Task3\\src\\main\\resources\\icon.png");
             imgUndoButton = new Image(new FileInputStream("C:\\ProgrammingLabSummer2022Task3\\src\\main\\resources\\undo.png"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -104,7 +109,9 @@ public class ContentCreator {
         return tileGroup;
     }
 
-
+    public static Image getIcon() {
+        return icon;
+    }
 
     public static Image getImgUndoButton() {
         return imgUndoButton;
@@ -115,6 +122,7 @@ public class ContentCreator {
         bp.setStyle("-fx-background-color: #3B4248");
 
 
+//        stepSound.setVolume(0.5);
         turn = false; //Чтобы при перезапуске белые ходили всегда первыми
         changingTurn();
         topText.setFont(Font.font("Arial", FontWeight.BOLD, 36));
@@ -169,7 +177,7 @@ public class ContentCreator {
         surrenderButton.addEventHandler(MouseEvent.MOUSE_CLICKED, surrender());
 
 
-        boardPainter(null, true);
+        boardPainter();
         root.getChildren().addAll(tileGroup, pieceGroup);//Само поле с шашками
 
         bp.setCenter(root);
@@ -182,74 +190,51 @@ public class ContentCreator {
     }
 
 
-    public static void boardPainter(Board previousBoard, boolean defaultBoard) {
-        if (defaultBoard) { //Случай начальной доски
-            getPieceGroup().getChildren().clear();
-            getTileGroup().getChildren().clear();
+    public static void boardPainter() {
+        //Отрисовка начальной доски
+        getPieceGroup().getChildren().clear();
+        getTileGroup().getChildren().clear();
 
-            setKillNeed(false);
-            getUnderTopText().setText("");
-            getLeft().getChildren().clear();
-            getRight().getChildren().clear();
+        setKillNeed(false);
+        getUnderTopText().setText("");
+        getLeft().getChildren().clear();
+        getRight().getChildren().clear();
 
-            turn = false;
-            for (int x = 0; x < WIDTH; x++) {
-                for (int y = 0; y < HEIGHT; y++) { //Строю начальное поле
-                    Tile tile = new Tile((x + y) % 2 == 0, x, y);
-                    //Закрашиваю клетки нужным цветом
-                    getBoard()[x][y] = tile;
+        turn = false;
+        for (int x = 0; x < WIDTH; x++) {
+            for (int y = 0; y < HEIGHT; y++) { //Строю начальное поле
+                Tile tile = new Tile((x + y) % 2 == 0, x, y);
+                //Закрашиваю клетки нужным цветом
+                getBoard()[x][y] = tile;
 
-                    tileGroup.getChildren().add(tile);
+                tileGroup.getChildren().add(tile);
 
-                    Piece piece = null;
+                Piece piece = null;
 
-                    if (y <= 2 && (x + y) % 2 != 0) {
-                        piece = new Piece(Piece.PieceType.BLACK, x, y);
-                    }
-
-                    if (y >= 5 && (x + y) % 2 != 0) {
-                        piece = new Piece(Piece.PieceType.WHITE, x, y);
-                    }
-
-                    if (piece != null) {
-                        tile.setPiece(piece);
-                        pieceGroup.getChildren().add(piece);
-                    }
-
+                if (y <= 2 && (x + y) % 2 != 0) {
+                    piece = new Piece(Piece.PieceType.BLACK, x, y);
                 }
-            }
-        } else { //Когда сделали "шаг назад"
-//
-//                getPieceGroup().getChildren().clear(); //Очищаю шашки
-//
-//                for (int i = 0; i < previousBoard.getKillCount(); i++) {
-//                    if (turn){
-//                        getRight().getChildren().remove(0,1);
-//                        System.out.println(getEatenPieces().peek());
-//                    } else{
-//                        getLeft().getChildren().remove(0,1);
-//                        System.out.println(getEatenPieces().peek());
-//                    }
-//                    getEatenPieces().pop();
-//                }
-//                changingTurn(); //Отображаю текст о том, кто ходит
-//
-//                for (int x = 0; x < WIDTH; x++) {
-//                    for (int y = 0; y < HEIGHT; y++) { //Пробегаюсь по клеткам доски, ищу шашки
-//
-//                        Piece piece;
-//                        if (getBoard()[x][y].hasPiece()) {
-//
-//                            piece = getBoard()[x][y].getPiece();
-//
-//                            System.out.println(piece.getPieceType().toString() + " " + x + " " + y);
-//                            getPieceGroup().getChildren().add(piece);
-//
-//                        }
-//                    }
-//                }
-//
 
+                if (y >= 5 && (x + y) % 2 != 0) {
+                    piece = new Piece(Piece.PieceType.WHITE, x, y);
+                }
+
+                if (piece != null) {
+                    tile.setPiece(piece);
+                    pieceGroup.getChildren().add(piece);
+                }
+
+            }
         }
     }
+
+
+    public static void eatAlarm() {
+        if (isKillNeed()) {
+            getUnderTopText().setText(turn ? getBlackEat().getText() : getWhiteEat().getText());
+        } else {
+            getUnderTopText().setText("");
+        }
+    }
+
 }

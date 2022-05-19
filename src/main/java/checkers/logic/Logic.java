@@ -15,19 +15,16 @@ public class Logic {
     public static final int WIDTH = 8;
     public static final int HEIGHT = 8;
     private static Tile[][] board = new Tile[WIDTH][HEIGHT];
-    //    private static final Stack<Board> history = new Stack<>(); //История состояний доски
+
     private static final Stack<Step> stepsStack = new Stack<>();
 
-    private static Stack<Piece> eatenPieces = new Stack<>();
+
 
     public static boolean turn = false; // False - ход белых, True - ход чёрных
     private static boolean killNeed = false; //Какая-то из шашек должна съесть ещё
     private static Piece lastKiller;
     private static int killCount;
 
-    public static Stack<Piece> getEatenPieces() {
-        return eatenPieces;
-    }
 
     public static Tile[][] getBoard() {
         return board;
@@ -37,9 +34,7 @@ public class Logic {
         Logic.board = board;
     }
 
-//    public static Stack<Board> getHistory() {
-//        return history;
-//    }
+
 
 
     public static Stack<Step> getStepsStack() {
@@ -217,22 +212,7 @@ public class Logic {
 
     }
 
-    public static void deadPiece(Piece piece) {
 
-        if ((piece.getPieceType() == Piece.PieceType.WHITE)) {
-            getRight().getChildren().add(piece);
-        } else {
-            getLeft().getChildren().add(piece);
-        }
-    }
-
-    public static void eatAlarm() {
-        if (isKillNeed()) {
-            getUnderTopText().setText(turn ? getBlackEat().getText() : getWhiteEat().getText());
-        } else {
-            getUnderTopText().setText("");
-        }
-    }
 
 
 }

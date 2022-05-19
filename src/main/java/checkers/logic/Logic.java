@@ -22,7 +22,7 @@ public class Logic {
 
     public static boolean turn = false; // False - ход белых, True - ход чёрных
     private static boolean killNeed = false; //Какая-то из шашек должна съесть ещё
-    private static Piece lastKiller;
+
     private static int killCount;
 
 
@@ -41,9 +41,7 @@ public class Logic {
         return stepsStack;
     }
 
-    public static Piece getLastKiller() {
-        return lastKiller;
-    }
+
 
     public static int getKillCount() {
         return killCount;
@@ -53,9 +51,6 @@ public class Logic {
         Logic.killCount = killCount;
     }
 
-    public static void setLastKiller(Piece lastKiller) {
-        Logic.lastKiller = lastKiller;
-    }
 
     public static void setKillNeed(boolean b) {
         killNeed = b;
@@ -117,7 +112,7 @@ public class Logic {
                 // 2) Выбрана светлая клетка; 3) и 4) Несоблюдение очереди. Ходит другая сторона
             }
 
-            if (getKillCount() > 0 && getLastKiller() != piece) { //Если нужны убийства подряд и совершала их другая шашка
+            if (getKillCount() > 0 && stepsStack.peek().getPiece() != piece) { //Если нужны убийства подряд и совершала их другая шашка
                 return new MoveResult(MoveType.NONE);
             }
 
@@ -152,7 +147,7 @@ public class Logic {
                 // 2) Выбрана светлая клетка; 3) и 4) Несоблюдение очереди. Ходит другая сторона
             }
 
-            if (getKillCount() > 0 && getLastKiller() != piece) { //Если нужны убийства подряд и совершала их другая шашка
+            if (getKillCount() > 0 && stepsStack.peek().getPiece() != piece) { //Если нужны убийства подряд и совершала их другая шашка
                 return new MoveResult(MoveType.NONE);
             }
             int x0 = toBoard(piece.getOldX());

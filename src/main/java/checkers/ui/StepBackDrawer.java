@@ -1,22 +1,30 @@
 package checkers.ui;
 
 import checkers.logic.MoveResult;
+import checkers.logic.Step;
 
 import static checkers.logic.Logic.*;
+import static checkers.ui.ContentCreator.getUnderTopText;
 
 public class StepBackDrawer {
 
 
-    public static void normalMove(int x, int y, Piece piece){
-        piece.move(x,y);
+    public static void normalMove(Step step){
         changingTurn();
-
+        getUnderTopText().setText("");
+        step.getPiece().move(step.getX(),step.getY());
+        if(step.getPiece().isCrownedLastTurn()) {
+            step.getPiece().getCrownImgView().setVisible(false);
+        }
     }
 
-    public static void killMove(int x, int y, MoveResult moveResult){
-        Piece killedPiece = moveResult.getPiece();
+    public static void killMove(Step step){
+        changingTurn();
+        getUnderTopText().setText("");
+        Piece killedPiece = step.getMoveResult().getPiece();
+        Piece killerPiece = step.getPiece();
 
-        getLastKiller().move(x,y);
+        killerPiece.move(step.getX(), step.getY());
 
         //Подгоняем воскресшую клетку на позицию
         killedPiece.move(toBoard(killedPiece.getOldX()),toBoard(killedPiece.getOldY()));
@@ -26,6 +34,9 @@ public class StepBackDrawer {
         } else{
             ContentCreator.getRight().getChildren().remove(killedPiece);
         }
-        changingTurn();
+        if(step.getMoveResult().WasCrowned()) {
+            killerPiece.getCrownImgView().setVisible(false);
+        }
+
     }
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="terraIncognita.Controllers.GameWindowController">
+    <rowConstraints>
+        <RowConstraints maxHeight="100.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+   <children>
+      <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" smooth="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.halignment="CENTER" GridPane.rowSpan="2" GridPane.valignment="CENTER">
+         <image>
+            <Image url="@../img/mateo-henneron-decors.jpg" />
+         </image>
+      </ImageView>
+       <Label alignment="CENTER" text="Player 1" textAlignment="CENTER" textFill="#171c02" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+           <font>
+               <Font name="Baskerville Old Face" size="42.0" />
+           </font>
+       </Label>
+      <GridPane fx:id="deskGrid" alignment="CENTER" hgap="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" minWidth="200.0" prefHeight="200.0" prefWidth="200.0" vgap="1.0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+         <GridPane.margin>
+            <Insets bottom="15.0" left="15.0" right="15.0" />
+         </GridPane.margin></GridPane>
+   </children>
+   <columnConstraints>
+      <ColumnConstraints />
+   </columnConstraints>
+</GridPane>

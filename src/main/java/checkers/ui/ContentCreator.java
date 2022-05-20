@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -22,10 +23,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+
 
 import static checkers.logic.Listeners.stepBack;
 import static checkers.logic.Listeners.surrender;
@@ -34,13 +37,13 @@ import static javafx.scene.layout.BorderPane.setMargin;
 
 public class ContentCreator {
 
+    private static final Stage window = new Stage();
     private static final BorderPane bp = new BorderPane();
 
     private static final Group tileGroup = new Group();//Сюда будут наноситься клетки
     private static final Group pieceGroup = new Group(); //Сюда будут наноситься шашки
     private static final Pane root = new Pane();
-    private static Media sound;
-    private static MediaPlayer stepSound;
+
 
     private static final VBox top = new VBox();
     private static final Label topText = new Label(), underTopText = new Label(); //Текст для хода
@@ -65,16 +68,14 @@ public class ContentCreator {
         return right;
     }
 
-    public static MediaPlayer getStepSound() {
-        return stepSound;
-    }
+
 
     static {
         try {
 //            sound = new Media("C:\\ProgrammingLabSummer2022Task3\\src\\main\\resources\\sound.mp3");
 //            stepSound = new MediaPlayer(sound);
-            icon = new Image("C:\\ProgrammingLabSummer2022Task3\\src\\main\\resources\\icon.png");
-            imgUndoButton = new Image(new FileInputStream("C:\\ProgrammingLabSummer2022Task3\\src\\main\\resources\\undo.png"));
+            icon = new Image("C:\\ProgrammingLabSummer2022Task3\\input\\icon.png");
+            imgUndoButton = new Image(new FileInputStream("C:\\ProgrammingLabSummer2022Task3\\input\\undo.png"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -117,12 +118,16 @@ public class ContentCreator {
         return imgUndoButton;
     }
 
-    public Parent createContent() {
+    public static BorderPane getBp() {
+        return bp;
+    }
+
+    public static void createContent() {
 
         bp.setStyle("-fx-background-color: #3B4248");
 
 
-//        stepSound.setVolume(0.5);
+
         turn = false; //Чтобы при перезапуске белые ходили всегда первыми
         changingTurn();
         topText.setFont(Font.font("Arial", FontWeight.BOLD, 36));
@@ -186,7 +191,12 @@ public class ContentCreator {
         undoButton.addEventHandler(MouseEvent.MOUSE_CLICKED, stepBack());
 
 
-        return bp;
+
+        window.setResizable(false);
+        window.setTitle("Checkers");
+        window.getIcons().add(getIcon());
+        window.setScene(new Scene(bp));
+        window.show();
     }
 
 

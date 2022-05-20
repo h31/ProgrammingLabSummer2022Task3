@@ -13,7 +13,7 @@ public class StepBackDrawer {
         changingTurn();
         getUnderTopText().setText("");
         step.getPiece().move(step.getX(),step.getY());
-        if(step.getPiece().isCrownedLastTurn()) {
+        if(step.getMoveResult().WasCrowned()) {
             step.getPiece().getCrownImgView().setVisible(false);
         }
     }

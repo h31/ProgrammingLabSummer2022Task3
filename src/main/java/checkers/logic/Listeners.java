@@ -1,6 +1,7 @@
 package checkers.logic;
 
 
+import checkers.ui.ContentCreator;
 import checkers.ui.Piece;
 import checkers.ui.StepBackDrawer;
 
@@ -8,6 +9,7 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+
 
 
 import static checkers.logic.Logic.*;
@@ -137,6 +139,7 @@ public class Listeners{
                             piece.setCrownedLastTurn(true);
                             piece.setCrown(true);
                             piece.getCrownImgView().setVisible(true); //Стала дамкой = видно корону
+                            result.setWasCrowned(true);
                         }
                         //Запоминаем расположение
                         getStepsStack().push(new Step(x0, y0, result, piece));
@@ -216,6 +219,13 @@ public class Listeners{
                 changingTurn();
                 getStepsStack().clear();
             }
+        };
+    }
+
+    public static EventHandler<MouseEvent> start(Stage stage){
+        return e ->{
+          ContentCreator.createContent();
+          stage.close();
         };
     }
 

@@ -68,13 +68,12 @@ public class Listeners {
 
                         case KILL: //Перешли через шашку
 
-                            //Если шашка уже дамка до проверки, то она стала ей не в последнем ходу
-                            if (piece.isCrown()) piece.setCrownedLastTurn(false);
+
 
                             //Следим за превращением в дамку
                             if (piece.getPieceType() == Piece.PieceType.BLACK && newY == (HEIGHT - 1) && !piece.isCrown() ||
                                     piece.getPieceType() == Piece.PieceType.WHITE && newY == 0 && !piece.isCrown()) {
-                                piece.setCrownedLastTurn(true);
+
                                 piece.setCrown(true);
                                 piece.getCrownImgView().setVisible(true); //Стала дамкой = видно корону
                                 //Передаем результату инф-ию, было ли в этом ходу перевоплощение в шашку
@@ -130,13 +129,12 @@ public class Listeners {
                             piece.abortMove();
                             break;
                         case NORMAL:
-                            //Если шашка уже дамка до проверки, то она стала ей не в последнем ходу
-                            if (piece.isCrown()) piece.setCrownedLastTurn(false);
+
 
                             //Следим за превращением в дамку
                             if (piece.getPieceType() == Piece.PieceType.BLACK && newY == (HEIGHT - 1) && !piece.isCrown() ||
                                     piece.getPieceType() == Piece.PieceType.WHITE && newY == 0 && !piece.isCrown()) {
-                                piece.setCrownedLastTurn(true);
+
                                 piece.setCrown(true);
                                 piece.getCrownImgView().setVisible(true); //Стала дамкой = видно корону
                                 result.setWasCrowned(true);

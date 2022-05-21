@@ -22,7 +22,7 @@ public class Piece extends StackPane {
     private double oldX, oldY;
     private boolean killer;
     private boolean crown;
-    private boolean crownedLastTurn;
+
     private final ImageView crownImgView = new ImageView(imgCrown);
 
 
@@ -53,9 +53,6 @@ public class Piece extends StackPane {
 
 
 
-    public void setCrownedLastTurn(boolean crownedLastTurn) {
-        this.crownedLastTurn = crownedLastTurn;
-    }
 
     public ImageView getCrownImgView() {
         return crownImgView;

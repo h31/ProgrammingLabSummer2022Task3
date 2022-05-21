@@ -1,17 +1,32 @@
 package terraIncognita.Model;
 
+import terraIncognita.Model.Desk.Desk;
+import terraIncognita.Model.Tiles.StartTile;
+import terraIncognita.Utils.Point;
+
 public class Player {
 
-    private int x, y;
+    private Point position;
     private Desk desk;
+    private String name;
 
-    public Player(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public Player(String name, Point startPosition, int vDeskSize, int hDeskSize) {
+        position = new Point(startPosition);
+        desk = new Desk(vDeskSize, hDeskSize, true);
+        this.name = name;
+        desk.insertTile(new StartTile(), startPosition);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Desk getDesk() {
+        return desk;
     }
 
     public void move(MovementDirection movementDirection) {
-        //TODO
+        Point expectedPosition = movementDirection.move(position);
     }
 
 }

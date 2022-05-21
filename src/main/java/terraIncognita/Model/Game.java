@@ -1,19 +1,22 @@
 package terraIncognita.Model;
 
 import terraIncognita.Main;
+import terraIncognita.Model.Desk.Desk;
+import terraIncognita.Model.Desk.Labyrinth;
 import terraIncognita.Model.Tiles.Tile;
+import terraIncognita.Utils.Point;
 import terraIncognita.Utils.Utils;
 
 public class Game {
 
     private static final int MIN_PLAYER_AMOUNT = 2;
     private static final int MAX_PLAYER_AMOUNT = 4;
+    private static final String STARTUP_LABYRINTH = Main.LABYRINTHS_DIR + "lab1.txt";
 
     private int playerAmount = 2;
-
-    private Desk labyrinth;
+    private Labyrinth labyrinth;
     private Player[] players;
-    private String startupLabyrinth = Main.LABYRINTHS_DIR + "lab3.txt";
+    private int activePlayerIndex = -1;
 
     public int getLabyrinthHorSize() {
         return labyrinth.getHorizontalSize();
@@ -23,8 +26,8 @@ public class Game {
         return  labyrinth.getVerticalSize();
     }
 
-    public Tile getLabyrinthTileAt(int vIndex, int hIndex) {
-        return labyrinth.getTileAt(vIndex, hIndex);
+    public Tile getLabyrinthTileAt(Point point) {
+        return labyrinth.getTileAt(point);
     }
 
     /**
@@ -49,9 +52,23 @@ public class Game {
         return playerAmount;
     }
 
-    public void startGame() {
-        labyrinth = Utils.genLabyrinthFromExistingSource(startupLabyrinth);
+    public Player startGame() {
+        labyrinth = Utils.genLabyrinthFromExistingSource(STARTUP_LABYRINTH);
         players = new Player[playerAmount];
+        for (int i = 0; i < playerAmount; i++) {
+            players[i] = new Player(
+                    "Player " + (i + 1),
+                    labyrinth.getStartPosition(),
+                    labyrinth.getVerticalSize(),
+                    labyrinth.getHorizontalSize()
+            );
+        }
+        return nextPlayer();
+    }
+
+    public Player nextPlayer() {
+        activePlayerIndex = (activePlayerIndex + 1) % playerAmount;
+        return players[activePlayerIndex];
     }
 
 }

@@ -39,7 +39,6 @@ public class StartWindowController extends BasicController {
     public void btnStartGameClicked(ActionEvent actionEvent) throws SceneNotFoundException {
         Main.stageController.prepareScene("GameWindow");
         Main.stageController.showScene();
-        Main.game.startGame();
         Main.stageController.getControllerOf("GameWindow").setup();
     }
 }

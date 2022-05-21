@@ -49,6 +49,7 @@ public class GameActivity extends AppCompatActivity {
     // Само игровое поле
     private Game game;
     private boolean gameIsEnd;
+    private float scoreBoardY;
     // Пары {Координата на поле, View на этой координате}
     private final Map<Coordinate, Square> squares = new HashMap<>();
 
@@ -225,6 +226,7 @@ public class GameActivity extends AppCompatActivity {
      */
     private void endGame(String text) {
         timer.cancel();
+        scoreBoardY = scoreBoard.getY();
         scoreBoard.animate()
                 .y((float) (board.getYOfBoard() - scoreBoard.getHeight() - layout.getHeight() * 0.02))
                 .setDuration(durationAnimations * 3);
@@ -273,8 +275,7 @@ public class GameActivity extends AppCompatActivity {
     private void restart() {
         interactionsOff();
         if (gameIsEnd) {
-            scoreBoard.animate().y((float) (scoreBoard.getY() - layout.getHeight() * 0.12)).
-                    setDuration(durationAnimations * 3);
+            scoreBoard.animate().y(scoreBoardY).setDuration(durationAnimations * 3);
             endGameText.setText("");
         }
         for (Map.Entry<Coordinate, Square> i : squares.entrySet())

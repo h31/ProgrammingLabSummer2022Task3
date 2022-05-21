@@ -4,7 +4,7 @@ package checkers.logic;
 import checkers.ui.Piece;
 import checkers.ui.Tile;
 
-import java.util.ArrayList;
+
 import java.util.Stack;
 
 import static checkers.ui.ContentCreator.*;
@@ -206,8 +206,4 @@ public class Logic {
         getTopText().setText(turn ? "Чёрные ходят" : "Белые ходят");
 
     }
-
-
-
-
 }

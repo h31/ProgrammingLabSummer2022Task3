@@ -1,6 +1,6 @@
 package checkers.ui;
 
-import checkers.logic.MoveResult;
+
 import checkers.logic.Step;
 
 import static checkers.logic.Logic.*;

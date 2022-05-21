@@ -1,6 +1,6 @@
 package checkers.ui;
 
-import checkers.logic.Listeners;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -51,9 +51,7 @@ public class Piece extends StackPane {
         }
     }
 
-    public boolean isCrownedLastTurn() {
-        return crownedLastTurn;
-    }
+
 
     public void setCrownedLastTurn(boolean crownedLastTurn) {
         this.crownedLastTurn = crownedLastTurn;

@@ -30,8 +30,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 
-import static checkers.logic.Listeners.stepBack;
-import static checkers.logic.Listeners.surrender;
+import static checkers.logic.Listeners.*;
 import static checkers.logic.Logic.*;
 import static javafx.scene.layout.BorderPane.setMargin;
 
@@ -72,8 +71,6 @@ public class ContentCreator {
 
     static {
         try {
-//            sound = new Media("C:\\ProgrammingLabSummer2022Task3\\src\\main\\resources\\sound.mp3");
-//            stepSound = new MediaPlayer(sound);
             icon = new Image("C:\\ProgrammingLabSummer2022Task3\\input\\icon.png");
             imgUndoButton = new Image(new FileInputStream("C:\\ProgrammingLabSummer2022Task3\\input\\undo.png"));
         } catch (FileNotFoundException e) {
@@ -94,9 +91,6 @@ public class ContentCreator {
     }
 
 
-    public static VBox getTop() {
-        return top;
-    }
 
     public static Label getTopText() {
         return topText;
@@ -170,13 +164,16 @@ public class ContentCreator {
         bottom.setAlignment(Pos.CENTER_RIGHT);
         bottom.setSpacing(8);
         ImageView undo = new ImageView(getImgUndoButton());
-        undo.setFitHeight(TILE_SIZE * 0.75);
-        undo.setFitWidth(TILE_SIZE * 0.75);
+        undo.setFitHeight(TILE_SIZE * 0.43);
+        undo.setFitWidth(TILE_SIZE * 0.43);
         undoButton.setGraphic(undo);
-        undoButton.setStyle("-fx-background-color: #B03653");
+        undoButton.setStyle("-fx-background-color: #bdb7ae;" +
+                " -fx-border-radius: 5;");
+
+
         surrenderButton.setText("Сдаться");
-        surrenderButton.setStyle("-fx-background-color: #EBC9D0; -fx-border-color: red;" +
-                " -fx-border-radius: 5; -fx-font: 22 arial");
+        surrenderButton.setStyle("-fx-background-color: #bdb7ae;" +
+                " -fx-font: 22 arial");
 
 
         surrenderButton.addEventHandler(MouseEvent.MOUSE_CLICKED, surrender());
@@ -189,14 +186,17 @@ public class ContentCreator {
 
 
         undoButton.addEventHandler(MouseEvent.MOUSE_CLICKED, stepBack());
+        undoButton.setPrefSize(surrenderButton.getWidth(), surrenderButton.getHeight());
 
 
+        bottom.setPadding(new Insets(20,10,5,0));
 
         window.setResizable(false);
         window.setTitle("Checkers");
         window.getIcons().add(getIcon());
         window.setScene(new Scene(bp));
         window.show();
+        window.setOnCloseRequest(closeProgram(window));
     }
 
 

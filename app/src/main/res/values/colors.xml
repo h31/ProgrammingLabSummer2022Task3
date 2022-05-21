@@ -16,4 +16,16 @@
     <color name="backgroundMenu">#3d3a33</color>
     <color name="textButton">#F9FBE7</color>
     <color name="backgroundButton">#f75e3e</color>
+    <color name="square_error">#3c3a32</color>
+    <color name="square_2">#EEE4DA</color>
+    <color name="square_4">#ede0c8</color>
+    <color name="square_8">#f2b179</color>
+    <color name="square_16">#f59563</color>
+    <color name="square_32">#f67c5f</color>
+    <color name="square_64">#f65e3b</color>
+    <color name="square_128">#edcf72</color>
+    <color name="square_256">#edcc61</color>
+    <color name="square_512">#edc850</color>
+    <color name="square_1024">#edc53f</color>
+    <color name="square_2048">#edc22e</color>
 </resources>

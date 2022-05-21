@@ -179,10 +179,10 @@ public class GameActivity extends AppCompatActivity {
         layout.postDelayed(() -> {
             if (finalMaxNumber == 2048) {
                 Log.i(TAG, "Win");
-                endGame("You won game!");
+                endGame(getString(R.string.win_text));
             } else if (game.gameIsLost()) {
                 Log.i(TAG, "Lose");
-                endGame("You lost game!");
+                endGame(getString(R.string.lose_text));
             } else
                 interactionsOn();
         }, durationAnimations);

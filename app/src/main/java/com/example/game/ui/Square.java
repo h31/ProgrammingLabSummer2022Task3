@@ -60,32 +60,32 @@ public class Square extends View {
     /**
      * @return цвет, которого должен быть квадрат с числами (2-2^11)
      */
-    private String getColor() {
+    private int getColorId() {
         switch (number) {
             case 2:
-                return "#eee4da";
+                return R.color.square_2;
             case 4:
-                return "#ede0c8";
+                return R.color.square_4;
             case 8:
-                return "#f2b179";
+                return R.color.square_8;
             case 16:
-                return "#f59563";
+                return R.color.square_16;
             case 32:
-                return "#f67c5f";
+                return R.color.square_32;
             case 64:
-                return "#f65e3b";
+                return R.color.square_64;
             case 128:
-                return "#edcf72";
+                return R.color.square_128;
             case 256:
-                return "#edcc61";
+                return R.color.square_256;
             case 512:
-                return "#edc850";
+                return R.color.square_512;
             case 1024:
-                return "#edc53f";
+                return R.color.square_1024;
             case 2048:
-                return "#edc22e";
+                return R.color.square_2048;
             default:
-                return "#3c3a32";
+                return R.color.square_error;
         }
     }
 
@@ -95,7 +95,7 @@ public class Square extends View {
     private void drawRectF(@NonNull Canvas canvas) {
         // Рисование прямоугольника
         @SuppressLint("DrawAllocation") Paint paint = new Paint();
-        paint.setColor(Color.parseColor(getColor()));
+        paint.setColor(getResources().getColor(getColorId()));
         @SuppressLint("DrawAllocation") RectF rect = new RectF();
         rect.set(0, 0, size, size);
         canvas.drawRoundRect(rect, (float) (getWidth() * 0.03), (float) (getWidth() * 0.03), paint);

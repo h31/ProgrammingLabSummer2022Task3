@@ -18,4 +18,6 @@
     <string name="time">Time</string>
     <string name="restart">Restart</string>
     <string name="quick">Quick</string>
+    <string name="win_text">You won game!</string>
+    <string name="lose_text">You lost game!</string>
 </resources>

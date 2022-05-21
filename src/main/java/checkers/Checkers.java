@@ -22,7 +22,6 @@ public class Checkers extends Application {
         window.setResizable(false);
         window.getIcons().add(ContentCreator.getIcon());
         window.setTitle("Checkers");
-//        window.setOnCloseRequest();
         window.setScene(scene);
         window.show();
         window.centerOnScreen();

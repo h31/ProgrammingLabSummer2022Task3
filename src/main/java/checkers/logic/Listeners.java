@@ -110,7 +110,7 @@ public class Listeners {
                             changingTurn();
                             deadPiece(killedPiece);
 
-                            if (getLeft().getChildren().size() == 12 || getRight().getChildren().size() == 12) {
+                            if (getLeft().getChildren().size() == amountOfPieces || getRight().getChildren().size() == amountOfPieces) {
                                 String message = turn ? "\n          Победа белых" :
                                         "\n          Победа чёрных";
                                 if (confirmation("End of the game", "Хотите начать игру заново?" + message)) {

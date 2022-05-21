@@ -15,6 +15,7 @@ public class Logic {
     public static final int WIDTH = 8;
     public static final int HEIGHT = 8;
     private static Tile[][] board = new Tile[WIDTH][HEIGHT];
+    public static int amountOfPieces;
 
     private static final Stack<Step> stepsStack = new Stack<>();
 

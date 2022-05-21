@@ -30,6 +30,13 @@ public class Game {
         return labyrinth.getTileAt(point);
     }
 
+    public Player getActivePlayer() {
+        if(activePlayerIndex < 0) {
+            return null;
+        }
+        return players[activePlayerIndex];
+    }
+
     /**
      * Decrements player amount according to the rules.
      * Bounds amount between min and max values.

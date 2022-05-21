@@ -12,6 +12,9 @@ public class Main extends Application {
     public static final String TILES_IMG_DIR = IMG_DIR + "Tiles/";
     public static final String LABYRINTHS_DIR = RES_DIR + "labyrinths/";
 
+    private static final int WINDOW_WIDTH = 600;
+    private static final int WINDOW_HEIGHT = 400;
+
     public static Game game = new Game();
     public static StageController stageController;
 

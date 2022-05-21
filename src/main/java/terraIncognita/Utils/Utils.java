@@ -14,24 +14,7 @@ import java.util.Objects;
 
 public class Utils {
 
-    public static class FXMLLoadResult {
-        private final Scene scene;
-        private final BasicController controller;
-        public FXMLLoadResult(Scene scene, BasicController controller) {
-            this.scene = scene;
-            this.controller = controller;
-        }
-
-        public Scene getScene() {
-            return scene;
-        }
-
-        public BasicController getController(){
-            return controller;
-        }
-    }
-
-    public static FXMLLoadResult loadFXMLScene (URL resource) {
+    public static BasicController loadFXMLScene (URL resource) {
         Parent root;
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(resource));
         try {
@@ -39,7 +22,9 @@ public class Utils {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return new FXMLLoadResult(new Scene(root), loader.getController()) ;
+        BasicController controller = loader.getController();
+        controller.setRuledScene(new Scene(root));
+        return controller ;
     }
 
     public static Labyrinth genLabyrinthFromExistingSource(String source) {

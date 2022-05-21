@@ -2,10 +2,9 @@ package terraIncognita.Controllers;
 
 import javafx.beans.property.*;
 import javafx.event.ActionEvent;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import terraIncognita.Main;
+import terraIncognita.Model.MovementDirection;
 import terraIncognita.Utils.Exceptions.SceneNotFoundException;
 
 import java.net.URL;

@@ -3,25 +3,25 @@ package terraIncognita.Model;
 import terraIncognita.Utils.Point;
 
 public enum MovementDirection {
-    Up {
+    UP {
         @Override
         public Point move(Point point) {
             return new Point(point.x(), point.y() - 1);
         }
     },
-    Down {
+    DOWN {
         @Override
         public Point move(Point point) {
             return new Point(point.x(), point.y() + 1);
         }
     },
-    Left {
+    LEFT {
         @Override
         public Point move(Point point) {
             return new Point(point.x() - 1, point.y());
         }
     },
-    Right {
+    RIGHT {
         @Override
         public Point move(Point point) {
             return new Point(point.x() + 1, point.y());

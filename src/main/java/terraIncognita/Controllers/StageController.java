@@ -12,7 +12,7 @@ import java.util.Map;
 public class StageController {
 
     private final Stage stage;
-    private final Map<String, Utils.FXMLLoadResult> windows = new HashMap<String, Utils.FXMLLoadResult>();
+    private final Map<String, BasicController> controllers = new HashMap<String, BasicController>();
 
     public StageController(Stage primaryStage) {
         stage = primaryStage;
@@ -25,10 +25,10 @@ public class StageController {
      * @throws SceneNotFoundException if no Scene with given name was found.
      */
     public BasicController getControllerOf (String sceneName) throws SceneNotFoundException {
-        if (!windows.containsKey(sceneName)) {
+        if (!controllers.containsKey(sceneName)) {
             throw new SceneNotFoundException("No Scene " + sceneName + " found");
         }
-        return windows.get(sceneName).getController();
+        return controllers.get(sceneName);
     }
 
     public void showScene() {
@@ -37,10 +37,10 @@ public class StageController {
 
     public void loadScene(URL fileName) {
         String sceneName = FilenameUtils.getBaseName(fileName.getPath());
-        if (windows.containsKey(sceneName)) {
+        if (controllers.containsKey(sceneName)) {
             return;
         }
-        windows.put(sceneName, Utils.loadFXMLScene(fileName));
+        controllers.put(sceneName, Utils.loadFXMLScene(fileName));
     }
 
     /**
@@ -50,10 +50,10 @@ public class StageController {
      * @throws SceneNotFoundException if no scene with name sceneName was found.
      */
     public void prepareScene(String sceneName) throws SceneNotFoundException {
-        if(!windows.containsKey(sceneName)) {
+        if(!controllers.containsKey(sceneName)) {
             throw new SceneNotFoundException("No Scene " + sceneName + " found");
         }
-        stage.setScene(windows.get(sceneName).getScene());
+        stage.setScene(controllers.get(sceneName).getRuledScene());
     }
 
 }

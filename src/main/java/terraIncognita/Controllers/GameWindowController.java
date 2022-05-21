@@ -1,11 +1,16 @@
 package terraIncognita.Controllers;
 
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.shape.Circle;
 import terraIncognita.Main;
 import terraIncognita.Model.Desk.Desk;
+import terraIncognita.Model.MovementDirection;
 import terraIncognita.Model.Player;
 import terraIncognita.Utils.Point;
 
@@ -15,7 +20,12 @@ import java.util.ResourceBundle;
 
 public class GameWindowController extends BasicController{
 
-    public GridPane deskGrid;
+    @FXML
+    private GridPane deskGrid;
+    @FXML
+    private Circle playerShape;
+    private static final double PLAYER_MIN_RADIUS = 5.0;
+
     private int hTileAmount;
     private int vTileAmount;
     private double borderSize;
@@ -25,7 +35,18 @@ public class GameWindowController extends BasicController{
 
     }
 
-    public void loadGridFrom(Desk desk) {
+    private void movePlayer(MovementDirection movementDirection) {
+        Main.game.getActivePlayer().move(movementDirection);
+
+        placePlayerTo(Main.game.getActivePlayer().getPosition());
+    }
+
+    private void placePlayerTo(Point newPos) {
+        deskGrid.getChildren().remove(playerShape);
+        deskGrid.add(playerShape, newPos.x(), newPos.y());
+    }
+
+    private void loadGridFrom(Desk desk) {
         clearGrid();
         for (int rowIndex = 0; rowIndex < vTileAmount; rowIndex++) {
             for (int colIndex = 0; colIndex < hTileAmount; colIndex++) {
@@ -42,12 +63,24 @@ public class GameWindowController extends BasicController{
         }
     }
 
-    public void clearGrid() {
+    private void clearGrid() {
         deskGrid.getChildren().clear();
     }
 
     @Override
     public void setup() {
+        this.ruledScene.setOnKeyTyped(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                switch (event.getCharacter()) {
+                    case "w" -> movePlayer(MovementDirection.UP);
+                    case "s" -> movePlayer(MovementDirection.DOWN);
+                    case "a" -> movePlayer(MovementDirection.LEFT);
+                    case "d" -> movePlayer(MovementDirection.RIGHT);
+                }
+            }
+        });
+
         Player activePlayer = Main.game.startGame();
 
         hTileAmount = Main.game.getLabyrinthHorSize();
@@ -58,6 +91,8 @@ public class GameWindowController extends BasicController{
                 deskGrid.getWidth() / hTileAmount
         );
 
+        playerShape.setRadius(Math.max(PLAYER_MIN_RADIUS, borderSize / 5));
+
         for (int i = 0; i < vTileAmount; i++) {
             deskGrid.getRowConstraints().add(new RowConstraints(borderSize, borderSize, borderSize));
         }
@@ -67,5 +102,6 @@ public class GameWindowController extends BasicController{
         }
 
         loadGridFrom(activePlayer.getDesk());
+        placePlayerTo(activePlayer.getPosition());
     }
 }

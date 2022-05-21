@@ -25,8 +25,13 @@ public class Player {
         return desk;
     }
 
+    public Point getPosition() {
+        return position;
+    }
+
     public void move(MovementDirection movementDirection) {
-        Point expectedPosition = movementDirection.move(position);
+        //Point expectedPosition = movementDirection.move(position);
+        position = movementDirection.move(position);
     }
 
 }

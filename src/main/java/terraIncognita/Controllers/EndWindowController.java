@@ -20,7 +20,9 @@ public class EndWindowController extends BasicController{
 
     @Override
     public void setup(Object... args) {
-
+        if (args[0].getClass() == String.class) {
+            winnerName.set(args[0] + " WINNER!");
+        }
     }
 
 

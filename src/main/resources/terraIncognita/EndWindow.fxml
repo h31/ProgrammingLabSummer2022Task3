@@ -13,7 +13,7 @@
     </ImageView>
    <GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="533.0" prefWidth="800.0">
       <children>
-         <Label alignment="CENTER" text="Label" textAlignment="CENTER" textFill="#171c02" GridPane.halignment="CENTER" GridPane.valignment="CENTER" fx:id="winnerLabel">
+         <Label fx:id="winnerLabel" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="800.0" style="-fx-background-color: #ffffff99;" text="Label" textAlignment="CENTER" textFill="#171c02" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
              <font>
                  <Font name="Baskerville Old Face" size="53.0" />
              </font>

@@ -1,13 +1,20 @@
 package terraIncognita.Controllers;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.jetbrains.annotations.NotNull;
 import terraIncognita.Main;
@@ -27,18 +34,31 @@ public class GameWindowController extends BasicController{
     private GridPane deskGrid;
     @FXML
     private Circle playerShape;
+    @FXML
+    private Label playerNameLabel;
+
     private static final double PLAYER_MIN_RADIUS = 5.0;
+
+    private boolean isCanMove = true;
 
     private int hTileAmount;
     private int vTileAmount;
     private double borderSize;
+    private final StringProperty labelText = new SimpleStringProperty("");
+
+    private final IntegerProperty r = new SimpleIntegerProperty(0);
+    private final IntegerProperty g = new SimpleIntegerProperty(0);
+    private final IntegerProperty b = new SimpleIntegerProperty(0);
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        playerNameLabel.textProperty().bind(labelText);
+        playerShape.fillProperty().bind(Bindings.createObjectBinding(() -> Color.rgb(r.get(), g.get(), b.get()), r, g, b));
     }
 
     private void movePlayer(MovementDirection movementDirection) {
+        isCanMove = false;
+
         Point oldPos = Main.game.getActivePlayer().getPosition();
         Point revealTile = Main.game.getActivePlayer().move(movementDirection);
         if (revealTile != null) {
@@ -47,7 +67,15 @@ public class GameWindowController extends BasicController{
         if (oldPos == Main.game.getActivePlayer().getPosition()) {
             return;
         }
+
+        if (Main.game.getActivePlayer().isEndGame()) {
+            Main.stageController.prepareScene(Main.END_WINDOW_SCENE_NAME);
+            Main.stageController.getControllerOf(Main.END_WINDOW_SCENE_NAME).setup(Main.game.getActivePlayer().getName());
+            Main.stageController.showScene();
+        }
+
         placePlayerTo(Main.game.getActivePlayer().getPosition());
+
     }
 
     private void revealTileAt(Point pos) {
@@ -84,19 +112,30 @@ public class GameWindowController extends BasicController{
         return imgView;
     }
 
-    private void loadGridFrom(Desk desk) {
+    private void changeCircleColor(java.awt.Color color) {
+        r.set(color.getRed());
+        g.set(color.getGreen());
+        b.set(color.getBlue());
+    }
+
+    private void loadDeskFrom(Player player) {
+        changeCircleColor(player.getColor());
+
         clearGrid();
         for (int rowIndex = 0; rowIndex < vTileAmount; rowIndex++) {
             for (int colIndex = 0; colIndex < hTileAmount; colIndex++) {
                 deskGrid.add(
                         createTileImageView(
-                                new File(Main.TILES_IMG_DIR + desk.getTileAt(new Point(colIndex, rowIndex)
+                                new File(Main.TILES_IMG_DIR + player.getDesk().getTileAt(new Point(colIndex, rowIndex)
                                 ).getImageFileName()).toURI().toString()
                         ),
                         colIndex, rowIndex
                 );
             }
         }
+
+        labelText.set(player.getName());
+        placePlayerTo(player.getPosition());
     }
 
     private void clearGrid() {
@@ -105,14 +144,20 @@ public class GameWindowController extends BasicController{
 
     @Override
     public void setup(Object... args) {
+        this.ruledScene.setOnKeyReleased(event -> {
+            isCanMove = true;
+        });
+
         this.ruledScene.setOnKeyTyped(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                switch (event.getCharacter()) {
-                    case "w" -> movePlayer(MovementDirection.UP);
-                    case "s" -> movePlayer(MovementDirection.DOWN);
-                    case "a" -> movePlayer(MovementDirection.LEFT);
-                    case "d" -> movePlayer(MovementDirection.RIGHT);
+                if (isCanMove) {
+                    switch (event.getCharacter()) {
+                        case "w" -> movePlayer(MovementDirection.UP);
+                        case "s" -> movePlayer(MovementDirection.DOWN);
+                        case "a" -> movePlayer(MovementDirection.LEFT);
+                        case "d" -> movePlayer(MovementDirection.RIGHT);
+                    }
                 }
             }
         });
@@ -137,7 +182,7 @@ public class GameWindowController extends BasicController{
             deskGrid.getColumnConstraints().add(new ColumnConstraints(borderSize, borderSize, borderSize));
         }
 
-        loadGridFrom(activePlayer.getDesk());
-        placePlayerTo(activePlayer.getPosition());
+        loadDeskFrom(activePlayer);
+
     }
 }

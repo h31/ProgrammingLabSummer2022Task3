@@ -12,6 +12,10 @@ public class Main extends Application {
     public static final String TILES_IMG_DIR = IMG_DIR + "Tiles/";
     public static final String LABYRINTHS_DIR = RES_DIR + "labyrinths/";
 
+    public static final String START_WINDOW_SCENE_NAME = "StartWindow";
+    public static final String GAME_WINDOW_SCENE_NAME = "GameWindow";
+    public static final String END_WINDOW_SCENE_NAME = "EndWindow";
+
     private static final int WINDOW_WIDTH = 600;
     private static final int WINDOW_HEIGHT = 400;
 
@@ -23,12 +27,13 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws SceneNotFoundException {
+    public void start(Stage primaryStage){
         primaryStage.setResizable(false);
         stageController = new StageController(primaryStage);
-        stageController.loadScene(getClass().getResource("StartWindow.fxml"));
-        stageController.loadScene(getClass().getResource("GameWindow.fxml"));
-        stageController.prepareScene("StartWindow");
+        stageController.loadScene(getClass().getResource(START_WINDOW_SCENE_NAME + ".fxml"));
+        stageController.loadScene(getClass().getResource(GAME_WINDOW_SCENE_NAME + ".fxml"));
+        stageController.loadScene(getClass().getResource(END_WINDOW_SCENE_NAME + ".fxml"));
+        stageController.prepareScene(START_WINDOW_SCENE_NAME);
         stageController.showScene();
     }
 }

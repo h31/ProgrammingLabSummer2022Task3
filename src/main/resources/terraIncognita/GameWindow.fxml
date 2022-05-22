@@ -18,7 +18,7 @@
             <Image url="@../img/mateo-henneron-decors.jpg" />
          </image>
       </ImageView>
-       <Label alignment="CENTER" text="Player 1" textAlignment="CENTER" textFill="#171c02" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+       <Label fx:id="playerNameLabel" alignment="CENTER" text="Player 1" textAlignment="CENTER" textFill="#171c02" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
            <font>
                <Font name="Baskerville Old Face" size="42.0" />
            </font>

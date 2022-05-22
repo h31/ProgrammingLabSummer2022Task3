@@ -22,11 +22,11 @@ public class StageController {
      * Returns controller of a scene with name sceneName added into stage controller.
      * @param sceneName String
      * @return BasicController
-     * @throws SceneNotFoundException if no Scene with given name was found.
      */
-    public BasicController getControllerOf (String sceneName) throws SceneNotFoundException {
+    public BasicController getControllerOf (String sceneName){
         if (!controllers.containsKey(sceneName)) {
-            throw new SceneNotFoundException("No Scene " + sceneName + " found");
+            Utils.logError(new SceneNotFoundException("No Scene " + sceneName + " found"));
+            return null;
         }
         return controllers.get(sceneName);
     }
@@ -47,11 +47,11 @@ public class StageController {
      * Sets active scene to the given.
      * Invoke showScene() to actually make the scene appear.
      * @param sceneName - String
-     * @throws SceneNotFoundException if no scene with name sceneName was found.
      */
-    public void prepareScene(String sceneName) throws SceneNotFoundException {
+    public void prepareScene(String sceneName) {
         if(!controllers.containsKey(sceneName)) {
-            throw new SceneNotFoundException("No Scene " + sceneName + " found");
+            Utils.logError(new SceneNotFoundException("No Scene " + sceneName + " found"));
+            return;
         }
         stage.setScene(controllers.get(sceneName).getRuledScene());
     }

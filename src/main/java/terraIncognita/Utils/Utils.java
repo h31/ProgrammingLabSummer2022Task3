@@ -84,4 +84,11 @@ public class Utils {
     public static String genUrlOf(String file) {
         return new File(file).toURI().toString();
     }
+
+    public static void logError(Exception e) {
+        System.err.println(e.getMessage());
+        for (var traceEl : e.getStackTrace()) {
+            System.err.println(traceEl.toString());
+        }
+    }
 }

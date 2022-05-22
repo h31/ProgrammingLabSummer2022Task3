@@ -2,18 +2,19 @@ package terraIncognita.Controllers;
 
 import javafx.beans.property.*;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import terraIncognita.Main;
-import terraIncognita.Model.MovementDirection;
 import terraIncognita.Utils.Exceptions.SceneNotFoundException;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class StartWindowController extends BasicController {
-    public Label playerAmountLabel;
+    @FXML
+    private Label playerAmountLabel;
 
-    private IntegerProperty playerAmount = new SimpleIntegerProperty(2);
+    private final IntegerProperty playerAmount = new SimpleIntegerProperty(2);
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -21,7 +22,7 @@ public class StartWindowController extends BasicController {
     }
 
     @Override
-    public void setup() {
+    public void setup(Object... args) {
 
     }
 
@@ -38,6 +39,6 @@ public class StartWindowController extends BasicController {
     public void btnStartGameClicked(ActionEvent actionEvent) throws SceneNotFoundException {
         Main.stageController.prepareScene("GameWindow");
         Main.stageController.showScene();
-        Main.stageController.getControllerOf("GameWindow").setup();
+        Main.stageController.getControllerOf("GameWindow").setup(null);
     }
 }

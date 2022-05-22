@@ -104,7 +104,7 @@ public class GameWindowController extends BasicController{
     }
 
     @Override
-    public void setup() {
+    public void setup(Object... args) {
         this.ruledScene.setOnKeyTyped(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {

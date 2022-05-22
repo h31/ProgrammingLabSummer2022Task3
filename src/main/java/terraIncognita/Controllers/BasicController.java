@@ -20,5 +20,5 @@ public abstract class BasicController implements Initializable {
         return ruledScene;
     }
 
-    public abstract void setup();
+    public abstract void setup(Object... args);
 }

@@ -60,9 +60,9 @@ public class GameWindowController extends BasicController{
         isCanMove = false;
 
         Point oldPos = Main.game.getActivePlayer().getPosition();
-        Point revealTile = Main.game.getActivePlayer().move(movementDirection);
-        if (revealTile != null) {
-            revealTileAt(revealTile);
+        Point[] revealTiles = Main.game.getActivePlayer().move(movementDirection);
+        for (Point p : revealTiles) {
+            revealTileAt(p);
         }
         if (oldPos == Main.game.getActivePlayer().getPosition()) {
             return;
@@ -75,7 +75,7 @@ public class GameWindowController extends BasicController{
         }
 
         placePlayerTo(Main.game.getActivePlayer().getPosition());
-
+        loadDeskFrom(Main.game.nextPlayer());
     }
 
     private void revealTileAt(Point pos) {

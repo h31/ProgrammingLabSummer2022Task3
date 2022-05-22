@@ -1,11 +1,15 @@
 package terraIncognita.Model.Tiles;
 
 public class WormholeTile extends Tile {
-    private char number;
+    private int number;
 
     public WormholeTile(char number) {
-        this.number = number;
+        this.number = Character.getNumericValue(number);
         setImageFileName("Wormhole_" + number + ".png");
+    }
+
+    public int getNumber() {
+        return number;
     }
 
 }

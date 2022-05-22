@@ -1,7 +1,11 @@
 package terraIncognita.Model;
 
+import terraIncognita.Main;
 import terraIncognita.Model.Desk.Desk;
 import terraIncognita.Model.Tiles.StartTile;
+import terraIncognita.Model.Tiles.Tile;
+import terraIncognita.Model.Tiles.UnopenedTile;
+import terraIncognita.Model.Tiles.WallTile;
 import terraIncognita.Utils.Point;
 
 public class Player {
@@ -29,9 +33,20 @@ public class Player {
         return position;
     }
 
-    public void move(MovementDirection movementDirection) {
-        //Point expectedPosition = movementDirection.move(position);
-        position = movementDirection.move(position);
+    /**
+     * Moves player according to the given movement direction.
+     * @param movementDirection direction of player he is trying to go to
+     * @return position of tile that is opened. If tile was already opened returns null.
+     */
+    public Point move(MovementDirection movementDirection) {
+        Point expectedPosition = movementDirection.move(position);
+        Tile tile = Main.game.getLabyrinthTileAt(expectedPosition);
+        Point newTileAt = (desk.getTileAt(expectedPosition).getClass() == UnopenedTile.class)? expectedPosition: null;
+        desk.insertTile(tile, expectedPosition);
+        if(tile.getClass() != WallTile.class) {
+            position = expectedPosition;
+        }
+        return newTileAt;
     }
 
 }

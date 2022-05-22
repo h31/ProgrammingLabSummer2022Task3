@@ -4,6 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import terraIncognita.Controllers.BasicController;
+import terraIncognita.Main;
 import terraIncognita.Model.Desk.Desk;
 import terraIncognita.Model.Desk.Labyrinth;
 import terraIncognita.Model.Tiles.*;
@@ -78,5 +79,9 @@ public class Utils {
         }
 
         return labyrinth;
+    }
+
+    public static String genUrlOf(String file) {
+        return new File(file).toURI().toString();
     }
 }

@@ -41,13 +41,14 @@ public class Piece extends StackPane {
     static {
         try {
             imgWhite = new Image(new FileInputStream(
-                    "input\\whitePiece.png"));
+                    "input/whitePiece.png"));
             imgBlack = new Image(new FileInputStream(
                     "input/blackPiece.png"));
             imgCrown = new Image(new FileInputStream(
                     "input/crown.png"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            //Написать вывод в alert window
         }
     }
 

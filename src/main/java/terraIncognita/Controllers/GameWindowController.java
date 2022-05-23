@@ -18,15 +18,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.jetbrains.annotations.NotNull;
 import terraIncognita.Main;
-import terraIncognita.Model.Desk.Desk;
 import terraIncognita.Model.MovementDirection;
 import terraIncognita.Model.Player;
+import terraIncognita.Utils.EventListener;
 import terraIncognita.Utils.Point;
 import terraIncognita.Utils.Utils;
 
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameWindowController extends BasicController{
 
@@ -38,8 +40,11 @@ public class GameWindowController extends BasicController{
     private Label playerNameLabel;
 
     private static final double PLAYER_MIN_RADIUS = 5.0;
+    private static final int REFRESH_RATE = 100;
+    private static final int SHOW_NEW_TURN_TIME = 1000;
 
     private boolean isCanMove = true;
+    private boolean isNewTurnShowing = false;
 
     private int hTileAmount;
     private int vTileAmount;
@@ -50,15 +55,21 @@ public class GameWindowController extends BasicController{
     private final IntegerProperty g = new SimpleIntegerProperty(0);
     private final IntegerProperty b = new SimpleIntegerProperty(0);
 
+    private EventListener changeGridEventListener;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         playerNameLabel.textProperty().bind(labelText);
         playerShape.fillProperty().bind(Bindings.createObjectBinding(() -> Color.rgb(r.get(), g.get(), b.get()), r, g, b));
+        changeGridEventListener = new EventListener() {
+            @Override
+            public void fire() {
+                loadDeskFrom(Main.game.nextPlayer());
+            }
+        };
     }
 
     private void movePlayer(MovementDirection movementDirection) {
-        isCanMove = false;
-
         Point oldPos = Main.game.getActivePlayer().getPosition();
         Point[] revealTiles = Main.game.getActivePlayer().move(movementDirection);
         for (Point p : revealTiles) {
@@ -68,14 +79,9 @@ public class GameWindowController extends BasicController{
             return;
         }
 
-        if (Main.game.getActivePlayer().isEndGame()) {
-            Main.stageController.prepareScene(Main.END_WINDOW_SCENE_NAME);
-            Main.stageController.getControllerOf(Main.END_WINDOW_SCENE_NAME).setup(Main.game.getActivePlayer().getName());
-            Main.stageController.showScene();
-        }
-
         placePlayerTo(Main.game.getActivePlayer().getPosition());
-        loadDeskFrom(Main.game.nextPlayer());
+        isCanMove = false;
+        //loadDeskFrom(Main.game.nextPlayer());
     }
 
     private void revealTileAt(Point pos) {
@@ -151,7 +157,7 @@ public class GameWindowController extends BasicController{
         this.ruledScene.setOnKeyTyped(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if (isCanMove) {
+                if (isCanMove && !isNewTurnShowing) {
                     switch (event.getCharacter()) {
                         case "w" -> movePlayer(MovementDirection.UP);
                         case "s" -> movePlayer(MovementDirection.DOWN);
@@ -183,6 +189,29 @@ public class GameWindowController extends BasicController{
         }
 
         loadDeskFrom(activePlayer);
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if(!isCanMove) {
+                    isNewTurnShowing = true;
+                    try {
+                        Thread.sleep(SHOW_NEW_TURN_TIME);
+                    } catch (InterruptedException e) {
+                        Utils.logError(e);
+                    }
+
+                    if (Main.game.getActivePlayer().isEndGame()) {
+                        Main.stageController.prepareScene(Main.END_WINDOW_SCENE_NAME);
+                        Main.stageController.getControllerOf(Main.END_WINDOW_SCENE_NAME).setup(Main.game.getActivePlayer().getName());
+                        Main.stageController.showScene();
+                    }
+                    isNewTurnShowing = false;
+                    changeGridEventListener.fire();
+                }
+            }
+        }, 0, REFRESH_RATE);
 
     }
 }

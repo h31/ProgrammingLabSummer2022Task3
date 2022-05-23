@@ -5,7 +5,9 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -20,7 +22,8 @@ import org.jetbrains.annotations.NotNull;
 import terraIncognita.Main;
 import terraIncognita.Model.MovementDirection;
 import terraIncognita.Model.Player;
-import terraIncognita.Utils.EventListener;
+import terraIncognita.Utils.Event.ReloadEventHandler;
+import terraIncognita.Utils.Event.ReloadGridEvent;
 import terraIncognita.Utils.Point;
 import terraIncognita.Utils.Utils;
 
@@ -55,18 +58,10 @@ public class GameWindowController extends BasicController{
     private final IntegerProperty g = new SimpleIntegerProperty(0);
     private final IntegerProperty b = new SimpleIntegerProperty(0);
 
-    private EventListener changeGridEventListener;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         playerNameLabel.textProperty().bind(labelText);
         playerShape.fillProperty().bind(Bindings.createObjectBinding(() -> Color.rgb(r.get(), g.get(), b.get()), r, g, b));
-        changeGridEventListener = new EventListener() {
-            @Override
-            public void fire() {
-                loadDeskFrom(Main.game.nextPlayer());
-            }
-        };
     }
 
     private void movePlayer(MovementDirection movementDirection) {
@@ -154,6 +149,13 @@ public class GameWindowController extends BasicController{
             isCanMove = true;
         });
 
+        deskGrid.addEventHandler(ReloadGridEvent.RELOAD_GRID_EVENT_TYPE, new ReloadEventHandler() {
+            @Override
+            public void onFire() {
+                ((GameWindowController)Main.stageController.getControllerOf(Main.GAME_WINDOW_SCENE_NAME)).loadDeskFrom(Main.game.nextPlayer());
+            }
+        });
+
         this.ruledScene.setOnKeyTyped(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
@@ -208,7 +210,7 @@ public class GameWindowController extends BasicController{
                         Main.stageController.showScene();
                     }
                     isNewTurnShowing = false;
-                    changeGridEventListener.fire();
+                    ((GameWindowController)Main.stageController.getControllerOf(Main.GAME_WINDOW_SCENE_NAME)).deskGrid.fireEvent(new ReloadGridEvent());
                 }
             }
         }, 0, REFRESH_RATE);

@@ -1,5 +1,6 @@
 package terraIncognita.Controllers;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -22,8 +23,6 @@ import org.jetbrains.annotations.NotNull;
 import terraIncognita.Main;
 import terraIncognita.Model.MovementDirection;
 import terraIncognita.Model.Player;
-import terraIncognita.Utils.Event.ReloadEventHandler;
-import terraIncognita.Utils.Event.ReloadGridEvent;
 import terraIncognita.Utils.Point;
 import terraIncognita.Utils.Utils;
 
@@ -65,6 +64,7 @@ public class GameWindowController extends BasicController{
     }
 
     private void movePlayer(MovementDirection movementDirection) {
+        isCanMove = false;
         Point oldPos = Main.game.getActivePlayer().getPosition();
         Point[] revealTiles = Main.game.getActivePlayer().move(movementDirection);
         for (Point p : revealTiles) {
@@ -75,7 +75,6 @@ public class GameWindowController extends BasicController{
         }
 
         placePlayerTo(Main.game.getActivePlayer().getPosition());
-        isCanMove = false;
         //loadDeskFrom(Main.game.nextPlayer());
     }
 
@@ -137,6 +136,7 @@ public class GameWindowController extends BasicController{
 
         labelText.set(player.getName());
         placePlayerTo(player.getPosition());
+        isCanMove = true;
     }
 
     private void clearGrid() {
@@ -145,16 +145,6 @@ public class GameWindowController extends BasicController{
 
     @Override
     public void setup(Object... args) {
-        this.ruledScene.setOnKeyReleased(event -> {
-            isCanMove = true;
-        });
-
-        deskGrid.addEventHandler(ReloadGridEvent.RELOAD_GRID_EVENT_TYPE, new ReloadEventHandler() {
-            @Override
-            public void onFire() {
-                ((GameWindowController)Main.stageController.getControllerOf(Main.GAME_WINDOW_SCENE_NAME)).loadDeskFrom(Main.game.nextPlayer());
-            }
-        });
 
         this.ruledScene.setOnKeyTyped(new EventHandler<KeyEvent>() {
             @Override
@@ -192,25 +182,25 @@ public class GameWindowController extends BasicController{
 
         loadDeskFrom(activePlayer);
 
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
+        Main.timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if(!isCanMove) {
+                if(!isCanMove && !isNewTurnShowing) {
                     isNewTurnShowing = true;
                     try {
                         Thread.sleep(SHOW_NEW_TURN_TIME);
                     } catch (InterruptedException e) {
                         Utils.logError(e);
                     }
-
-                    if (Main.game.getActivePlayer().isEndGame()) {
-                        Main.stageController.prepareScene(Main.END_WINDOW_SCENE_NAME);
-                        Main.stageController.getControllerOf(Main.END_WINDOW_SCENE_NAME).setup(Main.game.getActivePlayer().getName());
-                        Main.stageController.showScene();
-                    }
-                    isNewTurnShowing = false;
-                    ((GameWindowController)Main.stageController.getControllerOf(Main.GAME_WINDOW_SCENE_NAME)).deskGrid.fireEvent(new ReloadGridEvent());
+                    Platform.runLater(() -> {
+                        if (Main.game.getActivePlayer().isEndGame()) {
+                            Main.stageController.prepareScene(Main.END_WINDOW_SCENE_NAME);
+                            Main.stageController.getControllerOf(Main.END_WINDOW_SCENE_NAME).setup(Main.game.getActivePlayer().getName());
+                            Main.stageController.showScene();
+                        }
+                        loadDeskFrom(Main.game.nextPlayer());
+                        isNewTurnShowing = false;
+                    });
                 }
             }
         }, 0, REFRESH_RATE);

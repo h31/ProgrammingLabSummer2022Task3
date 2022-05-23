@@ -5,6 +5,8 @@ import terraIncognita.Controllers.StageController;
 import terraIncognita.Model.Game;
 import terraIncognita.Utils.Exceptions.SceneNotFoundException;
 
+import java.util.Timer;
+
 public class Main extends Application {
     public static final String APP_DIR = System.getProperty("user.dir") + "/";
     public static final String RES_DIR = APP_DIR + "src/main/resources/";
@@ -18,6 +20,7 @@ public class Main extends Application {
 
     private static final int WINDOW_WIDTH = 600;
     private static final int WINDOW_HEIGHT = 400;
+    public static final Timer timer = new Timer();
 
     public static Game game = new Game();
     public static StageController stageController;
@@ -25,7 +28,6 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
 
     @Override
     public void start(Stage primaryStage){
@@ -36,5 +38,11 @@ public class Main extends Application {
         stageController.loadScene(getClass().getResource(END_WINDOW_SCENE_NAME + ".fxml"));
         stageController.prepareScene(START_WINDOW_SCENE_NAME);
         stageController.showScene();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        timer.cancel();
     }
 }

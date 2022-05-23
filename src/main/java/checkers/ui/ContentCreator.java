@@ -15,8 +15,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
 import javafx.scene.text.Font;
@@ -115,6 +113,10 @@ public class ContentCreator {
     public static BorderPane getBp() {
         return bp;
     }
+
+    /**
+     * Отрисовавает начальное окно вместе со всеми Pane, стилями и размерами
+     */
 
     public static void createContent() {
 

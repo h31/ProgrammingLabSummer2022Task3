@@ -17,9 +17,9 @@ public class Tile extends Rectangle {
     {
         try {
             imgBlack = new Image(new FileInputStream(
-                    "C:\\ProgrammingLabSummer2022Task3\\input\\blackTile2.jpg"));
+                    "input/blackTile2.jpg"));
             imgWhite = new Image(new FileInputStream(
-                    "C:\\ProgrammingLabSummer2022Task3\\input\\whiteTile2.jpg"));
+                    "input/whiteTile2.jpg"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

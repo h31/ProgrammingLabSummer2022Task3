@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import static checkers.logic.Listeners.start;
 
 public class WelcomePage {
+    
     private static final Pane pane = new Pane();
     private static final Button startButton = new Button("START");
     private static final VBox vbox = new VBox();

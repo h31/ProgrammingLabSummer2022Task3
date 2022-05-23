@@ -20,9 +20,14 @@ public class Logic {
     private static final Stack<Step> stepsStack = new Stack<>();
 
 
-
-    public static boolean turn = false; // False - ход белых, True - ход чёрных
-    private static boolean killNeed = false; //Какая-то из шашек должна съесть ещё
+    /**
+     * False - ход белых, True - ход чёрных
+     */
+    public static boolean turn = false;
+    /**
+     * Какая-то из шашек должна съесть ещё
+     */
+    private static boolean killNeed = false;
 
     private static int killCount;
 

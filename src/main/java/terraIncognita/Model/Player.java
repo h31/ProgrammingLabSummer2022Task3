@@ -13,12 +13,12 @@ import java.util.List;
 public class Player {
 
     private Point position;
-    private Desk desk;
-    private String name;
+    private final Desk desk;
+    private final String name;
     private boolean hasTreasure = false;
     private boolean isEndGame = false;
 
-    private Color color;
+    private final Color color;
 
     public Player(String name, Point startPosition, int vDeskSize, int hDeskSize) {
         position = new Point(startPosition);

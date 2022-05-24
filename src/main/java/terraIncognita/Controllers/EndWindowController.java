@@ -12,7 +12,7 @@ public class EndWindowController extends BasicController{
     @FXML
     private Label winnerLabel;
 
-    private StringProperty winnerName = new SimpleStringProperty("");
+    private final StringProperty winnerName = new SimpleStringProperty("");
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         winnerLabel.textProperty().bind(winnerName);

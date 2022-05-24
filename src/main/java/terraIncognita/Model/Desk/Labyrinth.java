@@ -11,7 +11,7 @@ public class Labyrinth extends Desk {
 
     private Point startPosition;
     private Point endPosition;
-    private Point[] wormholesPositions = new Point[10];
+    private final Point[] wormholesPositions = new Point[10];
     private int wormholesAmount = 0;
 
     private Labyrinth(int vCount, int hCount) {
@@ -19,7 +19,6 @@ public class Labyrinth extends Desk {
     }
 
     public static Labyrinth genLabyrinthFromExistingSource(String source) {
-        StringBuilder sb = new StringBuilder();
         int lineCount = 0;
         int lineLength = -1;
         try(BufferedReader input = new BufferedReader(new FileReader(source))) {

@@ -3,7 +3,6 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import terraIncognita.Controllers.StageController;
 import terraIncognita.Model.Game;
-import terraIncognita.Utils.Exceptions.SceneNotFoundException;
 
 import java.util.Timer;
 
@@ -18,8 +17,6 @@ public class Main extends Application {
     public static final String GAME_WINDOW_SCENE_NAME = "GameWindow";
     public static final String END_WINDOW_SCENE_NAME = "EndWindow";
 
-    private static final int WINDOW_WIDTH = 600;
-    private static final int WINDOW_HEIGHT = 400;
     public static final Timer timer = new Timer();
 
     public static Game game = new Game();

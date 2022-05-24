@@ -6,20 +6,17 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.jetbrains.annotations.NotNull;
+
 import terraIncognita.Main;
 import terraIncognita.Model.MovementDirection;
 import terraIncognita.Model.Player;
@@ -29,7 +26,6 @@ import terraIncognita.Utils.Utils;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.Timer;
 import java.util.TimerTask;
 
 public class GameWindowController extends BasicController{
@@ -144,16 +140,13 @@ public class GameWindowController extends BasicController{
 
     @Override
     public void setup(Object... args) {
-        this.ruledScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (isCanMove && !isNewTurnShowing) {
-                    switch (event.getCode()) {
-                        case UP -> movePlayer(MovementDirection.UP);
-                        case DOWN -> movePlayer(MovementDirection.DOWN);
-                        case LEFT -> movePlayer(MovementDirection.LEFT);
-                        case RIGHT -> movePlayer(MovementDirection.RIGHT);
-                    }
+        this.ruledScene.setOnKeyPressed(event -> {
+            if (isCanMove && !isNewTurnShowing) {
+                switch (event.getCode()) {
+                    case UP -> movePlayer(MovementDirection.UP);
+                    case DOWN -> movePlayer(MovementDirection.DOWN);
+                    case LEFT -> movePlayer(MovementDirection.LEFT);
+                    case RIGHT -> movePlayer(MovementDirection.RIGHT);
                 }
             }
         });

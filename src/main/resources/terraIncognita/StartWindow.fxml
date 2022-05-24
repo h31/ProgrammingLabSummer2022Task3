@@ -29,7 +29,7 @@
          </Label>
          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
             <children>
-               <Button contentDisplay="CENTER" minHeight="48.0" minWidth="80.0" mnemonicParsing="false" onAction="#btnDecPlayersClicked" prefHeight="48.0" prefWidth="80.0" style="-fx-background-color: transparent;">
+               <Button fx:id="decPlayerAmountBtn" contentDisplay="CENTER" disable="true" minHeight="48.0" minWidth="80.0" mnemonicParsing="false" onAction="#btnDecPlayersClicked" prefHeight="48.0" prefWidth="80.0" style="-fx-background-color: transparent;">
                   <graphic>
                      <ImageView fitHeight="67.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                         <image>
@@ -73,7 +73,7 @@
                      <Font name="Baskerville Old Face" size="37.0" />
                   </font>
                </Label>
-               <Button minHeight="48.0" minWidth="80.0" mnemonicParsing="false" onAction="#btnIncPlayersClicked" prefHeight="48.0" prefWidth="80.0" style="-fx-background-color: transparent;">
+               <Button fx:id="incPlayerAmountBtn" minHeight="48.0" minWidth="80.0" mnemonicParsing="false" onAction="#btnIncPlayersClicked" prefHeight="48.0" prefWidth="80.0" style="-fx-background-color: transparent;">
                   <graphic>
                      <ImageView fitHeight="67.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                         <image>

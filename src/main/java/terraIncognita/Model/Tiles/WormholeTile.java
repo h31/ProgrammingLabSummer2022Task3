@@ -1,7 +1,7 @@
 package terraIncognita.Model.Tiles;
 
 public class WormholeTile extends Tile {
-    private int number;
+    private final int number;
 
     public WormholeTile(char number) {
         this.number = Character.getNumericValue(number);

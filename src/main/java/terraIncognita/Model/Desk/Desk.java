@@ -1,8 +1,6 @@
 package terraIncognita.Model.Desk;
 
 import org.jetbrains.annotations.NotNull;
-import terraIncognita.Model.Tiles.EndTile;
-import terraIncognita.Model.Tiles.StartTile;
 import terraIncognita.Model.Tiles.Tile;
 import terraIncognita.Model.Tiles.UnopenedTile;
 import terraIncognita.Utils.Point;

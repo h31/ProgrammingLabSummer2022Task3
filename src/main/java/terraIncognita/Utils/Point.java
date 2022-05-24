@@ -1,7 +1,7 @@
 package terraIncognita.Utils;
 
 public class Point {
-    private int _x, _y;
+    private final int _x, _y;
 
     public Point(int x, int y) {
         this._x = x;

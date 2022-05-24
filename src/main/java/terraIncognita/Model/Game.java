@@ -7,11 +7,13 @@ import terraIncognita.Model.Tiles.Tile;
 import terraIncognita.Utils.Point;
 import terraIncognita.Utils.Utils;
 
+import java.util.Objects;
+
 public class Game {
 
     private static final int MIN_PLAYER_AMOUNT = 2;
     private static final int MAX_PLAYER_AMOUNT = 4;
-    private static final String STARTUP_LABYRINTH = Main.LABYRINTHS_DIR + "lab5.txt";
+    private static final String STARTUP_LABYRINTH = Main.LABYRINTHS_DIR + "lab1.txt";
 
     private int playerAmount = 2;
     private Labyrinth labyrinth;
@@ -63,8 +65,10 @@ public class Game {
         return playerAmount;
     }
 
-    public Player startGame() {
-        labyrinth = Labyrinth.genLabyrinthFromExistingSource(STARTUP_LABYRINTH);
+    public Player startGame(String labyrinthSource) {
+        labyrinth = Labyrinth.genLabyrinthFromExistingSource(
+                Objects.isNull(labyrinthSource)? STARTUP_LABYRINTH: labyrinthSource
+        );
         players = new Player[playerAmount];
         for (int i = 0; i < playerAmount; i++) {
             players[i] = new Player(

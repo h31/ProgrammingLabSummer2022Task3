@@ -75,7 +75,6 @@ public class GameWindowController extends BasicController{
         }
 
         placePlayerTo(Main.game.getActivePlayer().getPosition());
-        //loadDeskFrom(Main.game.nextPlayer());
     }
 
     private void revealTileAt(Point pos) {
@@ -145,22 +144,22 @@ public class GameWindowController extends BasicController{
 
     @Override
     public void setup(Object... args) {
-
-        this.ruledScene.setOnKeyTyped(new EventHandler<KeyEvent>() {
+        this.ruledScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 if (isCanMove && !isNewTurnShowing) {
-                    switch (event.getCharacter()) {
-                        case "w" -> movePlayer(MovementDirection.UP);
-                        case "s" -> movePlayer(MovementDirection.DOWN);
-                        case "a" -> movePlayer(MovementDirection.LEFT);
-                        case "d" -> movePlayer(MovementDirection.RIGHT);
+                    switch (event.getCode()) {
+                        case UP -> movePlayer(MovementDirection.UP);
+                        case DOWN -> movePlayer(MovementDirection.DOWN);
+                        case LEFT -> movePlayer(MovementDirection.LEFT);
+                        case RIGHT -> movePlayer(MovementDirection.RIGHT);
                     }
                 }
             }
         });
-
-        Player activePlayer = Main.game.startGame();
+        Player activePlayer = Main.game.startGame(
+                ((StartWindowController) Main.stageController.getControllerOf(Main.START_WINDOW_SCENE_NAME)).getLabyrinthSource()
+        );
 
         hTileAmount = Main.game.getLabyrinthHorSize();
         vTileAmount = Main.game.getLabyrinthVerSize();

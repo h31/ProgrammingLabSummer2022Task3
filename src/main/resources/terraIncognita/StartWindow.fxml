@@ -15,11 +15,16 @@
          <Image url="@../img/mateo-henneron-decors.jpg" />
       </image>
    </ImageView>
-   <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+   <VBox alignment="TOP_CENTER" prefWidth="800.0">
       <children>
           <Label alignment="CENTER" text="Terra Incognita" textAlignment="CENTER" textFill="#171c02">
             <font>
                <Font name="Baskerville Old Face" size="53.0" />
+            </font>
+         </Label>
+         <Label alignment="CENTER" text="Choose player amount" textAlignment="CENTER" textFill="#171c02" underline="true">
+            <font>
+               <Font name="Baskerville Old Face" size="25.0" />
             </font>
          </Label>
          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
@@ -32,7 +37,7 @@
                         </image>
                      </ImageView>
                   </graphic>
-               </Button>
+                     </Button>
                <Label fx:id="playerAmountLabel" contentDisplay="CENTER" text="2" textFill="#fffbe4">
                   <graphic>
                      <Rectangle arcHeight="100.0" arcWidth="100.0" height="57.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="126.0">
@@ -82,11 +87,15 @@
                </Button>
             </children>
          </HBox>
-         <Button mnemonicParsing="false" onAction="#btnStartGameClicked" style="-fx-background-color: transparent;">
+         <ComboBox fx:id="labyrinthComboBox" prefWidth="200.0" promptText="Choose labyrinth">
+            <VBox.margin>
+               <Insets top="10.0" />
+            </VBox.margin></ComboBox>
+         <Button fx:id="startBtn" mnemonicParsing="false" onAction="#btnStartGameClicked" style="-fx-background-color: transparent;">
             <graphic>
-               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+               <ImageView fx:id="startBtnImage" disable="true" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                   <image>
-                     <Image url="@../img/start_2.png" />
+                     <Image url="@../img/startDisabled.png" />
                   </image>
                </ImageView>
             </graphic>

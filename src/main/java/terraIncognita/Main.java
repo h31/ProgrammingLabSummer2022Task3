@@ -37,6 +37,7 @@ public class Main extends Application {
         stageController.loadScene(getClass().getResource(GAME_WINDOW_SCENE_NAME + ".fxml"));
         stageController.loadScene(getClass().getResource(END_WINDOW_SCENE_NAME + ".fxml"));
         stageController.prepareScene(START_WINDOW_SCENE_NAME);
+        stageController.getControllerOf(START_WINDOW_SCENE_NAME).setup();
         stageController.showScene();
     }
 

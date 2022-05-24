@@ -7,7 +7,6 @@ import terraIncognita.Utils.Point;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-
 public class Labyrinth extends Desk {
 
     private Point startPosition;
@@ -30,7 +29,6 @@ public class Labyrinth extends Desk {
                 if (lineLength == -1) {
                     lineLength = line.length();
                 }
-                sb.append(line);
                 line = input.readLine();
             }
         } catch (IOException e) {
@@ -38,10 +36,15 @@ public class Labyrinth extends Desk {
         }
 
         Labyrinth labyrinth = new Labyrinth(lineCount, lineLength);
-        char[] chars = sb.toString().toCharArray();
-        for(int y = 0; y < lineCount; y++) {
-            for (int x = 0; x < lineLength; x++) {
-                char ch = chars[y * lineLength + x];
+        try(BufferedReader input = new BufferedReader(new FileReader(source))) {
+            int ch = input.read();
+            int y = 0;
+            int x = 0;
+            while (ch != -1) {
+                if (ch == '\n') {
+                    ch = input.read();
+                    continue;
+                }
                 switch (ch) {
                     case ' ':
                         labyrinth.insertTile(new EmptyTile(), new Point(x, y));
@@ -60,13 +63,20 @@ public class Labyrinth extends Desk {
                         break;
                     default:
                         if (ch >= '0' && ch <='9') {
-                            labyrinth.insertTile(new WormholeTile(ch), new Point(x, y));
+                            labyrinth.insertTile(new WormholeTile((char)ch), new Point(x, y));
                         } else {
                             throw new RuntimeException(new IllegalArgumentException(
-                                    "Unexpected token " + ch + " in file " + source));
+                                    "Unexpected token " + (char)ch + " in file " + source));
                         }
                 }
+                x = (x + 1) % lineLength;
+                if (x == 0) {
+                    y++;
+                }
+                ch = input.read();
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
         return labyrinth;

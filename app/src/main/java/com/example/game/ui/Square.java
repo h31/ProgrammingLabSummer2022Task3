@@ -108,7 +108,8 @@ public class Square extends View {
         @SuppressLint("DrawAllocation") Paint paint = new Paint();
         String numberToString = String.valueOf(number);
         paint.setTypeface(ResourcesCompat.getFont(getContext(), R.font.clear_sans_bold));
-        paint.setColor(Color.parseColor(number < 8 ? "#776e65" : "#f9f6f2"));
+        paint.setColor(getResources().getColor(
+                number < 8 ? R.color.text_on_square_less_8 : R.color.text_on_square_more_8));
         paint.setTextSize((int) (size * 0.6) - (int) (size * (numberToString.length() - 1) * 0.1));
         // Для получения высоты текста
         @SuppressLint("DrawAllocation") Rect textBounds = new Rect();

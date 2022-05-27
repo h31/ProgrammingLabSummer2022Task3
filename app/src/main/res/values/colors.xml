@@ -28,4 +28,6 @@
     <color name="square_512">#edc850</color>
     <color name="square_1024">#edc53f</color>
     <color name="square_2048">#edc22e</color>
+    <color name="text_on_square_less_8">#776e65</color>
+    <color name="text_on_square_more_8">#f9f6f2</color>
 </resources>

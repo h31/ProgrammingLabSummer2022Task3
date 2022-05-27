@@ -17,7 +17,7 @@
     <string name="score">Score</string>
     <string name="time">Time</string>
     <string name="restart">Restart</string>
-    <string name="quick">Quick</string>
+    <string name="quit">Quit</string>
     <string name="win_text">You won game!</string>
     <string name="lose_text">You lost game!</string>
 </resources>

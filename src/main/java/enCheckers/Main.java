@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     private InfoCenter infoCenter;
+
     @Override
     public void start(Stage primaryStage) {
         try {
@@ -16,7 +17,7 @@ public class Main extends Application {
             initLayout(root);
             primaryStage.setScene(scene);
             primaryStage.show();
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

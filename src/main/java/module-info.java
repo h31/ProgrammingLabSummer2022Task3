@@ -10,7 +10,10 @@ module enCheckers {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires java.desktop;
 
     opens enCheckers to javafx.fxml;
     exports enCheckers;
+    exports enCheckers.UI;
+    opens enCheckers.UI to javafx.fxml;
 }

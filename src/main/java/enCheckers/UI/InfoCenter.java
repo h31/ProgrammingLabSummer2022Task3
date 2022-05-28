@@ -11,7 +11,7 @@ import javafx.scene.text.Font;
 public class InfoCenter {
     private StackPane pane;
     private Label message;
-    private Button startGameButton;
+    private final Button startGameButton;
 
     public InfoCenter() {
         pane = new StackPane();
@@ -29,6 +29,7 @@ public class InfoCenter {
         startGameButton = new Button("Start New Game");
         startGameButton.setMinSize(135, 30);
         startGameButton.setTranslateY(20);
+        setStartButtonOnAction(startNewGame());
         pane.getChildren().add(startGameButton);
     }
 
@@ -50,5 +51,17 @@ public class InfoCenter {
 
     public void setStartButtonOnAction(EventHandler<ActionEvent> onAction) {
         startGameButton.setOnAction(onAction);
+    }
+
+    private EventHandler<ActionEvent> startNewGame() {
+        return new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                hideStartButton();
+                updateMessage("Player White's Turn");
+                CheckBoard.isGame = true;
+
+            }
+        };
     }
 }

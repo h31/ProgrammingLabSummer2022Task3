@@ -1,5 +1,6 @@
 package enCheckers;
 
+import enCheckers.UI.CheckBoard;
 import enCheckers.UI.InfoCenter;
 import enCheckers.UI.TileBoard;
 import enCheckers.UI.UIConstants;
@@ -14,6 +15,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
     private InfoCenter infoCenter;
     private TileBoard tileBoard;
+    private CheckBoard checkBoard;
 
 
     public void start(Stage stage) {
@@ -32,6 +34,7 @@ public class Main extends Application {
     private void initLayout(BorderPane root) {
         initInfoCenter(root);
         initTileBoard(root);
+        initCheckBoard(root);
     }
 
     private void initTileBoard(BorderPane root) {
@@ -41,19 +44,11 @@ public class Main extends Application {
 
     private void initInfoCenter(BorderPane root) {
         infoCenter = new InfoCenter();
-        infoCenter.setStartButtonOnAction(startNewGame());
         root.getChildren().add(infoCenter.getStackPane());
     }
 
-    private EventHandler<ActionEvent> startNewGame() {
-        return new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                infoCenter.hideStartButton();
-                infoCenter.updateMessage("Player X's Turn");
-                System.out.println("Game is starting!!!");
-
-            }
-        };
+    private void initCheckBoard(BorderPane root) {
+        checkBoard = new CheckBoard(infoCenter);
+        root.getChildren().add(checkBoard.getStackPane());
     }
 }

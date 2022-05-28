@@ -1,4 +1,4 @@
-package enCheckers.UI;
+package Checkers.UI;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;

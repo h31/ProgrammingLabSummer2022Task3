@@ -1,4 +1,4 @@
-package enCheckers.UI;
+package Checkers.UI;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

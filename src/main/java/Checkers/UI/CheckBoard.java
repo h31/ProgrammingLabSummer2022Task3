@@ -1,14 +1,8 @@
-package enCheckers.UI;
+package Checkers.UI;
 
-import javafx.geometry.Insets;
+import Checkers.logic.Turner;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -16,8 +10,11 @@ import javafx.scene.text.Font;
 
 import java.util.Objects;
 
+import static java.lang.Math.abs;
+
 public class CheckBoard {
     private final StackPane pane;
+    boolean someToEatAll = false;
     private final InfoCenter infoCenter;
     private final byte size = 8;
     private final Check[][] checks = new Check[size][size];
@@ -29,9 +26,12 @@ public class CheckBoard {
     private int checkerTurnRow;
 
     private int checkerTurnCol;
+    private byte lastX = 0;
     private Color checkerTurnColor;
 
     private String playerTurn = "White";
+    private int cntBlack = 12;
+    private int cntWhite = 12;
 
     public CheckBoard(InfoCenter infoCenter) {
         this.infoCenter = infoCenter;
@@ -69,14 +69,16 @@ public class CheckBoard {
         return pane;
     }
 
-    private class Check {
+    public class Check {
+        boolean someToEat = false;
         int row;
+        boolean isKing;
         int col;
         private StackPane pane;
         private Label label;
         Rectangle border = new Rectangle();
 
-        Color color;
+        public Color color;
 
 
 
@@ -114,38 +116,96 @@ public class CheckBoard {
 
             pane.setOnMouseClicked(event -> {
                 if (isGame) {
-                    if (!isTurn && !Objects.equals(color, Color.TRANSPARENT)) {
+                    if (!isTurn && !Objects.equals(color, Color.TRANSPARENT) && lastX != 2 &&
+                            (isWhiteTurn() && color.equals(Color.GREEN) ||
+                                    !isWhiteTurn() && color.equals(Color.RED)) &&
+                            (!someToEatAll || someToEat && someToEatAll)) {
                         isTurn = true;
                         checkerTurnRow = row;
                         checkerTurnCol = col;
                         checkerTurnColor = color;
                         inline(row, col);
-                    } else if (checkerTurnRow == row && checkerTurnCol == col){
+                    }  else if (checkerTurnRow == row && checkerTurnCol == col && lastX != 2) {
                         isTurn = false;
                         unline(checkerTurnRow, checkerTurnCol);
-                    } else if (checkerTurnColor == color){
+                    } else if (checkerTurnRow == row && checkerTurnCol == col) {
+                        isTurn = false;
+                        unline(checkerTurnRow, checkerTurnCol);
+                        lastX = 0;
+                        changePlayerTurn();
+                    }else if(checkerTurnColor == color && isTurn && lastX != 2) {
                         unline(checkerTurnRow, checkerTurnCol);
                         checkerTurnRow = row;
                         checkerTurnCol = col;
                         inline(row, col);
                     } else if (isTurn) {
                         if (Objects.equals(color, Color.TRANSPARENT)) {
-                            pane.getChildren().remove(border);
-                            if (Objects.equals(checkerTurnColor, Color.GREEN)) {
-                                color = Color.GREEN;
+                            Turner checkTurn = new Turner(checkerTurnRow, checkerTurnCol, row, col, color, checkerTurnColor);
+                            byte x = checkTurn.checkTurn(checks);
+                            if (x != 0) {
+                                if (x == 1 && !checkTurn.checkAll(checks, checkerTurnCol, checkerTurnRow)) {
+                                    pane.getChildren().remove(border);
+                                    border.setFill(checkerTurnColor);
+                                    pane.getChildren().add(border);
+                                    color = checkerTurnColor;
+                                    delete(checkerTurnRow, checkerTurnCol);
+                                    isTurn = false;
+                                    changePlayerTurn();
+                                } else if (x == 2) {
+                                    pane.getChildren().remove(border);
+                                    border.setFill(Color.GOLD);
+                                    pane.getChildren().add(border);
+                                    color = checkerTurnColor;
+                                    delete(checkerTurnRow, checkerTurnCol);
+                                    if (checks[checkTurn.eatenRow()][checkTurn.eatenCol()].color.equals(Color.RED)) {
+                                        cntBlack--;
+                                    } else {
+                                        cntWhite--;
+                                    }
+                                    delete(checkTurn.eatenRow(), checkTurn.eatenCol());
+                                    checkerTurnRow = row;
+                                    checkerTurnCol = col;
+                                    lastX = 2;
+                                    if (!checkTurn.checkAll(checks, checkerTurnCol, checkerTurnRow)) {
+                                        pane.getChildren().remove(border);
+                                        border.setFill(checkerTurnColor);
+                                        pane.getChildren().add(border);
+                                        isTurn = false;
+                                        changePlayerTurn();
+                                        lastX = 0;
+                                    }
+                                }
                             }
-                            if (Objects.equals(checkerTurnColor, Color.RED)) {
-                                color = Color.RED;
-                            }
-                            border.setFill(color);
-                            pane.getChildren().add(border);
-                            delete(checkerTurnRow, checkerTurnCol);
-                            isTurn = false;
-                            changePlayerTurn();
                         }
+                    }
+                    boolean t = false;
+                    for (byte i = 0; i < size; i ++) {
+                        for(byte j = 0; j < size; j++) {
+                            if (!checks[i][j].color.equals(Color.TRANSPARENT)) {
+                                Turner checkTurn2 = new Turner(i, j, 0, 0,
+                                        Color.TRANSPARENT, checks[i][j].color);
+                                if (checkTurn2.checkAll(checks, i, j)) {
+                                    t = true;
+                                    if (!checks[i][j].someToEat) checks[i][j].someToEat = true;
+                                    if (!someToEatAll) someToEatAll = true;
+                                } else checks[i][j].someToEat = false;
+                            }
+                        }
+                    }
+                    if (!t) someToEatAll = false;
+                }
+                if (cntBlack == 0 || cntWhite == 0) {
+                    isGame = false;
+                    if (cntBlack == 0) {
+                        infoCenter.updateMessage("White Won!");
+                    } else {
+                        infoCenter.updateMessage("Black Won!");
                     }
                 }
             });
+
+
+
         }
 
         public void delete(int row, int col) {
@@ -168,6 +228,12 @@ public class CheckBoard {
             check.pane.getChildren().remove(check.border);
             check.border.setFill(check.color);
             check.pane.getChildren().add(check.border);
+        }
+
+        public boolean isWhiteTurn() {
+            boolean result;
+            result = playerTurn.equals("White");
+            return result;
         }
 
         public StackPane getStackPane() {

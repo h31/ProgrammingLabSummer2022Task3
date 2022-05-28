@@ -1,12 +1,10 @@
-package enCheckers;
+package Checkers;
 
-import enCheckers.UI.CheckBoard;
-import enCheckers.UI.InfoCenter;
-import enCheckers.UI.TileBoard;
-import enCheckers.UI.UIConstants;
+import Checkers.UI.CheckBoard;
+import Checkers.UI.InfoCenter;
+import Checkers.UI.TileBoard;
+import Checkers.UI.UIConstants;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 
 import javafx.scene.layout.BorderPane;

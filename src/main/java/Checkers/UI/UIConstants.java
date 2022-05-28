@@ -1,4 +1,4 @@
-package enCheckers.UI;
+package Checkers.UI;
 
 public class UIConstants {
     public static final int APP_WIDTH = 600;

@@ -12,8 +12,8 @@ module enCheckers {
     requires com.almasb.fxgl.all;
     requires java.desktop;
 
-    opens enCheckers to javafx.fxml;
-    exports enCheckers;
-    exports enCheckers.UI;
-    opens enCheckers.UI to javafx.fxml;
+    opens Checkers to javafx.fxml;
+    exports Checkers;
+    exports Checkers.UI;
+    opens Checkers.UI to javafx.fxml;
 }

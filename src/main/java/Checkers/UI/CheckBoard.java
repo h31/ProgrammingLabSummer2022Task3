@@ -25,6 +25,7 @@ public class CheckBoard {
     private boolean isTurn = false;
 
     private int checkerTurnRow;
+    private boolean checkerTurnIsKing;
 
     private int checkerTurnCol;
     boolean checkerSomeToEat = false;
@@ -74,7 +75,7 @@ public class CheckBoard {
     public class Check {
         boolean someToEat = false;
         int row;
-        boolean isKing;
+        public boolean isKing;
         int col;
         private StackPane pane;
         private Label label;
@@ -113,11 +114,12 @@ public class CheckBoard {
 
             label = new Label("");
             label.setAlignment(Pos.CENTER);
-            label.setFont(Font.font(24));
+            label.setFont(Font.font(30));
             pane.getChildren().add(label);
 
             pane.setOnMouseClicked(event -> {
                 if (isGame) {
+                    makeAKing(row, col);
                     if (!isTurn && !Objects.equals(color, Color.TRANSPARENT) && lastX != 2 &&
                             (isWhiteTurn() && color.equals(Color.GREEN) && (someToEat || !someToEatAllWhite) ||
                                     !isWhiteTurn() && color.equals(Color.RED)  && (someToEat || !someToEatAllBlack))) {
@@ -126,6 +128,7 @@ public class CheckBoard {
                         checkerTurnCol = col;
                         checkerTurnColor = color;
                         checkerSomeToEat = someToEat;
+                        checkerTurnIsKing = isKing;
                         inline(row, col);
                     }  else if (checkerTurnRow == row && checkerTurnCol == col && lastX != 2) {
                         isTurn = false;
@@ -139,6 +142,7 @@ public class CheckBoard {
                         unline(checkerTurnRow, checkerTurnCol);
                         checkerTurnRow = row;
                         checkerTurnCol = col;
+                        checkerTurnIsKing = isKing;
                         inline(row, col);
                     } else if (isTurn) {
                         if (Objects.equals(color, Color.TRANSPARENT)) {
@@ -150,6 +154,7 @@ public class CheckBoard {
                                     border.setFill(checkerTurnColor);
                                     pane.getChildren().add(border);
                                     color = checkerTurnColor;
+                                    isKing = checkerTurnIsKing;
                                     delete(checkerTurnRow, checkerTurnCol);
                                     isTurn = false;
                                     if (isWhiteTurn() && row == 0 || !isWhiteTurn() && row == 7) {
@@ -161,6 +166,10 @@ public class CheckBoard {
                                     border.setFill(Color.GOLD);
                                     pane.getChildren().add(border);
                                     color = checkerTurnColor;
+                                    isKing = checkerTurnIsKing;
+                                    if (isWhiteTurn() && row == 0 || !isWhiteTurn() && row == 7) {
+                                        makeAKing(row, col);
+                                    }
                                     delete(checkerTurnRow, checkerTurnCol);
                                     if (checks[checkTurn.eatenRow()][checkTurn.eatenCol()].color.equals(Color.RED)) {
                                         cntBlack--;
@@ -237,6 +246,7 @@ public class CheckBoard {
         public void makeAKing(int row, int col) {
             Check check = checks[row][col];
             check.label.setText("X");
+            check.isKing = true;
         }
 
         public void inline(int row, int col) {

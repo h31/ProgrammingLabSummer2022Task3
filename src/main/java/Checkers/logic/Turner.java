@@ -36,37 +36,41 @@ public class Turner {
         initEnemyColor(checkerTurnColor);
         int difRow = abs(row - checkerTurnRow);
         int difCol = abs(col - checkerTurnCol);
-        if (checkerTurnColor.equals(Color.GREEN) && color.equals(Color.TRANSPARENT)) {
-            if (row < checkerTurnRow && difCol == 1 && difRow == 1) return 1;
-            if (difCol == 2 && difRow == 2) {
-                if (row > checkerTurnRow) {
-                    row--;
-                } else {
-                    row++;
+        if (!checks[checkerTurnRow][checkerTurnCol].isKing) {
+            if (checkerTurnColor.equals(Color.GREEN) && color.equals(Color.TRANSPARENT)) {
+                if (row < checkerTurnRow && difCol == 1 && difRow == 1) return 1;
+                if (difCol == 2 && difRow == 2) {
+                    if (row > checkerTurnRow) {
+                        row--;
+                    } else {
+                        row++;
+                    }
+                    if (col > checkerTurnCol) {
+                        col--;
+                    } else {
+                        col++;
+                    }
+                    if (checks[row][col].color.equals(checkerEnemyColor)) return 2;
                 }
-                if (col > checkerTurnCol) {
-                    col--;
-                } else {
-                    col++;
-                }
-                if (checks[row][col].color.equals(checkerEnemyColor)) return 2;
-            }
 
-        } else if (checkerTurnColor.equals(Color.RED) && color.equals(Color.TRANSPARENT)) {
-            if (row > checkerTurnRow && difCol == 1 && difRow == 1) return 1;
-            if (difCol == 2 && difRow == 2) {
-                if (row > checkerTurnRow) {
-                    row--;
-                } else {
-                    row++;
+            } else if (checkerTurnColor.equals(Color.RED) && color.equals(Color.TRANSPARENT)) {
+                if (row > checkerTurnRow && difCol == 1 && difRow == 1) return 1;
+                if (difCol == 2 && difRow == 2) {
+                    if (row > checkerTurnRow) {
+                        row--;
+                    } else {
+                        row++;
+                    }
+                    if (col > checkerTurnCol) {
+                        col--;
+                    } else {
+                        col++;
+                    }
+                    if (checks[row][col].color.equals(checkerEnemyColor)) return 2;
                 }
-                if (col > checkerTurnCol) {
-                    col--;
-                } else {
-                    col++;
-                }
-                if (checks[row][col].color.equals(checkerEnemyColor)) return 2;
             }
+        } else {
+
         }
         return 0;
     }

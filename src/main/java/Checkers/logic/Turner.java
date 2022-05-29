@@ -110,6 +110,15 @@ public class Turner {
         return row;
     }
 
+    public void set(int checkerTurnRow, int checkerTurnCol, int row, int col, Color color, Color checkerTurnColor){
+        this.col = col;
+        this.row = row;
+        this.color = color;
+        this.checkerTurnCol = checkerTurnCol;
+        this.checkerTurnRow = checkerTurnRow;
+        this.checkerTurnColor = checkerTurnColor;
+    }
+
     public int eatenCol() {
         return col;
     }

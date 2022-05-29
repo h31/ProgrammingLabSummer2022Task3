@@ -14,7 +14,8 @@ import static java.lang.Math.abs;
 
 public class CheckBoard {
     private final StackPane pane;
-    boolean someToEatAll = false;
+    boolean someToEatAllWhite = false;
+    boolean someToEatAllBlack = false;
     private final InfoCenter infoCenter;
     private final byte size = 8;
     private final Check[][] checks = new Check[size][size];
@@ -26,6 +27,7 @@ public class CheckBoard {
     private int checkerTurnRow;
 
     private int checkerTurnCol;
+    boolean checkerSomeToEat = false;
     private byte lastX = 0;
     private Color checkerTurnColor;
 
@@ -117,13 +119,13 @@ public class CheckBoard {
             pane.setOnMouseClicked(event -> {
                 if (isGame) {
                     if (!isTurn && !Objects.equals(color, Color.TRANSPARENT) && lastX != 2 &&
-                            (isWhiteTurn() && color.equals(Color.GREEN) ||
-                                    !isWhiteTurn() && color.equals(Color.RED)) &&
-                            (!someToEatAll || someToEat && someToEatAll)) {
+                            (isWhiteTurn() && color.equals(Color.GREEN) && (someToEat || !someToEatAllWhite) ||
+                                    !isWhiteTurn() && color.equals(Color.RED)  && (someToEat || !someToEatAllBlack))) {
                         isTurn = true;
                         checkerTurnRow = row;
                         checkerTurnCol = col;
                         checkerTurnColor = color;
+                        checkerSomeToEat = someToEat;
                         inline(row, col);
                     }  else if (checkerTurnRow == row && checkerTurnCol == col && lastX != 2) {
                         isTurn = false;
@@ -133,7 +135,7 @@ public class CheckBoard {
                         unline(checkerTurnRow, checkerTurnCol);
                         lastX = 0;
                         changePlayerTurn();
-                    }else if(checkerTurnColor == color && isTurn && lastX != 2) {
+                    }else if(checkerTurnColor == color && isTurn && lastX != 2 && checkerSomeToEat == someToEat) {
                         unline(checkerTurnRow, checkerTurnCol);
                         checkerTurnRow = row;
                         checkerTurnCol = col;
@@ -150,6 +152,9 @@ public class CheckBoard {
                                     color = checkerTurnColor;
                                     delete(checkerTurnRow, checkerTurnCol);
                                     isTurn = false;
+                                    if (isWhiteTurn() && row == 0 || !isWhiteTurn() && row == 7) {
+                                        makeAKing(row, col);
+                                    }
                                     changePlayerTurn();
                                 } else if (x == 2) {
                                     pane.getChildren().remove(border);
@@ -178,21 +183,34 @@ public class CheckBoard {
                             }
                         }
                     }
-                    boolean t = false;
+
+                    boolean tWhite = false;
+                    boolean tBlack = false;
                     for (byte i = 0; i < size; i ++) {
                         for(byte j = 0; j < size; j++) {
                             if (!checks[i][j].color.equals(Color.TRANSPARENT)) {
-                                Turner checkTurn2 = new Turner(i, j, 0, 0,
+                                Turner checkTurn2 = new Turner(j, i, 0, 0,
                                         Color.TRANSPARENT, checks[i][j].color);
-                                if (checkTurn2.checkAll(checks, i, j)) {
-                                    t = true;
-                                    if (!checks[i][j].someToEat) checks[i][j].someToEat = true;
-                                    if (!someToEatAll) someToEatAll = true;
+                                if (checkTurn2.checkAll(checks, j, i)) {
+
+                                    checks[i][j].someToEat = true;
+                                    if (checks[i][j].color.equals(Color.GREEN)) {
+                                        someToEatAllWhite = true;
+                                        tWhite = true;
+                                    } else {
+                                        someToEatAllBlack = true;
+                                        tBlack = true;
+                                    }
                                 } else checks[i][j].someToEat = false;
                             }
                         }
                     }
-                    if (!t) someToEatAll = false;
+                    someToEatAllWhite = tWhite;
+                    someToEatAllBlack = tBlack;
+
+
+
+
                 }
                 if (cntBlack == 0 || cntWhite == 0) {
                     isGame = false;
@@ -214,6 +232,11 @@ public class CheckBoard {
             check.border.setFill(Color.TRANSPARENT);
             check.pane.getChildren().add(check.border);
             check.color = Color.TRANSPARENT;
+        }
+
+        public void makeAKing(int row, int col) {
+            Check check = checks[row][col];
+            check.label.setText("X");
         }
 
         public void inline(int row, int col) {

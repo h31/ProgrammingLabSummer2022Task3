@@ -1,8 +1,12 @@
 package Checkers.UI;
 
 import Checkers.logic.Turner;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -113,13 +117,17 @@ public class CheckBoard {
             pane.getChildren().add(border);
 
             label = new Label("");
+            label.setMinWidth(51);
+            label.setMinHeight(51);
             label.setAlignment(Pos.CENTER);
             label.setFont(Font.font(30));
             pane.getChildren().add(label);
 
             pane.setOnMouseClicked(event -> {
+
                 if (isGame) {
-                    makeAKing(row, col);
+
+
                     if (!isTurn && !Objects.equals(color, Color.TRANSPARENT) && lastX != 2 &&
                             (isWhiteTurn() && color.equals(Color.GREEN) && (someToEat || !someToEatAllWhite) ||
                                     !isWhiteTurn() && color.equals(Color.RED)  && (someToEat || !someToEatAllBlack))) {
@@ -245,7 +253,7 @@ public class CheckBoard {
 
         public void makeAKing(int row, int col) {
             Check check = checks[row][col];
-            check.label.setText("X");
+            check.label.setBackground(new Background(new BackgroundFill(Color.GOLD, new CornerRadii(0), new Insets(0))));
             check.isKing = true;
         }
 

@@ -172,7 +172,7 @@ public class Logic {
                 if (board[currX][currY].hasPiece() &&
                         board[currX][currY].getPiece().getPieceType() != piece.getPieceType()) {  //Считаем шашки врага,
                     // идущие подряд
-                    piecesOnLineInA_Row += 1;
+                    piecesOnLineInA_Row ++;
                     x1 = currX;
                     y1 = currY; //Координаты "потенциально убитой" шашки
                 }
@@ -196,6 +196,8 @@ public class Logic {
         if (result.getMoveType() == MoveType.KILL) {
             getBoard()[toBoard(result.getPiece().getStartFromX())][toBoard(result.getPiece().getStartFromY())].setPiece(null);
         }
+
+        piece.drawer(x,y);
 
     }
 

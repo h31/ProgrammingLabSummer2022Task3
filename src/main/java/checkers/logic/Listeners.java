@@ -82,7 +82,6 @@ public class Listeners {
                 //Перемещаем на доске в логике
                 move(piece, newX, newY, result);
 
-                piece.drawer(newX, newY);
 
                 if (result.getMoveType() == MoveType.NORMAL) {
                     switchTurn(); //Смена хода

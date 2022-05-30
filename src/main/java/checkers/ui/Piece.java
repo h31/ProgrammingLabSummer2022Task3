@@ -17,7 +17,7 @@ public class Piece extends StackPane {
     private double startFromX, startFromY; //С этой точки мы начинаем движения при ходе шашки
     private boolean killer;
     private boolean crown;
-    private static final ImageView crownView = new ImageView(Media.getImgCrown());
+    private static ImageView crownView;
 
 
 
@@ -83,6 +83,7 @@ public class Piece extends StackPane {
 
     public Piece(Piece.PieceType pieceType, int x, int y) {
         this.pieceType = pieceType;
+        crownView = new ImageView(Media.getImgCrown());
 
 
         drawer(x, y);// Перемещение к левому верхнему углу клетки при начальной отрисовке

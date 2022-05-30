@@ -7,6 +7,8 @@ import java.util.Optional;
 
 
 import static checkers.logic.Logic.getStepsStack;
+import static checkers.ui.Buttons.getNoButton;
+import static checkers.ui.Buttons.getYesButton;
 import static checkers.ui.ContentCreator.*;
 import static checkers.ui.changeContent.changingTurn;
 
@@ -16,14 +18,13 @@ public class ConfirmBox {
 
     public static boolean confirmation(String headerText, String message) {
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, headerText, getYesButton(), getNoButton());
         alert.setTitle("Confirmation Dialog");
-        alert.setHeaderText(headerText);
         alert.setContentText(message);
         alert.initOwner(getWindow());
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK){
+        if (result.get() == getYesButton()){
             boardPainter();
             changingTurn();
             getStepsStack().clear();

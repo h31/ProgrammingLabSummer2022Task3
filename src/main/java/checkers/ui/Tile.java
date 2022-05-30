@@ -34,4 +34,8 @@ public class Tile extends Rectangle {
 
     }
 
+    public Tile(){
+
+    }
+
 }

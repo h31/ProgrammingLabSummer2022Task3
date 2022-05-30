@@ -17,6 +17,8 @@ import static checkers.logic.Logic.*;
 import static checkers.ui.ConfirmBox.confirmation;
 import static checkers.ui.ContentCreator.*;
 import static checkers.ui.Piece.deadPiece;
+import static checkers.ui.changeContent.changingTurn;
+import static checkers.ui.changeContent.eatAlarm;
 
 
 public class Listeners {
@@ -168,6 +170,7 @@ public class Listeners {
         return e -> {
             String message = turn == Piece.PieceType.BLACK ? "\n      Поражение чёрных" : "\n      Поражение белых";
             if (confirmation("Вы точно хотите сдаться?", message)) {
+                setTurn(Piece.PieceType.WHITE); //Чтобы при перезапуске белые ходили всегда первыми
                 boardPainter();
                 changingTurn();
                 getStepsStack().clear();

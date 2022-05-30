@@ -1,36 +1,22 @@
 package checkers.ui;
 
-
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Parent;
-
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-
-
-
-
 import static checkers.logic.Listeners.*;
 import static checkers.logic.Logic.*;
 import static checkers.ui.Media.getIcon;
-import static checkers.ui.Media.getImgUndoButton;
+import static checkers.ui.changeContent.changingTurn;
 import static javafx.scene.layout.BorderPane.setMargin;
 
 public class ContentCreator {
@@ -50,8 +36,7 @@ public class ContentCreator {
     private static final Text whiteEat = new Text("Белые должны есть"),
             blackEat = new Text("Чёрные должны есть");
 
-    private static final Button undoButton = new Button(), surrenderButton = new Button();
-    private static final HBox bottom = new HBox(surrenderButton, undoButton);
+    private static final HBox bottom = new HBox(Buttons.getSurrenderButton(), Buttons.getUndoButton());
 
 
     private static final FlowPane right = new FlowPane(Orientation.HORIZONTAL),
@@ -93,10 +78,7 @@ public class ContentCreator {
     public static Group getTileGroup() {
         return tileGroup;
     }
-
-    public static BorderPane getBp() {
-        return bp;
-    }
+    
 
     /**
      * Отрисовавает начальное окно вместе со всеми Pane, стилями и размерами
@@ -108,7 +90,6 @@ public class ContentCreator {
 
 
 
-        setTurn(Piece.PieceType.WHITE); //Чтобы при перезапуске белые ходили всегда первыми
         changingTurn();
         topText.setFont(Font.font("Arial", FontWeight.BOLD, 36));
         topText.setTextFill(Color.ORANGE);
@@ -122,7 +103,6 @@ public class ContentCreator {
         bp.setTop(top);
         top.setAlignment(Pos.TOP_CENTER);
 
-
         right.setMaxSize(2 * TILE_SIZE + 12, TILE_SIZE * 6 + 10);//Размер FlowPane, куда складываются съеденные шашки
         left.setMaxSize(2 * TILE_SIZE + 12, TILE_SIZE * 6 + 10);
         right.setAlignment(Pos.TOP_CENTER);
@@ -132,7 +112,6 @@ public class ContentCreator {
         left.setVgap(10);
         right.setHgap(10);
         right.setVgap(10);
-
 
         bp.setRight(right);
 
@@ -145,35 +124,13 @@ public class ContentCreator {
         root.setPrefSize(WIDTH * TILE_SIZE, HEIGHT * TILE_SIZE);
         root.setMaxSize(WIDTH * TILE_SIZE, HEIGHT * TILE_SIZE);
 
-
         bp.setBottom(bottom);
         bottom.setAlignment(Pos.CENTER_RIGHT);
         bottom.setSpacing(8);
-        ImageView undo = new ImageView(getImgUndoButton());
-        undo.setFitHeight(TILE_SIZE * 0.43);
-        undo.setFitWidth(TILE_SIZE * 0.43);
-        undoButton.setGraphic(undo);
-        undoButton.setStyle("-fx-background-color: #bdb7ae;" +
-                " -fx-border-radius: 5;");
-
-
-        surrenderButton.setText("Сдаться");
-        surrenderButton.setStyle("-fx-background-color: #bdb7ae;" +
-                " -fx-font: 22 arial");
-
-
-        surrenderButton.addEventHandler(MouseEvent.MOUSE_CLICKED, surrender());
-
-
         boardPainter();
         root.getChildren().addAll(tileGroup, pieceGroup);//Само поле с шашками
 
         bp.setCenter(root);
-
-
-        undoButton.addEventHandler(MouseEvent.MOUSE_CLICKED, stepBack());
-        undoButton.setPrefSize(surrenderButton.getWidth(), surrenderButton.getHeight());
-
 
         bottom.setPadding(new Insets(20,10,5,0));
 
@@ -225,18 +182,5 @@ public class ContentCreator {
         }
     }
 
-
-    public static void eatAlarm() {
-        if (isKillNeed()) {
-            getUnderTopText().setText(turn== Piece.PieceType.BLACK ? getBlackEat().getText() : getWhiteEat().getText());
-        } else {
-            getUnderTopText().setText("");
-        }
-    }
-
-    public static void changingTurn() {
-        getTopText().setText(turn== Piece.PieceType.BLACK ? "Чёрные ходят" : "Белые ходят");
-
-    }
 
 }

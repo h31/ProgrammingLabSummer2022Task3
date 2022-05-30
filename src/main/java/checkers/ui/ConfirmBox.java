@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import static checkers.logic.Logic.getStepsStack;
 import static checkers.ui.ContentCreator.*;
+import static checkers.ui.changeContent.changingTurn;
 
 public class ConfirmBox {
 

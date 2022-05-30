@@ -22,8 +22,8 @@ public class Media {
                     "input/blackTile2.jpg"));
             imgWhiteTile = new Image(new FileInputStream(
                     "input/whiteTile2.jpg"));
-            icon = new Image("C:\\ProgrammingLabSummer2022Task3\\input\\icon.png");
-            imgUndoButton = new Image(new FileInputStream("C:\\ProgrammingLabSummer2022Task3\\input\\undo.png"));
+            icon = new Image("C:/ProgrammingLabSummer2022Task3/input/icon.png");
+            imgUndoButton = new Image(new FileInputStream("C:/ProgrammingLabSummer2022Task3/input/undo.png"));
         } catch (FileNotFoundException | NullPointerException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");

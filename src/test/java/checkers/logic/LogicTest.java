@@ -19,7 +19,7 @@ class LogicTest {
         turn = false;
         for (int x = 0; x < WIDTH; x++) {
             for (int y = 0; y < HEIGHT; y++) { //Строю начальное поле
-                Tile tile = new Tile((x + y) % 2 == 0, x, y);
+                Tile tile = new Tile();
                 //Закрашиваю клетки нужным цветом
                 board[x][y] = tile;
 
@@ -39,7 +39,6 @@ class LogicTest {
 
             }
         }
-
         setBoard(board);
     }
 
@@ -47,5 +46,15 @@ class LogicTest {
     void rightColor() {
         assertEquals(board[0][1].getPiece().getPieceType(), Piece.PieceType.BLACK);
         assertEquals(board[0][7].getPiece().getPieceType(), Piece.PieceType.WHITE);
+    }
+
+    @Test
+    void legalMove(){
+        MoveResult result = tryMove(board[3][5].getPiece(), 5 ,4);
+        assertEquals(result.getMoveType(), MoveType.NORMAL);
+        move(board[3][5].getPiece(), 5,4, result);
+        assertTrue(board[5][4].hasPiece());
+        assertFalse(board[3][5].hasPiece());
+
     }
 }

@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 
 
 import static checkers.logic.Listeners.start;
+import static checkers.ui.Buttons.makeButtons;
 
 public class WelcomePage {
     
@@ -50,6 +51,8 @@ public class WelcomePage {
 
         pane.setPrefSize(320,350);
         pane.getChildren().add(vbox);
+
+        makeButtons();
 
         return pane;
     }

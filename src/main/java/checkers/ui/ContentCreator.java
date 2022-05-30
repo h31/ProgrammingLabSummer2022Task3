@@ -27,18 +27,13 @@ public class ContentCreator {
     private static final Group tileGroup = new Group();//Сюда будут наноситься клетки
     private static final Group pieceGroup = new Group(); //Сюда будут наноситься шашки
     private static final Pane root = new Pane();
-
-
     private static final VBox top = new VBox();
     private static final Label topText = new Label(), underTopText = new Label(); //Текст для хода
     // и напоминание о еде
-
     private static final Text whiteEat = new Text("Белые должны есть"),
             blackEat = new Text("Чёрные должны есть");
 
     private static final HBox bottom = new HBox(Buttons.getSurrenderButton(), Buttons.getUndoButton());
-
-
     private static final FlowPane right = new FlowPane(Orientation.HORIZONTAL),
             left = new FlowPane(Orientation.HORIZONTAL);
 
@@ -49,7 +44,6 @@ public class ContentCreator {
     public static FlowPane getRight() {
         return right;
     }
-
 
     public static Label getUnderTopText() {
         return underTopText;
@@ -78,17 +72,13 @@ public class ContentCreator {
     public static Group getTileGroup() {
         return tileGroup;
     }
-    
 
     /**
      * Отрисовавает начальное окно вместе со всеми Pane, стилями и размерами
      */
 
     public static void createContent() {
-
         bp.setStyle("-fx-background-color: #3B4248");
-
-
 
         changingTurn();
         topText.setFont(Font.font("Arial", FontWeight.BOLD, 36));
@@ -120,7 +110,6 @@ public class ContentCreator {
         setMargin(left, new Insets(0, 10, 0, 0));//Отодвигаем от границы
         setMargin(right, new Insets(0, 0, 0, 10));
 
-
         root.setPrefSize(WIDTH * TILE_SIZE, HEIGHT * TILE_SIZE);
         root.setMaxSize(WIDTH * TILE_SIZE, HEIGHT * TILE_SIZE);
 
@@ -141,7 +130,6 @@ public class ContentCreator {
         window.show();
         window.setOnCloseRequest(closeProgram(window));
     }
-
 
     public static void boardPainter() {
         //Отрисовка начальной доски

@@ -99,10 +99,6 @@ public class Turner {
                         SomeStaff.makeAKing(selectedCellRow, selectedCellCol);
                     }
                     SomeStaff.delete(activeCheckerRow, activeCheckerCol);
-                    if ((SomeStaff.isWhiteTurn() && selectedCellRow == 0 || !SomeStaff.isWhiteTurn() &&
-                            selectedCellRow == 7) && !activeCheckerKing) {
-                        SomeStaff.makeAKing(selectedCellRow, selectedCellCol);
-                    }
                     SomeStaff.changePlayerTurn();
                 } else if (x == 2) { //все случаи, когда кого-то шашка берёт
                     selectedChecker.label.setBackground(UIConstants.BACK_GOLD);
@@ -124,12 +120,11 @@ public class Turner {
 
                     activeCheckerRow = selectedCellRow;
                     activeCheckerCol = selectedCellCol;
-                    activeCheckerKing = selectedChecker.isKing;
 
                     resultOfLastTurn = 2;
                     verifierTurns.init(activeCheckerRow, activeCheckerCol);
 
-                    if (!verifierTurns.checkForTakes()) { //проверка на то, можно ли в след. позиции есть
+                    if (!verifierTurns.checkForTakes() || activeCheckerKing != selectedChecker.isKing) {//проверка на то, можно ли в след. позиции есть
                         if (activeCheckerColor.equals("White")) {
                             selectedChecker.label.setBackground(UIConstants.BACK_WHITE);
                         } else {
@@ -137,6 +132,7 @@ public class Turner {
                         }
                         SomeStaff.changePlayerTurn();
                     }
+                    activeCheckerKing = selectedChecker.isKing;
                 }
             }
         }
@@ -151,7 +147,7 @@ public class Turner {
             for(byte j = 0; j < size; j++) {
                 if (!checkers[i][j].color.equals("No")) {
                     verifierTurns.init(i, j);
-                    thereIsNoDraw = verifierTurns.checkForTurns();
+                    thereIsNoDraw = thereIsNoDraw || verifierTurns.checkForTurns();
                     if (verifierTurns.checkForTakes()) {
                         checkers[i][j].someToEat = true;
                         if (checkers[i][j].color.equals("White")) {

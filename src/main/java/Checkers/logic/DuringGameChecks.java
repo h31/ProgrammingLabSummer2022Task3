@@ -21,8 +21,8 @@ public class DuringGameChecks {
 
     }
 
-    public static void checkForDraw(boolean isThatADraw) {
-        if (isThatADraw) {
+    public static void checkForDraw(boolean isThatNoDraw) {
+        if (!isThatNoDraw) {
             Turner.infoCenter.updateMessage("Draw!!!");
             CheckBoard.isGame = false;
         }

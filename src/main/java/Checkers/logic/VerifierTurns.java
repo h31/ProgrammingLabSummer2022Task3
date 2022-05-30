@@ -52,7 +52,8 @@ public class VerifierTurns {
             difCol = (selectedCellCol - activeCheckerCol) / difCol;
             int i = activeCheckerRow + difRow;
             int j = activeCheckerCol + difCol;
-            if (activeCheckerKing) {
+            if (activeCheckerKing || selectedCellRow < activeCheckerRow && activeCheckerColor.equals("White") ||
+                    selectedCellRow > activeCheckerRow && activeCheckerColor.equals("Black")) {
                 switch (dif) {
                     case (1) -> {
                         return 1;
@@ -65,27 +66,13 @@ public class VerifierTurns {
                         }
                     }
                 }
-                } else {
-                    if (selectedCellRow < activeCheckerRow && activeCheckerColor.equals("White") ||
-                            selectedCellRow > activeCheckerRow && activeCheckerColor.equals("Black")) {
-                        switch (dif) {
-                            case (1) -> {
-                                return 1;
-                            }
-                            case (2) -> {
-                                if (checkers[i][j].color.equals(enemyCheckerColor)) {
-                                    eatenCheckerRow = i;
-                                    eatenCheckerCol = j;
-                                    return 2;
-                                }
-                            }
-                        }
-                    }
-                }
             }
+        }
 
         return 0; //This turn is impossible
     }
+
+
 
 
     public int checkAllTurns() {

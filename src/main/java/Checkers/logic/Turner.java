@@ -88,36 +88,38 @@ public class Turner {
             int x = verifierTurns.checkTurn(selectedCellRow, selectedCellCol);
             if (x != 0) {
                 if (x == 1 && !activeCheckerSomeToEat) { //если можно походить без взятия и взять шашка никого не может
-                    selectedChecker.labelDown.setBackground(UIConstants.BLACK_BACK);
-                    if (activeCheckerColor.equals("White")) {
+                    selectedChecker.labelDown.setBackground(UIConstants.BLACK_BACK); //Ставим нижний слой шашки
+                    if (activeCheckerColor.equals("White")) { //Ставим верхний слой шашки
                         selectedChecker.labelUp.setBackground(UIConstants.WHITE_CHECKER);
                     } else {
                         selectedChecker.labelUp.setBackground(UIConstants.BLACK_CHECKER);
                     }
                     selectedChecker.color = activeCheckerColor;
                     if ((SomeStaff.isWhiteTurn() && selectedCellRow == 0 || !SomeStaff.isWhiteTurn() &&
-                            selectedCellRow == 7) || activeCheckerKing) {
+                            selectedCellRow == 7) || activeCheckerKing) { //Ставим\переносим статус дамки
                         SomeStaff.makeAKing(selectedCellRow, selectedCellCol);
                     }
-                    SomeStaff.delete(activeCheckerRow, activeCheckerCol);
+                    SomeStaff.delete(activeCheckerRow, activeCheckerCol); //Удаляем старую шашку
                     SomeStaff.changePlayerTurn();
                 } else if (x == 2) { //все случаи, когда кого-то шашка берёт
-                    selectedChecker.labelDown.setBackground(UIConstants.BLACK_BACK);
-                    selectedChecker.labelUp.setBackground(UIConstants.CHOOSEN_CHECKER);
+                    selectedChecker.labelDown.setBackground(UIConstants.BLACK_BACK); //ставим нижний слой
+                    selectedChecker.labelUp.setBackground(UIConstants.CHOOSEN_CHECKER); //подсвечиваем
                     selectedChecker.color = activeCheckerColor;
 
                     if (activeCheckerKing || (SomeStaff.isWhiteTurn() && selectedCellRow == 0 ||
-                            !SomeStaff.isWhiteTurn() && selectedCellRow == 7)) {
+                            !SomeStaff.isWhiteTurn() && selectedCellRow == 7)) { //ставим\переносим дамку
                         SomeStaff.makeAKing(selectedCellRow, selectedCellCol);
                     }
-                    SomeStaff.delete(activeCheckerRow, activeCheckerCol);
+                    SomeStaff.delete(activeCheckerRow, activeCheckerCol); //удаляем старую
 
+                    //проверяем, какой цвет взяли
                     if (checkers[verifierTurns.getEatenRow()][verifierTurns.getEatenCol()].color.equals("Black")) {
                         DuringGameChecks.cntBlack--;
                     } else {
                         DuringGameChecks.cntWhite--;
                     }
 
+                    //удаляем съеденную
                     SomeStaff.delete(verifierTurns.getEatenRow(), verifierTurns.getEatenCol());
 
                     activeCheckerRow = selectedCellRow;
@@ -125,8 +127,8 @@ public class Turner {
 
                     resultOfLastTurn = 2;
                     verifierTurns.init(activeCheckerRow, activeCheckerCol);
-
-                    if (!verifierTurns.checkForTakes() || activeCheckerKing != selectedChecker.isKing) {//проверка на то, можно ли в след. позиции есть
+                    //проверяем, продолжатся ли взятия на следующем ходу
+                    if (!verifierTurns.checkForTakes() || activeCheckerKing != selectedChecker.isKing) {
                         if (activeCheckerColor.equals("White")) {
                             selectedChecker.labelUp.setBackground(UIConstants.WHITE_CHECKER);
                         } else {

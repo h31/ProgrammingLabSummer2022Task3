@@ -69,15 +69,15 @@ public class CheckBoard {
             pane.getChildren().add(border);
 
             labelUp = new Label("");
-            labelUp.setMinWidth(51);
-            labelUp.setMinHeight(51);
+            labelUp.setMinWidth(49);
+            labelUp.setMinHeight(49);
             labelUp.setAlignment(Pos.CENTER);
             labelUp.setFont(Font.font(30));
             labelDown = new Label("");
-            labelDown.setMinWidth(55);
+            labelDown.setMinWidth(53);
             labelDown.setMinHeight(55);
             labelDown.setAlignment(Pos.CENTER);
-
+            labelDown.setTranslateY(1);
             if ((row + col) % 2 == 1) {
                 if (row < 3) {
                     labelUp.setBackground(UIConstants.BLACK_CHECKER);

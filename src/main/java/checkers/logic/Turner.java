@@ -1,14 +1,14 @@
-package Checkers.logic;
+package checkers.logic;
 
-import Checkers.UI.CheckBoard;
-import Checkers.UI.InfoCenter;
-import Checkers.UI.UIConstants;
+import checkers.UI.CheckersBoard;
+import checkers.UI.InfoCenter;
+import checkers.UI.UIConstants;
 
 public class Turner {
     static int resultOfLastTurn = 0;
     static InfoCenter infoCenter;
     public static boolean isTurn = false;
-    public static CheckBoard.Checker[][] checkers = CheckBoard.checkers;
+    public static CheckersBoard.Checker[][] checkers = CheckersBoard.checkers;
     int selectedCellRow; //Ряд выбранной клетки
     int selectedCellCol; //Столбец выбранной клетки
     String selectedCellColor; //Цвет фигуры в выбранной клетке
@@ -22,7 +22,7 @@ public class Turner {
     boolean activeCheckerKing;
     VerifierTurns verifierTurns = new VerifierTurns(); //Проверка хода
 
-    static CheckBoard.Checker selectedChecker;
+    static CheckersBoard.Checker selectedChecker;
 
 
     public Turner(InfoCenter infoCenter) {

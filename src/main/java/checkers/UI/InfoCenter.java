@@ -1,4 +1,4 @@
-package Checkers.UI;
+package checkers.UI;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -12,6 +12,7 @@ public class InfoCenter {
     private final StackPane pane;
     private final Label message;
     private final Button startGameButton;
+    private PrimaryStage primaryStage;
 
     public InfoCenter() {
         pane = new StackPane();
@@ -26,10 +27,11 @@ public class InfoCenter {
         message.setTranslateY(-20);
         pane.getChildren().add(message);
 
-        startGameButton = new Button("Start New Game");
+        startGameButton = new Button("Create New Field");
         startGameButton.setMinSize(135, 30);
         startGameButton.setTranslateY(20);
-        setStartButtonOnAction(startNewGame());
+        setStartButtonOnAction(createNewField());
+
         pane.getChildren().add(startGameButton);
     }
 
@@ -52,12 +54,37 @@ public class InfoCenter {
     public void setStartButtonOnAction(EventHandler<ActionEvent> onAction) {
         startGameButton.setOnAction(onAction);
     }
+    public void setButtonOnAction(Button button, EventHandler<ActionEvent> onAction) {
+        button.setOnAction(onAction);
+    }
 
     private EventHandler<ActionEvent> startNewGame() {
         return event -> {
             hideStartButton();
-            updateMessage("Player Black's Turn");
-            CheckBoard.isGame = true;
+            updateMessage("Black's Turn");
+            CheckersBoard.isGame = true;
+            startGameButton.setText("Restart");
+            setStartButtonOnAction(restart());
+        };
+    }
+
+    private EventHandler<ActionEvent> createNewField() {
+        return event -> {
+            updateMessage("Start New Game");
+            startGameButton.setText("Start New Game");
+            setStartButtonOnAction(startNewGame());
+            primaryStage = new PrimaryStage(FirstStage.root, this);
+        };
+    }
+
+    private EventHandler<ActionEvent> restart() {
+        return event -> {
+            updateMessage("Start New Game");
+            startGameButton.setText("Start New Game");
+            setStartButtonOnAction(startNewGame());
+            FirstStage.root = FirstStage.copyOfRoot;
+            primaryStage = new PrimaryStage(FirstStage.root, this);
+
         };
     }
 }

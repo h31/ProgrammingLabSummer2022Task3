@@ -1,8 +1,8 @@
-package Checkers.logic;
+package checkers.logic;
 
-import Checkers.UI.CheckBoard;
-import Checkers.UI.InfoCenter;
-import Checkers.UI.UIConstants;
+import checkers.UI.CheckersBoard;
+import checkers.UI.InfoCenter;
+import checkers.UI.UIConstants;
 
 public class SomeStaff {
     public static String playerTurn = "Black";
@@ -14,7 +14,7 @@ public class SomeStaff {
         } else {
             playerTurn = "Black";
         }
-        infoCenter.updateMessage("Player " + playerTurn + "'s turn");
+        infoCenter.updateMessage(playerTurn + "'s turn");
         Turner.isTurn = false;
         Turner.resultOfLastTurn = 0;
     }
@@ -24,12 +24,12 @@ public class SomeStaff {
     }
 
     public static void inline(int row, int col) {
-        CheckBoard.Checker checker = Turner.checkers[row][col];
+        CheckersBoard.Checker checker = Turner.checkers[row][col];
         checker.labelUp.setBackground(UIConstants.CHOOSEN_CHECKER);
     }
 
     public static void unline(int row, int col) {
-        CheckBoard.Checker checker = Turner.checkers[row][col];
+        CheckersBoard.Checker checker = Turner.checkers[row][col];
         if (checker.color.equals("White")){
             checker.labelUp.setBackground(UIConstants.WHITE_CHECKER);
         } else {
@@ -38,17 +38,17 @@ public class SomeStaff {
     }
 
     public static void delete(int row, int col) {
-        CheckBoard.Checker checker = Turner.checkers[row][col];
+        CheckersBoard.Checker checker = Turner.checkers[row][col];
         checker.labelUp.setBackground(UIConstants.NO_CHECKER);
-        checker.labelUp.setText("");
+        checker.labelKing.setBackground(UIConstants.NO_CHECKER);
         checker.labelDown.setBackground(UIConstants.NO_CHECKER);
         checker.color = "No";
         checker.someToEat = false;
     }
 
     public static void makeAKing(int row, int col) {
-        CheckBoard.Checker checker = Turner.checkers[row][col];
-        checker.labelUp.setText("X");
+        CheckersBoard.Checker checker = Turner.checkers[row][col];
+        checker.labelKing.setBackground(UIConstants.KING);
         checker.isKing = true;
     }
 }

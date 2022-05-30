@@ -1,11 +1,11 @@
-package Checkers.logic;
+package checkers.logic;
 
-import Checkers.UI.CheckBoard;
+import checkers.UI.CheckersBoard;
 
 import static java.lang.Math.abs;
 
 public class VerifierTurns {
-    private final CheckBoard.Checker[][] checkers = CheckBoard.checkers;
+    private final CheckersBoard.Checker[][] checkers = CheckersBoard.checkers;
     private int activeCheckerRow;
     private int activeCheckerCol;
     private String activeCheckerColor;

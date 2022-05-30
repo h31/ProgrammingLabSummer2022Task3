@@ -1,4 +1,4 @@
-package Checkers.logic;
+package checkers.logic;
 
 import static java.lang.Math.max;
 

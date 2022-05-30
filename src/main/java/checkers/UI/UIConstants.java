@@ -1,4 +1,4 @@
-package Checkers.UI;
+package checkers.UI;
 
 import javafx.geometry.Insets;
 import javafx.scene.layout.Background;
@@ -22,7 +22,9 @@ public class UIConstants {
     public static final Background NO_CHECKER =
             new Background(new BackgroundFill(Color.TRANSPARENT, new CornerRadii(360), Insets.EMPTY));
     public static final Background CHOOSEN_CHECKER =
-            new Background(new BackgroundFill(Color.GOLD, new CornerRadii(360), Insets.EMPTY));
+            new Background(new BackgroundFill(Color.YELLOW, new CornerRadii(360), Insets.EMPTY));
     public static final Background BLACK_BACK =
             new Background(new BackgroundFill(Color.BLACK, new CornerRadii(360), Insets.EMPTY));
+    public static final Background KING =
+            new Background(new BackgroundFill(Color.GREEN, new CornerRadii(360), Insets.EMPTY));
 }

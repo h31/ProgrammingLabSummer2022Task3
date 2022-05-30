@@ -1,15 +1,16 @@
-package Checkers.UI;
+package checkers.UI;
 
-import Checkers.logic.Turner;
+import checkers.logic.DuringGameChecks;
+import checkers.logic.SomeStaff;
+import checkers.logic.Turner;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
-public class CheckBoard {
+public class CheckersBoard {
     private final StackPane pane;
     final InfoCenter infoCenter;
     private static final byte size = UIConstants.SIZE;
@@ -17,13 +18,18 @@ public class CheckBoard {
     public static boolean isGame = false;
     Turner turner;
 
-    public CheckBoard(InfoCenter infoCenter) {
+    public CheckersBoard(InfoCenter infoCenter) {
         this.infoCenter = infoCenter;
         turner = new Turner(infoCenter);
         pane = new StackPane();
         pane.setMinSize(UIConstants.APP_WIDTH, UIConstants.TILE_BOARD_HEIGHT);
         pane.setTranslateX((double) UIConstants.APP_WIDTH / 2);
         pane.setTranslateY((double) (UIConstants.TILE_BOARD_HEIGHT / 2) + UIConstants.INFO_CENTER_HEIGHT);
+
+        DuringGameChecks.cntBlack = 12;
+        DuringGameChecks.cntWhite = 12;
+        DuringGameChecks.someToEatAllBlack = false;
+        DuringGameChecks.someToEatAllWhite = false;
 
         addAllChecks();
     }
@@ -48,6 +54,7 @@ public class CheckBoard {
         private final StackPane pane;
         public Label labelDown;
         public Label labelUp;
+        public Label labelKing;
         public int row;
         public int col;
         public String color;
@@ -68,14 +75,26 @@ public class CheckBoard {
 
             pane.getChildren().add(border);
 
+
+            labelKing = new Label("");
+            labelKing.setMinWidth(15);
+            labelKing.setMinHeight(15);
+            labelKing.setMaxWidth(15);
+            labelKing.setMaxHeight(15);
+            labelKing.setAlignment(Pos.CENTER);
+            labelKing.setBackground(UIConstants.NO_CHECKER);
             labelUp = new Label("");
             labelUp.setMinWidth(49);
             labelUp.setMinHeight(49);
+            labelUp.setMaxWidth(49);
+            labelUp.setMaxHeight(49);
             labelUp.setAlignment(Pos.CENTER);
-            labelUp.setFont(Font.font(30));
+            labelUp.setFont(Font.font(40));
             labelDown = new Label("");
             labelDown.setMinWidth(53);
             labelDown.setMinHeight(55);
+            labelDown.setMaxWidth(53);
+            labelDown.setMaxHeight(55);
             labelDown.setAlignment(Pos.CENTER);
             labelDown.setTranslateY(1);
             if ((row + col) % 2 == 1) {
@@ -97,10 +116,11 @@ public class CheckBoard {
             }
             pane.getChildren().add(labelDown);
             pane.getChildren().add(labelUp);
+            pane.getChildren().add(labelKing);
 
 
             pane.setOnMouseClicked(event -> {
-                if (isGame && event.getButton() == MouseButton.PRIMARY) turner.makeATurn(row, col);
+                turner.makeATurn(row, col);
                 event.consume();
             });
 

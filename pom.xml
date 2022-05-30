@@ -129,7 +129,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                Checkers.Main
+                                checkers.Main
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

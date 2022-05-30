@@ -1,6 +1,6 @@
-package Checkers.logic;
+package checkers.logic;
 
-import Checkers.UI.CheckBoard;
+import checkers.UI.CheckersBoard;
 
 public class DuringGameChecks {
     public static boolean someToEatAllWhite = false;
@@ -12,19 +12,22 @@ public class DuringGameChecks {
     public static void checkForWinner() {
         if (cntBlack == 0) {
             Turner.infoCenter.updateMessage("White Won!!!");
-            CheckBoard.isGame = false;
+            CheckersBoard.isGame = false;
         }
         if (cntWhite == 0) {
             Turner.infoCenter.updateMessage("Black Won!!!");
-            CheckBoard.isGame = false;
+            CheckersBoard.isGame = false;
         }
 
+        if (!CheckersBoard.isGame) {
+            Turner.infoCenter.showStartButton();
+        }
     }
 
     public static void checkForDraw(boolean isThatNoDraw) {
         if (!isThatNoDraw) {
             Turner.infoCenter.updateMessage("Draw!!!");
-            CheckBoard.isGame = false;
+            CheckersBoard.isGame = false;
         }
     }
 }

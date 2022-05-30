@@ -1,4 +1,4 @@
-package Checkers.UI;
+package checkers.UI;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -47,22 +47,16 @@ public class TileBoard {
     private static class Tile {
         private final StackPane pane;
 
-        private final Rectangle border = new Rectangle();
-
         private Tile(int row, int col) {
             pane = new StackPane();
             pane.setMinSize(60, 60);
+            Rectangle border = new Rectangle();
             border.setWidth(60);
             border.setHeight(60);
             if ((row + col) % 2 == 1) border.setFill(Color.rgb(84, 137, 28));
             else border.setFill(Color.rgb(255, 239, 188));
             border.setStroke(Color.BLACK);
             pane.getChildren().add(border);
-
-            Label label = new Label("");
-            label.setAlignment(Pos.CENTER);
-            label.setFont(Font.font(24));
-            pane.getChildren().add(label);
         }
 
         private StackPane getStackPane() {

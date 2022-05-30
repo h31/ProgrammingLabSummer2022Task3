@@ -19,7 +19,7 @@ public class InfoCenter {
         pane.setTranslateX((double) UIConstants.APP_WIDTH / 2);
         pane.setTranslateY((double) UIConstants.INFO_CENTER_HEIGHT / 2);
 
-        message = new Label("English Draughters");
+        message = new Label("English Checkers");
         message.setMinSize(UIConstants.APP_WIDTH, UIConstants.INFO_CENTER_HEIGHT);
         message.setFont(Font.font(24));
         message.setAlignment(Pos.CENTER);

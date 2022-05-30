@@ -20,6 +20,7 @@ public class Main extends Application {
             Scene scene = new Scene(root, UIConstants.APP_WIDTH, UIConstants.APP_HEIGHT);
             initLayout(root);
             stage.setScene(scene);
+            stage.setTitle("English Checkers");
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();

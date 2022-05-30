@@ -1,6 +1,6 @@
 package Checkers.UI;
 
-import Checkers.logic.Turner;
+import Checkers.logic.VerifierTurns;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -15,19 +15,18 @@ import javafx.scene.text.Font;
 
 import java.util.Objects;
 
-import static java.lang.Math.abs;
-
 public class CheckBoard {
     public Background backWhite= new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY));
     public Background backBlack= new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY));
     public Background backNo= new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY));
     public Background backGo= new Background(new BackgroundFill(Color.GOLD, CornerRadii.EMPTY, Insets.EMPTY));
     private final StackPane pane;
+    private final VerifierTurns verifierTurns = new VerifierTurns();
     boolean someToEatAllWhite = false;
     boolean someToEatAllBlack = false;
     private final InfoCenter infoCenter;
-    private final byte size = 8;
-    private final Check[][] checks = new Check[size][size];
+    private static final byte size = 8;
+    public static final Check[][] checks = new Check[size][size];
 
     public static boolean isGame = false;
 
@@ -156,11 +155,6 @@ public class CheckBoard {
                     }  else if (isTurn && checkerTurnRow == row && checkerTurnCol == col && lastX != 2) {
                         isTurn = false;
                         unline(checkerTurnRow, checkerTurnCol);
-                    } else if (isTurn && checkerTurnRow == row && checkerTurnCol == col) {
-                        isTurn = false;
-                        unline(checkerTurnRow, checkerTurnCol);
-                        lastX = 0;
-                        changePlayerTurn();
                     }else if(isTurn && checkerTurnColor.equals(color) && lastX != 2 && checkerSomeToEat == someToEat) {
                         unline(checkerTurnRow, checkerTurnCol);
                         checkerTurnRow = row;
@@ -169,10 +163,10 @@ public class CheckBoard {
                         inline(row, col);
                     } else if (isTurn) {
                         if (Objects.equals(color, "No")) {
-                            Turner checkTurn = new Turner(checkerTurnRow, checkerTurnCol, row, col, color, checkerTurnColor);
-                            byte x = checkTurn.checkTurn(checks);
+                            verifierTurns.init(checkerTurnRow, checkerTurnCol);
+                            int x = verifierTurns.checkTurn(row, col);
                             if (x != 0) {
-                                if (x == 1 && !checkTurn.checkAll(checks, checkerTurnCol, checkerTurnRow)) {
+                                if (x == 1 && !someToEat) {
                                     if (checkerTurnColor.equals("White")) {
                                         label.setBackground(backWhite);
                                     } else {
@@ -200,17 +194,17 @@ public class CheckBoard {
                                         makeAKing(row, col);
                                     }
                                     delete(checkerTurnRow, checkerTurnCol);
-                                    if (checks[checkTurn.eatenRow()][checkTurn.eatenCol()].color.equals("Black")) {
+                                    if (checks[verifierTurns.getEatenRow()][verifierTurns.getEatenCol()].color.equals("Black")) {
                                         cntBlack--;
                                     } else {
                                         cntWhite--;
                                     }
-                                    delete(checkTurn.eatenRow(), checkTurn.eatenCol());
+                                    delete(verifierTurns.getEatenRow(), verifierTurns.getEatenCol());
                                     checkerTurnRow = row;
                                     checkerTurnCol = col;
                                     checkerTurnIsKing = isKing;
                                     lastX = 2;
-                                    if (!checkTurn.checkAll(checks, checkerTurnCol, checkerTurnRow)) {
+                                    if (!someToEat) {
                                         if (checkerTurnColor.equals("White")) {
                                             label.setBackground(backWhite);
                                         } else {
@@ -230,10 +224,8 @@ public class CheckBoard {
                     for (byte i = 0; i < size; i ++) {
                         for(byte j = 0; j < size; j++) {
                             if (!checks[i][j].color.equals("No")) {
-                                Turner checkTurn2 = new Turner(j, i, 0, 0,
-                                        "No", checks[i][j].color);
-                                if (checkTurn2.checkAll(checks, j, i)) {
-
+                                verifierTurns.init(i, j);
+                                if (verifierTurns.checkForTakes()) {
                                     checks[i][j].someToEat = true;
                                     if (checks[i][j].color.equals("White")) {
                                         someToEatAllWhite = true;

@@ -10,16 +10,14 @@ import javafx.scene.text.Font;
 public class TileBoard {
 
     private final StackPane pane;
-    private InfoCenter infoCenter;
     private final byte size = 10;
-    private Tile[][] tiles = new Tile[size][size];
+    private final Tile[][] tiles = new Tile[size][size];
 
-    public TileBoard(InfoCenter infoCenter) {
-        this.infoCenter = infoCenter;
+    public TileBoard() {
         pane = new StackPane();
         pane.setMinSize(UIConstants.APP_WIDTH, UIConstants.TILE_BOARD_HEIGHT);
-        pane.setTranslateX(UIConstants.APP_WIDTH / 2);
-        pane.setTranslateY((UIConstants.TILE_BOARD_HEIGHT / 2) + UIConstants.INFO_CENTER_HEIGHT);
+        pane.setTranslateX((double) UIConstants.APP_WIDTH / 2);
+        pane.setTranslateY((double) (UIConstants.TILE_BOARD_HEIGHT / 2) + UIConstants.INFO_CENTER_HEIGHT);
 
         addAllTiles();
     }
@@ -59,9 +57,8 @@ public class TileBoard {
         return pane;
     }
 
-    private class Tile {
-        private StackPane pane;
-        private Label label;
+    private static class Tile {
+        private final StackPane pane;
 
         public Rectangle border = new Rectangle();
 
@@ -74,7 +71,7 @@ public class TileBoard {
             border.setStroke(Color.BLACK);
             pane.getChildren().add(border);
 
-            label = new Label("");
+            Label label = new Label("");
             label.setAlignment(Pos.CENTER);
             label.setFont(Font.font(24));
             pane.getChildren().add(label);

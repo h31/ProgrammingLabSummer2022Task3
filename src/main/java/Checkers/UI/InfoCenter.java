@@ -9,15 +9,15 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 
 public class InfoCenter {
-    private StackPane pane;
-    private Label message;
+    private final StackPane pane;
+    private final Label message;
     private final Button startGameButton;
 
     public InfoCenter() {
         pane = new StackPane();
         pane.setMinSize(UIConstants.APP_WIDTH, UIConstants.INFO_CENTER_HEIGHT);
-        pane.setTranslateX(UIConstants.APP_WIDTH / 2);
-        pane.setTranslateY(UIConstants.INFO_CENTER_HEIGHT / 2);
+        pane.setTranslateX((double) UIConstants.APP_WIDTH / 2);
+        pane.setTranslateY((double) UIConstants.INFO_CENTER_HEIGHT / 2);
 
         message = new Label("English Draughters");
         message.setMinSize(UIConstants.APP_WIDTH, UIConstants.INFO_CENTER_HEIGHT);
@@ -54,14 +54,10 @@ public class InfoCenter {
     }
 
     private EventHandler<ActionEvent> startNewGame() {
-        return new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                hideStartButton();
-                updateMessage("Player White's Turn");
-                CheckBoard.isGame = true;
-
-            }
+        return event -> {
+            hideStartButton();
+            updateMessage("Player White's Turn");
+            CheckBoard.isGame = true;
         };
     }
 }

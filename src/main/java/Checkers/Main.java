@@ -12,8 +12,6 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
     private InfoCenter infoCenter;
-    private TileBoard tileBoard;
-    private CheckBoard checkBoard;
 
 
     public void start(Stage stage) {
@@ -36,7 +34,7 @@ public class Main extends Application {
     }
 
     private void initTileBoard(BorderPane root) {
-        tileBoard = new TileBoard(infoCenter);
+        TileBoard tileBoard = new TileBoard();
         root.getChildren().add(tileBoard.getStackPane());
     }
 
@@ -46,7 +44,7 @@ public class Main extends Application {
     }
 
     private void initCheckBoard(BorderPane root) {
-        checkBoard = new CheckBoard(infoCenter);
+        CheckBoard checkBoard = new CheckBoard(infoCenter);
         root.getChildren().add(checkBoard.getStackPane());
     }
 }

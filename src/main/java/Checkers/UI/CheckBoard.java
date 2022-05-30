@@ -1,5 +1,6 @@
 package Checkers.UI;
 
+import Checkers.logic.Turner;
 import Checkers.logic.VerifierTurns;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -24,11 +25,12 @@ public class CheckBoard {
     private final VerifierTurns verifierTurns = new VerifierTurns();
     boolean someToEatAllWhite = false;
     boolean someToEatAllBlack = false;
-    private final InfoCenter infoCenter;
+    public final InfoCenter infoCenter;
     private static final byte size = 8;
-    public static final Check[][] checks = new Check[size][size];
+    public static Check[][] checks = new Check[size][size];
 
     public static boolean isGame = false;
+    Turner turner;
 
     private boolean isTurn = false;
 
@@ -50,8 +52,8 @@ public class CheckBoard {
         pane.setMinSize(UIConstants.APP_WIDTH, UIConstants.TILE_BOARD_HEIGHT);
         pane.setTranslateX(UIConstants.APP_WIDTH / 2);
         pane.setTranslateY((UIConstants.TILE_BOARD_HEIGHT / 2) + UIConstants.INFO_CENTER_HEIGHT);
-
         addAllChecks();
+        turner = new Turner(infoCenter);
     }
 
     private void addAllChecks() {
@@ -81,12 +83,12 @@ public class CheckBoard {
     }
 
     public class Check {
-        boolean someToEat = false;
-        int row;
+        public boolean someToEat = false;
+        public int row;
         public boolean isKing;
-        int col;
+        public int col;
         private StackPane pane;
-        private Label label;
+        public Label label;
         Rectangle border = new Rectangle();
 
         public String color;
@@ -132,128 +134,9 @@ public class CheckBoard {
 
 
             pane.setOnMouseClicked(event -> {
-                if (MouseButton.SECONDARY == event.getButton()) {
-                    makeAKing(row, col);
-                }
-
-                if (MouseButton.MIDDLE == event.getButton()) {
+                if (event.getButton() == MouseButton.SECONDARY) {
                     System.out.println(someToEat);
-                    System.out.println(someToEatAllWhite);
-                }
-
-                if (isGame && event.getButton() != MouseButton.SECONDARY && event.getButton() != MouseButton.MIDDLE) {
-                    if (!isTurn && !color.equals("No") && lastX != 2 &&
-                            (isWhiteTurn() && color.equals("White") && (someToEat || !someToEatAllWhite) ||
-                                    !isWhiteTurn() && color.equals("Black")  && (someToEat || !someToEatAllBlack))) {
-                        isTurn = true;
-                        checkerTurnRow = row;
-                        checkerTurnCol = col;
-                        checkerTurnColor = color;
-                        checkerSomeToEat = someToEat;
-                        checkerTurnIsKing = isKing;
-                        inline(row, col);
-                    }  else if (isTurn && checkerTurnRow == row && checkerTurnCol == col && lastX != 2) {
-                        isTurn = false;
-                        unline(checkerTurnRow, checkerTurnCol);
-                    }else if(isTurn && checkerTurnColor.equals(color) && lastX != 2 && checkerSomeToEat == someToEat) {
-                        unline(checkerTurnRow, checkerTurnCol);
-                        checkerTurnRow = row;
-                        checkerTurnCol = col;
-                        checkerTurnIsKing = isKing;
-                        inline(row, col);
-                    } else if (isTurn) {
-                        if (Objects.equals(color, "No")) {
-                            verifierTurns.init(checkerTurnRow, checkerTurnCol);
-                            int x = verifierTurns.checkTurn(row, col);
-                            if (x != 0) {
-                                if (x == 1 && !someToEat) {
-                                    if (checkerTurnColor.equals("White")) {
-                                        label.setBackground(backWhite);
-                                    } else {
-                                        label.setBackground(backBlack);
-                                    }
-                                    color = checkerTurnColor;
-                                    isKing = checkerTurnIsKing;
-                                    if (isKing) {
-                                        makeAKing(row, col);
-                                    }
-                                    delete(checkerTurnRow, checkerTurnCol);
-                                    isTurn = false;
-                                    if ((isWhiteTurn() && row == 0 || !isWhiteTurn() && row == 7) && !checkerTurnIsKing) {
-                                        makeAKing(row, col);
-                                    }
-                                    changePlayerTurn();
-                                } else if (x == 2) {
-                                    label.setBackground(backGo);
-                                    color = checkerTurnColor;
-                                    isKing = checkerTurnIsKing;
-                                    if (isKing) {
-                                        makeAKing(row, col);
-                                    }
-                                    if (isWhiteTurn() && row == 0 || !isWhiteTurn() && row == 7) {
-                                        makeAKing(row, col);
-                                    }
-                                    delete(checkerTurnRow, checkerTurnCol);
-                                    if (checks[verifierTurns.getEatenRow()][verifierTurns.getEatenCol()].color.equals("Black")) {
-                                        cntBlack--;
-                                    } else {
-                                        cntWhite--;
-                                    }
-                                    delete(verifierTurns.getEatenRow(), verifierTurns.getEatenCol());
-                                    checkerTurnRow = row;
-                                    checkerTurnCol = col;
-                                    checkerTurnIsKing = isKing;
-                                    lastX = 2;
-                                    verifierTurns.init(checkerTurnRow, checkerTurnCol);
-                                    if (!verifierTurns.checkForTakes()) {
-                                        if (checkerTurnColor.equals("White")) {
-                                            label.setBackground(backWhite);
-                                        } else {
-                                            label.setBackground(backBlack);
-                                        }
-                                        isTurn = false;
-                                        changePlayerTurn();
-                                        lastX = 0;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    boolean tWhite = false;
-                    boolean tBlack = false;
-                    for (byte i = 0; i < size; i ++) {
-                        for(byte j = 0; j < size; j++) {
-                            if (!checks[i][j].color.equals("No")) {
-                                verifierTurns.init(i, j);
-                                if (verifierTurns.checkForTakes()) {
-                                    checks[i][j].someToEat = true;
-                                    if (checks[i][j].color.equals("White")) {
-                                        someToEatAllWhite = true;
-                                        tWhite = true;
-                                    } else {
-                                        someToEatAllBlack = true;
-                                        tBlack = true;
-                                    }
-                                } else checks[i][j].someToEat = false;
-                            }
-                        }
-                    }
-                    someToEatAllWhite = tWhite;
-                    someToEatAllBlack = tBlack;
-
-
-
-
-                }
-                if (cntBlack == 0 || cntWhite == 0) {
-                    isGame = false;
-                    if (cntBlack == 0) {
-                        infoCenter.updateMessage("White Won!");
-                    } else {
-                        infoCenter.updateMessage("Black Won!");
-                    }
-                }
+                } else if(isGame) turner.makeATurn(row, col, checks);
             });
 
 

@@ -3,22 +3,14 @@ package Checkers.logic;
 import Checkers.UI.CheckBoard;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.max;
 
 public class VerifierTurns {
-    private CheckBoard.Check[][] checkers = CheckBoard.checks;;
+    private final CheckBoard.Check[][] checkers = CheckBoard.checks;
     private int activeCheckerRow;
     private int activeCheckerCol;
     private String activeCheckerColor;
-    private String enemyCheckerColor;
     private boolean activeCheckerIsKing;
-    private int cntEnemies;
-    private int difRow;
-    private int difCol;
-    private int dif;
-
-    private int i;
-    private int j;
+    private String enemyCheckerColor;
     private int cnt;
     private final Repeater repeater = new Repeater();
 
@@ -53,20 +45,20 @@ public class VerifierTurns {
 
     public int checkTurn(int selectedCellRow, int selectedCellCol) {
 
-        difRow = abs(selectedCellRow - activeCheckerRow);
-        difCol = abs(selectedCellCol - activeCheckerCol);
+        int difRow = abs(selectedCellRow - activeCheckerRow);
+        int difCol = abs(selectedCellCol - activeCheckerCol);
         String selectedCellColor = checkers[selectedCellRow][selectedCellCol].color;
 
 
         if (selectedCellColor.equals("No") && difRow == difCol) {
-            dif = difRow;
+            int dif = difRow;
             difRow = (selectedCellRow - activeCheckerRow) / difRow;
             difCol = (selectedCellCol - activeCheckerCol) / difCol;
-            i = activeCheckerRow;
-            j = activeCheckerCol;
+            int i = activeCheckerRow;
+            int j = activeCheckerCol;
 
             if (activeCheckerIsKing) {
-                cntEnemies = 0;
+                int cntEnemies = 0;
                 while (i != selectedCellRow) {
                     i += difRow;
                     j += difCol;

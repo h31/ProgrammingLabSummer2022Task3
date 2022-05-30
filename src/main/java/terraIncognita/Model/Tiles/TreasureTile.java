@@ -1,7 +1,10 @@
 package terraIncognita.Model.Tiles;
 
 public class TreasureTile extends Tile {
-    public TreasureTile() {
+
+    public final static TreasureTile INSTANCE = new TreasureTile();
+
+    private TreasureTile() {
         setImageFileName("TreasureTile.png");
     }
 }

@@ -1,17 +1,14 @@
 package terraIncognita.Model;
 
-import terraIncognita.Main;
+import org.jetbrains.annotations.NotNull;
 import terraIncognita.Model.Desk.Labyrinth;
 import terraIncognita.Model.Tiles.Tile;
 import terraIncognita.Utils.Point;
-
-import java.util.Objects;
 
 public class Game {
 
     public static final int MIN_PLAYER_AMOUNT = 2;
     public static final int MAX_PLAYER_AMOUNT = 4;
-    private static final String STARTUP_LABYRINTH = Main.LABYRINTHS_DIR + "lab1.txt";
 
     private int playerAmount = 2;
     private Labyrinth labyrinth;
@@ -47,8 +44,12 @@ public class Game {
      * @param decrement int
      * @return int - actual value of player amount after decreasing and bounding
      */
-    public int decPlayerAmount(int decrement) {
-        playerAmount = Math.max(playerAmount - decrement, MIN_PLAYER_AMOUNT);
+    public int decPlayerAmount(int decrement)   {
+        if (decrement > MAX_PLAYER_AMOUNT - MIN_PLAYER_AMOUNT) {
+            playerAmount = MIN_PLAYER_AMOUNT;
+        } else {
+            playerAmount = Math.max(playerAmount - decrement, MIN_PLAYER_AMOUNT);
+        }
         return playerAmount;
     }
 
@@ -59,17 +60,20 @@ public class Game {
      * @return int - actual value of player amount after increasing and bounding
      */
     public int incPlayerAmount(int increment) {
-        playerAmount = Math.min(playerAmount + increment, MAX_PLAYER_AMOUNT);
+        if (increment > MAX_PLAYER_AMOUNT - MIN_PLAYER_AMOUNT) {
+            playerAmount = MAX_PLAYER_AMOUNT;
+        } else {
+            playerAmount = Math.min(playerAmount + increment, MAX_PLAYER_AMOUNT);
+        }
         return playerAmount;
     }
 
-    public Player startGame(String labyrinthSource) {
-        labyrinth = Labyrinth.genLabyrinthFromExistingSource(
-                Objects.isNull(labyrinthSource)? STARTUP_LABYRINTH: labyrinthSource
-        );
+    public Player startGame(@NotNull String labyrinthSource) {
+        labyrinth = Labyrinth.genLabyrinthFromExistingSource(labyrinthSource);
         players = new Player[playerAmount];
         for (int i = 0; i < playerAmount; i++) {
             players[i] = new Player(
+                    i,                              // ID
                     "Player " + (i + 1),
                     labyrinth.getStartPosition(),
                     labyrinth.getVerticalSize(),

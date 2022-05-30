@@ -2,6 +2,7 @@ package terraIncognita.Controllers;
 
 import javafx.stage.Stage;
 import org.apache.commons.io.FilenameUtils;
+import org.jetbrains.annotations.NotNull;
 import terraIncognita.Utils.Exceptions.SceneNotFoundException;
 import terraIncognita.Utils.Utils;
 
@@ -25,7 +26,7 @@ public class StageController {
      */
     public BasicController getControllerOf (String sceneName){
         if (!controllers.containsKey(sceneName)) {
-            Utils.logError(new SceneNotFoundException("No Scene " + sceneName + " found"));
+            Utils.logErrorWithExit(new SceneNotFoundException("No Scene " + sceneName + " found"));
             return null;
         }
         return controllers.get(sceneName);
@@ -35,7 +36,7 @@ public class StageController {
         stage.show();
     }
 
-    public void loadScene(URL fileName) {
+    public void loadScene(@NotNull URL fileName) {
         String sceneName = FilenameUtils.getBaseName(fileName.getPath());
         if (controllers.containsKey(sceneName)) {
             return;
@@ -50,7 +51,7 @@ public class StageController {
      */
     public void prepareScene(String sceneName) {
         if(!controllers.containsKey(sceneName)) {
-            Utils.logError(new SceneNotFoundException("No Scene " + sceneName + " found"));
+            Utils.logErrorWithExit(new SceneNotFoundException("No Scene \"" + sceneName + "\" found"));
             return;
         }
         stage.setScene(controllers.get(sceneName).getRuledScene());

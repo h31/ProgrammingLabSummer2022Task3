@@ -1,22 +1,33 @@
 package terraIncognita.Utils;
 
+import java.util.Objects;
+
 public class Point {
-    private final int _x, _y;
+    public final int x, y;
 
     public Point(int x, int y) {
-        this._x = x;
-        this._y = y;
+        this.x = x;
+        this.y = y;
     }
 
-    public Point(Point point) {
-        this._x = point.x();
-        this._y = point.y();
+    @Override
+    public String toString() {
+        return "Point{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
     }
 
-    public int x() {
-        return _x;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Point point = (Point) o;
+        return x == point.x && y == point.y;
     }
-    public int y() {
-        return _y;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 }

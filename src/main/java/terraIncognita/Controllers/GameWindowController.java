@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.jetbrains.annotations.NotNull;
 
-import terraIncognita.Main;
+import terraIncognita.App;
 import terraIncognita.Model.MovementDirection;
 import terraIncognita.Model.Player;
 import terraIncognita.Utils.Point;
@@ -25,11 +25,15 @@ import terraIncognita.Utils.Utils;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.TimerTask;
 
 public class GameWindowController extends BasicController{
 
+    @FXML
+    private GridPane root;
     @FXML
     private GridPane deskGrid;
     @FXML
@@ -47,8 +51,8 @@ public class GameWindowController extends BasicController{
     private int hTileAmount;
     private int vTileAmount;
     private double borderSize;
-    private final StringProperty labelText = new SimpleStringProperty("");
 
+    private final StringProperty labelText = new SimpleStringProperty("");
     private final IntegerProperty r = new SimpleIntegerProperty(0);
     private final IntegerProperty g = new SimpleIntegerProperty(0);
     private final IntegerProperty b = new SimpleIntegerProperty(0);
@@ -61,42 +65,61 @@ public class GameWindowController extends BasicController{
 
     private void movePlayer(MovementDirection movementDirection) {
         isCanMove = false;
-        Point oldPos = Main.game.getActivePlayer().getPosition();
-        Point[] revealTiles = Main.game.getActivePlayer().move(movementDirection);
+        Point oldPos = App.game.getActivePlayer().getPosition();
+        List<Point> revealTiles = App.game.getActivePlayer().move(movementDirection);
         for (Point p : revealTiles) {
             revealTileAt(p);
         }
-        if (oldPos == Main.game.getActivePlayer().getPosition()) {
-            return;
-        }
+        App.timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if(!isCanMove && !isNewTurnShowing) {
+                    isNewTurnShowing = true;
+                    try {
+                        Thread.sleep(SHOW_NEW_TURN_TIME);
+                    } catch (InterruptedException e) {
+                        Utils.logErrorWithExit(e);
+                    }
+                    Platform.runLater(() -> {
+                        if (App.game.getActivePlayer().isEndGame()) {
+                            App.stageController.prepareScene(App.END_WINDOW_SCENE_NAME);
+                            App.stageController.getControllerOf(App.END_WINDOW_SCENE_NAME).setup(App.game.getActivePlayer().getName());
+                            App.stageController.showScene();
+                        }
+                        loadDeskFrom(App.game.nextPlayer());
+                        isNewTurnShowing = false;
+                    });
+                }
+            }
+        }, 0);
 
-        placePlayerTo(Main.game.getActivePlayer().getPosition());
+        if (oldPos != App.game.getActivePlayer().getPosition()) {
+            placePlayerTo(App.game.getActivePlayer().getPosition());
+        }
     }
 
     private void revealTileAt(Point pos) {
+        Optional<Node> tileOp = deskGrid.getChildren().stream().filter(el ->
+                GridPane.getRowIndex(el) == pos.y &&
+                GridPane.getColumnIndex(el) == pos.x &&
+                el.getClass() == ImageView.class
+        ).findFirst();
+
         ImageView tile = null;
-        for(Node child : deskGrid.getChildren()) {
-            if (GridPane.getRowIndex(child) == pos.y() &&
-                    GridPane.getColumnIndex(child) == pos.x() &&
-                    child.getClass() == ImageView.class) {
-                tile = (ImageView) child;
-                break;
-            }
-        }
-        if(tile == null) {
-            throw new RuntimeException("Unexpected error occurred");
+        try {
+            tile = (ImageView) tileOp.get();
+        } catch (Exception e) {
+            Utils.logErrorWithExit(e);
         }
         deskGrid.getChildren().remove(tile);
-        deskGrid.add(createTileImageView(Utils.genUrlOf(
-                        Main.TILES_IMG_DIR + Main.game.getActivePlayer().getDesk().getTileAt(pos).getImageFileName()
-                )),
-                pos.x(), pos.y()
-        );
+
+        String imageFileName = App.TILES_IMG_DIR + App.game.getActivePlayer().getDesk().getTileAt(pos).getImageFileName();
+        deskGrid.add(createTileImageView(Utils.genUrlOf(imageFileName)), pos.x, pos.y);
     }
 
     private void placePlayerTo(Point newPos) {
         deskGrid.getChildren().remove(playerShape);
-        deskGrid.add(playerShape, newPos.x(), newPos.y());
+        deskGrid.add(playerShape, newPos.x, newPos.y);
     }
 
     private ImageView createTileImageView(@NotNull String url) {
@@ -116,12 +139,13 @@ public class GameWindowController extends BasicController{
     private void loadDeskFrom(Player player) {
         changeCircleColor(player.getColor());
 
+        //TODO - исправить эффективность. Посмотреть что-то через синглтоны
         clearGrid();
         for (int rowIndex = 0; rowIndex < vTileAmount; rowIndex++) {
             for (int colIndex = 0; colIndex < hTileAmount; colIndex++) {
                 deskGrid.add(
                         createTileImageView(
-                                new File(Main.TILES_IMG_DIR + player.getDesk().getTileAt(new Point(colIndex, rowIndex)
+                                new File(App.TILES_IMG_DIR + player.getDesk().getTileAt(new Point(colIndex, rowIndex)
                                 ).getImageFileName()).toURI().toString()
                         ),
                         colIndex, rowIndex
@@ -150,12 +174,12 @@ public class GameWindowController extends BasicController{
                 }
             }
         });
-        Player activePlayer = Main.game.startGame(
-                ((StartWindowController) Main.stageController.getControllerOf(Main.START_WINDOW_SCENE_NAME)).getLabyrinthSource()
+        Player activePlayer = App.game.startGame(
+                ((StartWindowController) App.stageController.getControllerOf(App.START_WINDOW_SCENE_NAME)).getLabyrinthSource()
         );
 
-        hTileAmount = Main.game.getLabyrinthHorSize();
-        vTileAmount = Main.game.getLabyrinthVerSize();
+        hTileAmount = App.game.getLabyrinthHorSize();
+        vTileAmount = App.game.getLabyrinthVerSize();
 
         borderSize = Math.min(
                 deskGrid.getHeight() / vTileAmount,
@@ -173,29 +197,6 @@ public class GameWindowController extends BasicController{
         }
 
         loadDeskFrom(activePlayer);
-
-        Main.timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if(!isCanMove && !isNewTurnShowing) {
-                    isNewTurnShowing = true;
-                    try {
-                        Thread.sleep(SHOW_NEW_TURN_TIME);
-                    } catch (InterruptedException e) {
-                        Utils.logError(e);
-                    }
-                    Platform.runLater(() -> {
-                        if (Main.game.getActivePlayer().isEndGame()) {
-                            Main.stageController.prepareScene(Main.END_WINDOW_SCENE_NAME);
-                            Main.stageController.getControllerOf(Main.END_WINDOW_SCENE_NAME).setup(Main.game.getActivePlayer().getName());
-                            Main.stageController.showScene();
-                        }
-                        loadDeskFrom(Main.game.nextPlayer());
-                        isNewTurnShowing = false;
-                    });
-                }
-            }
-        }, 0, REFRESH_RATE);
 
     }
 }

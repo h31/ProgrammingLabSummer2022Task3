@@ -2,7 +2,9 @@ package terraIncognita.Model.Tiles;
 
 public class EmptyTile extends Tile {
 
-    public EmptyTile() {
+    public static final EmptyTile INSTANCE = new EmptyTile();
+
+    private EmptyTile() {
         setImageFileName("EmptyTile.png");
     }
 }

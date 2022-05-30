@@ -12,12 +12,14 @@ import javafx.util.StringConverter;
 
 import org.apache.commons.io.FilenameUtils;
 
-import terraIncognita.Main;
+import terraIncognita.App;
 import terraIncognita.Model.Game;
 import terraIncognita.Utils.Utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -57,7 +59,13 @@ public class StartWindowController extends BasicController {
 
     @Override
     public void setup(Object... args) {
-        var files = Utils.loadFilesFrom(Main.LABYRINTHS_DIR);
+        List<File> files = null;
+        try {
+            files = Utils.loadFilesFrom(App.LABYRINTHS_DIR);
+        } catch (IOException e) {
+            Utils.logErrorWithExit(e);
+            return;
+        }
         labyrinthComboBox.setItems(FXCollections.observableList(files));
         labyrinthComboBox.setConverter(new StringConverter<File>() {
             @Override
@@ -80,11 +88,11 @@ public class StartWindowController extends BasicController {
     private void tryChangeStartBtnEnable() {
         if (startButtonDisabled.get()) {
             startBtnImage.setImage(new Image(
-                    Utils.genUrlOf(Main.IMG_DIR + START_IMAGE_NAME_DISABLED)
+                    Utils.genUrlOf(App.IMG_DIR + START_IMAGE_NAME_DISABLED)
             ));
         } else {
             startBtnImage.setImage(new Image(
-                    Utils.genUrlOf(Main.IMG_DIR + START_IMAGE_NAME_ENABLED)
+                    Utils.genUrlOf(App.IMG_DIR + START_IMAGE_NAME_ENABLED)
             ));
         }
     }
@@ -96,20 +104,20 @@ public class StartWindowController extends BasicController {
 
     @FXML
     private void btnDecPlayersClicked() {
-        playerAmount.set(Main.game.decPlayerAmount(1));
+        playerAmount.set(App.game.decPlayerAmount(1));
         checkIncDecBtnDisabled();
     }
 
     @FXML
     private void btnIncPlayersClicked() {
-        playerAmount.set(Main.game.incPlayerAmount(1));
+        playerAmount.set(App.game.incPlayerAmount(1));
         checkIncDecBtnDisabled();
     }
 
     @FXML
     private void btnStartGameClicked(){
-            Main.stageController.prepareScene(Main.GAME_WINDOW_SCENE_NAME);
-            Main.stageController.getControllerOf(Main.GAME_WINDOW_SCENE_NAME).setup();
-            Main.stageController.showScene();
+            App.stageController.prepareScene(App.GAME_WINDOW_SCENE_NAME);
+            App.stageController.getControllerOf(App.GAME_WINDOW_SCENE_NAME).setup();
+            App.stageController.showScene();
     }
 }

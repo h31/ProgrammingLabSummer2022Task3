@@ -2,7 +2,10 @@ package terraIncognita.Model.Desk;
 
 import org.jetbrains.annotations.NotNull;
 import terraIncognita.Model.Tiles.*;
+import terraIncognita.Utils.Exceptions.MultipleUsageOfSingleTileException;
+import terraIncognita.Utils.Exceptions.NoNeededTileException;
 import terraIncognita.Utils.Point;
+import terraIncognita.Utils.Utils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -11,73 +14,54 @@ public class Labyrinth extends Desk {
 
     private Point startPosition;
     private Point endPosition;
+    private Point treasurePosition;
     private final Point[] wormholesPositions = new Point[10];
     private int wormholesAmount = 0;
 
     private Labyrinth(int vCount, int hCount) {
-        super(vCount, hCount, false);
+        super(vCount, hCount);
     }
 
     public static Labyrinth genLabyrinthFromExistingSource(String source) {
+        StringBuilder sb = new StringBuilder();
         int lineCount = 0;
         int lineLength = -1;
         try(BufferedReader input = new BufferedReader(new FileReader(source))) {
             String line = input.readLine();
             while(line != null) {
+                if (line.equals("")) {
+                    line = input.readLine();
+                    continue;
+                }
                 lineCount++;
                 if (lineLength == -1) {
                     lineLength = line.length();
                 }
+                sb.append(line);
                 line = input.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Utils.logErrorWithExit(e);
         }
-
         Labyrinth labyrinth = new Labyrinth(lineCount, lineLength);
-        try(BufferedReader input = new BufferedReader(new FileReader(source))) {
-            int ch = input.read();
-            int y = 0;
-            int x = 0;
-            while (ch != -1) {
-                if (ch == '\n') {
-                    ch = input.read();
-                    continue;
-                }
-                switch (ch) {
-                    case ' ':
-                        labyrinth.insertTile(new EmptyTile(), new Point(x, y));
-                        break;
-                    case '#':
-                        labyrinth.insertTile(new WallTile(), new Point(x, y));
-                        break;
-                    case 'S':
-                        labyrinth.insertTile(new StartTile(), new Point(x, y));
-                        break;
-                    case 'E':
-                        labyrinth.insertTile(new EndTile(), new Point(x, y));
-                        break;
-                    case 'T':
-                        labyrinth.insertTile(new TreasureTile(), new Point(x, y));
-                        break;
-                    default:
-                        if (ch >= '0' && ch <='9') {
-                            labyrinth.insertTile(new WormholeTile((char)ch), new Point(x, y));
-                        } else {
-                            throw new RuntimeException(new IllegalArgumentException(
-                                    "Unexpected token " + (char)ch + " in file " + source));
-                        }
-                }
-                x = (x + 1) % lineLength;
-                if (x == 0) {
-                    y++;
-                }
-                ch = input.read();
+        char[] chars = sb.toString().toCharArray();
+        for (int y = 0; y < lineCount; y++) {
+            for (int x = 0; x < lineLength; x++) {
+                char ch = chars[y * lineLength + x];
+                Tile tile = ('0' <= ch && ch <= '9') ? WormholeTile.getInstance(ch) : switch (ch) {
+                    case ' ' -> EmptyTile.INSTANCE;
+                    case '#' -> WallTile.INSTANCE;
+                    case 'S' -> StartTile.INSTANCE;
+                    case 'E' -> EndTile.INSTANCE;
+                    case 'T' -> TreasureTile.INSTANCE;
+                    default -> throw new IllegalArgumentException("Unexpected token " + (char) ch + " in file " + source);
+                };
+
+                labyrinth.insertTile(tile, new Point(x, y));
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
 
+        labyrinth.validate();
         return labyrinth;
     }
 
@@ -106,23 +90,44 @@ public class Labyrinth extends Desk {
     public void insertTile(@NotNull Tile tile, @NotNull Point point) {
         super.insertTile(tile, point);
 
-        if (tile.getClass() == StartTile.class) {
+        if (tile instanceof StartTile) {
             if (startPosition != null) {
-                throw new IllegalArgumentException("Two or more StartTiles provided");
+                Utils.logErrorWithExit(new MultipleUsageOfSingleTileException("Two or more StartTiles provided"));
             }
             startPosition = point;
         }
-        if (tile.getClass() == EndTile.class) {
+        if (tile instanceof EndTile) {
             if (endPosition != null) {
-                throw new IllegalArgumentException("Two or more EndTiles provided");
+                Utils.logErrorWithExit(new MultipleUsageOfSingleTileException("Two or more EndTiles provided"));
+                return;
             }
             endPosition = point;
         }
 
-        if (tile.getClass() == WormholeTile.class) {
+        if (tile instanceof TreasureTile) {
+            if (treasurePosition != null) {
+                Utils.logErrorWithExit(new MultipleUsageOfSingleTileException("Two or more Treasures provided"));
+                return;
+            }
+            treasurePosition = point;
+        }
+
+        if (tile instanceof WormholeTile) {
             wormholesPositions[((WormholeTile)tile).getNumber()] = point;
             wormholesAmount++;
         }
 
     }
+
+    public void validate() {
+        if (treasurePosition == null || endPosition == null || startPosition == null) {
+            Utils.logErrorWithExit(new NoNeededTileException("""
+                    One of the following tiles not founded:
+                    \r start
+                    \r end
+                    \r treasure.""")
+            );
+        }
+    }
+
 }

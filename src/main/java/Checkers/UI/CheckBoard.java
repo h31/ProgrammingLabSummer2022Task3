@@ -204,7 +204,8 @@ public class CheckBoard {
                                     checkerTurnCol = col;
                                     checkerTurnIsKing = isKing;
                                     lastX = 2;
-                                    if (!someToEat) {
+                                    verifierTurns.init(checkerTurnRow, checkerTurnCol);
+                                    if (!verifierTurns.checkForTakes()) {
                                         if (checkerTurnColor.equals("White")) {
                                             label.setBackground(backWhite);
                                         } else {
@@ -264,6 +265,7 @@ public class CheckBoard {
             check.label.setBackground(backNo);
             check.label.setText("");
             check.color = "No";
+            check.someToEat = false;
         }
 
         public void makeAKing(int row, int col) {

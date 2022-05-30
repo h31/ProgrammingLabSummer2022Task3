@@ -6,7 +6,7 @@ import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
 public class VerifierTurns {
-    private final CheckBoard.Check[][] checkers = CheckBoard.checks;
+    private CheckBoard.Check[][] checkers = CheckBoard.checks;;
     private int activeCheckerRow;
     private int activeCheckerCol;
     private String activeCheckerColor;
@@ -33,10 +33,12 @@ public class VerifierTurns {
 
 
     public void init(int activeCheckerRow, int activeCheckerCol) {
+
         this.activeCheckerRow = activeCheckerRow;
         this.activeCheckerCol = activeCheckerCol;
         this.activeCheckerColor = checkers[activeCheckerRow][activeCheckerCol].color;
         this.activeCheckerIsKing = checkers[activeCheckerRow][activeCheckerCol].isKing;
+
         initEnemyColor(activeCheckerColor);
     }
 
@@ -50,6 +52,7 @@ public class VerifierTurns {
 
 
     public int checkTurn(int selectedCellRow, int selectedCellCol) {
+
         difRow = abs(selectedCellRow - activeCheckerRow);
         difCol = abs(selectedCellCol - activeCheckerCol);
         String selectedCellColor = checkers[selectedCellRow][selectedCellCol].color;

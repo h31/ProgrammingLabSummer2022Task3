@@ -44,20 +44,12 @@ public class WelcomePage {
         startButton.setAlignment(Pos.BOTTOM_CENTER);
 
 
-
-
-
-
         startButton.addEventHandler(MouseEvent.MOUSE_CLICKED, start(stage));
         startButton.setFont(Font.font("Times New Roman", FontWeight.BOLD, 12));
 
 
-
         pane.setPrefSize(320,350);
         pane.getChildren().add(vbox);
-
-
-
 
         return pane;
     }

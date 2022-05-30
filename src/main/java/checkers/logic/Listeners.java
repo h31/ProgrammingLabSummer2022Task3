@@ -31,132 +31,87 @@ public class Listeners {
     }
 
     public static EventHandler<MouseEvent> movement(Piece piece) {
-        return e -> piece.relocate(e.getSceneX() - piece.getMouseX() + piece.getOldX(),
-                e.getSceneY() - piece.getMouseY() + piece.getOldY());
+        return e -> piece.relocate(e.getSceneX() - piece.getMouseX() + piece.getStartFromX(),
+                e.getSceneY() - piece.getMouseY() + piece.getStartFromY());
     }
 
     public static EventHandler<MouseEvent> moveEnd(Piece piece) {
         return e -> Platform.runLater(() -> {
 
-
             int newX = toBoard(piece.getLayoutX());
             int newY = toBoard((piece.getLayoutY()));
 
+            if (newX < 0 || newX >= WIDTH // Проверка на нахождение шашки в пределах игрового поля
+                    || newY < 0 || newY >= HEIGHT) {
+                piece.abortMove(); //Если не в пределах доски - сброс
+            }
 
-            if (newX >= 0 && newX < WIDTH // Проверка на нахождение шашки в пределах игрового поля
-                    && newY >= 0 && newY < HEIGHT) {
+            MoveResult result = tryMove(piece, newX, newY);
 
-                MoveResult result = (piece.isCrown() ? tryMoveCrown(piece, newX, newY) :
-                        tryMove(piece, newX, newY)); //Вернёт результат шага и новыe координаты
-
-                int y0 = toBoard(piece.getOldY());
-                int x0 = toBoard(piece.getOldX());
+            int y0 = toBoard(piece.getStartFromY());
+            int x0 = toBoard(piece.getStartFromX());
 
 
-                Logic.anyThreat();
-                if (isKillNeed() && !piece.isKiller()) {
-                    piece.abortMove(); //Если какая-то шашка должна съесть, а выбрана другая - сброс
+            if (isKillNeed() && !piece.isKiller()) {
+                piece.abortMove(); //Если какая-то шашка должна съесть, а выбрана другая - сброс
 
+            }
+
+
+            if (result.getMoveType() == MoveType.NONE) {
+                piece.abortMove();
+
+            } else {
+                //Следим за превращением в дамку
+                if (piece.getPieceType() == Piece.PieceType.BLACK && newY == (HEIGHT - 1) && !piece.isCrown() ||
+                        piece.getPieceType() == Piece.PieceType.WHITE && newY == 0 && !piece.isCrown()) {
+
+                    piece.setCrown(true);
+                    piece.getCrownView().setVisible(true); //Стала дамкой = видно корону
+                    result.setWasCrowned(true);
                 }
 
-                if (isKillNeed() && piece.isKiller()) {
-                    switch (result.getMoveType()) {
-                        case NONE:
-                        case NORMAL: //Если шашка должна съедать дальше, эти движения не устраивают
-                            piece.abortMove();
-                            break;
+            }
+            if (result.getMoveType() == MoveType.NORMAL && !isKillNeed() || result.getMoveType() == MoveType.KILL && isKillNeed()) { //Если шашка должна съедать дальше, эти движения не устраивают
 
-                        case KILL: //Перешли через шашку
+                //Запоминаем расположение
+                getStepsStack().push(new Step(x0, y0, result, piece));
 
+                //Перемещаем на доске в логике
+                move(piece, newX, newY, result);
 
+                piece.drawer(newX, newY);
 
-                            //Следим за превращением в дамку
-                            if (piece.getPieceType() == Piece.PieceType.BLACK && newY == (HEIGHT - 1) && !piece.isCrown() ||
-                                    piece.getPieceType() == Piece.PieceType.WHITE && newY == 0 && !piece.isCrown()) {
+                if (result.getMoveType() == MoveType.NORMAL) {
+                    switchTurn(); //Смена хода
+                    changingTurn();
+                } else {
+                    if (canKill(piece, newX, newY)) { //Если после хода шашка может убить ещё,
+                        // появляется флаг killer и ход не переходит
+                        piece.setKiller(true);
+                        setKillCount(getKillCount() + 1);
+                    } else {
+                        setKillNeed(false);
+                        piece.setKiller(false);
+                        switchTurn();//Смена хода
+                        setKillCount(0);
+                    }
+                    changingTurn();
+                    deadPiece(result.getPiece());
 
-                                piece.setCrown(true);
-                                piece.getCrownImgView().setVisible(true); //Стала дамкой = видно корону
-                                //Передаем результату инф-ию, было ли в этом ходу перевоплощение в шашку
-                                result.setWasCrowned(true);
-                            }
-
-                            //Запоминаем
-                            getStepsStack().push(new Step(x0, y0, result, piece));
-
-                            getBoard()[x0][y0].setPiece(null); // Очищаем предыдущую клетку
-                            getBoard()[newX][newY].setPiece(piece); //Ставим на новую
-
-                            piece.move(newX, newY);
-                            Piece killedPiece = result.getPiece(); // Убитая шашка
-                            //По координатам убитой шашки удаляем её из board
-                            getBoard()[toBoard(killedPiece.getOldX())][toBoard(killedPiece.getOldY())].setPiece(null);
-                            //Очищаем с поля
-                            getPieceGroup().getChildren().remove(killedPiece);
-
-                            if (canKill(piece, newX, newY)) { //Если после хода шашка может убить ещё,
-                                // появляется флаг killer и ход не переходит
-                                piece.setKiller(true);
-                                setKillCount(getKillCount() + 1);
-
-
-                            } else {
-                                setKillNeed(false);
-                                piece.setKiller(false);
-                                turn = !turn;//Смена хода
-                                setKillCount(0);
-                            }
-
+                    if (getLeft().getChildren().size() == amountOfPieces || getRight().getChildren().size() == amountOfPieces) {
+                        String message = turn == Piece.PieceType.BLACK ? "\n          Победа белых" :
+                                "\n          Победа чёрных";
+                        if (confirmation("End of the game", "Хотите начать игру заново?" + message)) {
+                            boardPainter();
                             changingTurn();
-                            deadPiece(killedPiece);
-
-                            if (getLeft().getChildren().size() == amountOfPieces || getRight().getChildren().size() == amountOfPieces) {
-                                String message = turn ? "\n          Победа белых" :
-                                        "\n          Победа чёрных";
-                                if (confirmation("End of the game", "Хотите начать игру заново?" + message)) {
-                                    boardPainter();
-                                    changingTurn();
-                                }
-
-                            }
-
-
-                            break;
+                        }
                     }
 
-                } else if (!isKillNeed()) {
-                    switch (result.getMoveType()) {
-                        case NONE:
-                            piece.abortMove();
-                            break;
-                        case NORMAL:
-
-
-                            //Следим за превращением в дамку
-                            if (piece.getPieceType() == Piece.PieceType.BLACK && newY == (HEIGHT - 1) && !piece.isCrown() ||
-                                    piece.getPieceType() == Piece.PieceType.WHITE && newY == 0 && !piece.isCrown()) {
-
-                                piece.setCrown(true);
-                                piece.getCrownImgView().setVisible(true); //Стала дамкой = видно корону
-                                result.setWasCrowned(true);
-                            }
-                            //Запоминаем расположение
-                            getStepsStack().push(new Step(x0, y0, result, piece));
-
-                            getBoard()[x0][y0].setPiece(null); // Очищаем предыдущую клетку
-                            getBoard()[newX][newY].setPiece(piece);//Ставим на новую
-
-                            piece.move(newX, newY);
-
-                            turn = !turn; //Смена хода
-                            changingTurn();
-
-
-                            break;
-                    }
                 }
-                eatAlarm(); //Напоминание о том, что нужно есть
-            } else piece.abortMove(); //Если не в пределах доски - сброс
-
+            }
+            eatAlarm(); //Напоминание о том, что нужно есть
+            Logic.anyThreat();
         });
     }
 
@@ -169,10 +124,10 @@ public class Listeners {
                     case NORMAL:
                         //Очищаем клетку
                         getBoard()[toBoard(step.getPiece().getLayoutX())][toBoard(step.getPiece().getLayoutY())].setPiece(null);
-                        turn = !turn;
+                        switchTurn();
                         StepBackDrawer.normalMove(step);
 
-                        getBoard()[toBoard(step.getPiece().getOldX())][toBoard(step.getPiece().getOldY())].setPiece(step.getPiece());
+                        getBoard()[toBoard(step.getPiece().getStartFromX())][toBoard(step.getPiece().getStartFromY())].setPiece(step.getPiece());
                         setKillNeed(false);
                         break;
                     case KILL:
@@ -180,15 +135,15 @@ public class Listeners {
                         Piece killedPiece = step.getMoveResult().getPiece();
                         Piece killerPiece = step.getPiece();
                         //Восстанавливаем убитого
-                        getBoard()[toBoard(killedPiece.getOldX())][toBoard(killedPiece.getOldY())].setPiece(killedPiece);
+                        getBoard()[toBoard(killedPiece.getStartFromX())][toBoard(killedPiece.getStartFromY())].setPiece(killedPiece);
                         //Очищаем клетку занимаемую убившим
-                        getBoard()[toBoard(killerPiece.getOldX())][toBoard(killerPiece.getOldY())].setPiece(null);
+                        getBoard()[toBoard(killerPiece.getStartFromX())][toBoard(killerPiece.getStartFromY())].setPiece(null);
                         //Возвращаем шашку в предыдущую клетку
                         getBoard()[step.getX()][step.getY()].setPiece(killerPiece);
 
                         //Смена хода, если шашка ела подряд и не завершила,
                         // то не меняем ход. Логика по типу: убийца съел - значит точно был его ход
-                        turn = step.getPiece().getPieceType() != Piece.PieceType.WHITE;
+                        turn = step.getPiece().getPieceType();
 
                         StepBackDrawer.killMove(step);
 
@@ -211,8 +166,8 @@ public class Listeners {
 
     public static EventHandler<MouseEvent> surrender() {
         return e -> {
-            String message = turn ? "\n      Поражение чёрных" : "\n      Поражение белых";
-            if (confirmation("Surrender", "Вы точно хотите сдаться?" + message)) {
+            String message = turn == Piece.PieceType.BLACK ? "\n      Поражение чёрных" : "\n      Поражение белых";
+            if (confirmation("Вы точно хотите сдаться?", message)) {
                 boardPainter();
                 changingTurn();
                 getStepsStack().clear();
@@ -229,10 +184,12 @@ public class Listeners {
 
     public static EventHandler<WindowEvent> closeProgram(Stage stage) {
         return e -> {
-            e.consume();
-            if (confirmation("End session", "Вы, действительно, хотите прекратить работу программы?")) {
-               stage.close();
+            e.consume(); //Без этого закрывается всегда
+
+            if (confirmation("Вы точно хотите закрыть приложение?", "")) {
+                stage.close();
             }
+
         };
     }
 

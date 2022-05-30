@@ -1,14 +1,10 @@
 package checkers.ui;
 
-
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 import static checkers.logic.Listeners.*;
 import static checkers.logic.Logic.*;
@@ -17,13 +13,12 @@ import static checkers.ui.ContentCreator.getRight;
 
 public class Piece extends StackPane {
     private final PieceType pieceType;
-    private static Image imgBlack, imgWhite, imgCrown;
     private double mouseX, mouseY;
-    private double oldX, oldY;
+    private double startFromX, startFromY; //С этой точки мы начинаем движения при ходе шашки
     private boolean killer;
     private boolean crown;
+    private final ImageView crownView = new ImageView(Media.getImgCrown());
 
-    private final ImageView crownImgView = new ImageView(imgCrown);
 
 
     public enum PieceType { //Тип шашки
@@ -36,27 +31,6 @@ public class Piece extends StackPane {
         }
 
 
-    }
-
-    static {
-        try {
-            imgWhite = new Image(new FileInputStream(
-                    "input/whitePiece.png"));
-            imgBlack = new Image(new FileInputStream(
-                    "input/blackPiece.png"));
-            imgCrown = new Image(new FileInputStream(
-                    "input/crown.png"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            //Написать вывод в alert window
-        }
-    }
-
-
-
-
-    public ImageView getCrownImgView() {
-        return crownImgView;
     }
 
     public void setMouseX(double mouseX) {
@@ -79,12 +53,12 @@ public class Piece extends StackPane {
         return pieceType;
     }
 
-    public double getOldX() {
-        return oldX;
+    public double getStartFromX() {
+        return startFromX;
     }
 
-    public double getOldY() {
-        return oldY;
+    public double getStartFromY() {
+        return startFromY;
     }
 
     public boolean isKiller() {
@@ -103,23 +77,27 @@ public class Piece extends StackPane {
         this.crown = crown;
     }
 
+    public ImageView getCrownView() {
+        return crownView;
+    }
+
     public Piece(Piece.PieceType pieceType, int x, int y) {
         this.pieceType = pieceType;
 
 
-        move(x, y);// Перемещение к левому верхнему углу клетки при начальной отрисовке
+        drawer(x, y);// Перемещение к левому верхнему углу клетки при начальной отрисовке
 
-        ImageView imageView = pieceType == PieceType.BLACK ? new ImageView(imgBlack) : new ImageView(imgWhite);
+        ImageView imageView = pieceType == PieceType.BLACK ? new ImageView(Media.getImgBlack()) : new ImageView(Media.getImgWhite());
         imageView.setFitHeight(TILE_SIZE);
         imageView.setFitWidth(TILE_SIZE);
 
 
-        crownImgView.setFitWidth(TILE_SIZE);
-        crownImgView.setFitHeight(TILE_SIZE);
-        crownImgView.setOpacity(0.67);
-        crownImgView.setVisible(false);//Ставлю сразу на все шашки, но делаю видимой только у дамок
+        crownView.setFitWidth(TILE_SIZE);
+        crownView.setFitHeight(TILE_SIZE);
+        crownView.setOpacity(0.67);
+        crownView.setVisible(false);//Ставлю сразу на все шашки, но делаю видимой только у дамок
 
-        getChildren().addAll(imageView, crownImgView);
+        getChildren().addAll(imageView, crownView);
 
         //Слушатель, отвечающий за начало движения
         addEventHandler(MouseEvent.MOUSE_PRESSED, moveStart(this));
@@ -130,23 +108,23 @@ public class Piece extends StackPane {
 
     }
 
-    public void move(int x, int y) { //Подгонка изображения к левому верхнему краю клетки
-        oldX = x * TILE_SIZE;
-        oldY = y * TILE_SIZE;
-        relocate(oldX, oldY);
+    //Подгонка изображения к левому верхнему краю клетки
+    public void drawer(int x, int y) {
+        //Меняем поля, отвечающие за начальную точку при движении
+        startFromX = x * TILE_SIZE;
+        startFromY = y * TILE_SIZE;
+        relocate(startFromX, startFromY);
     }
 
+    //Отмена движения
     public void abortMove() { //Отмена движения
-        relocate(oldX, oldY);
+        relocate(startFromX, startFromY);
     }
+
+    //Отправляет съеденную шашку за доску
     public static void deadPiece(Piece piece) {
-
-        if ((piece.getPieceType() == Piece.PieceType.WHITE)) {
-            getRight().getChildren().add(piece);
-        } else {
-            getLeft().getChildren().add(piece);
-        }
+        FlowPane pane = piece.getPieceType() == PieceType.WHITE ? getRight() : getLeft();
+        pane.getChildren().add(piece);
     }
-
 
 }

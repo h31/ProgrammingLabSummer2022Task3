@@ -12,19 +12,6 @@ import static checkers.logic.Logic.TILE_SIZE;
 public class Tile extends Rectangle {
     private Piece piece;
 
-    private Image imgBlack, imgWhite;
-
-    {
-        try {
-            imgBlack = new Image(new FileInputStream(
-                    "input/blackTile2.jpg"));
-            imgWhite = new Image(new FileInputStream(
-                    "input/whiteTile2.jpg"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
     public boolean hasPiece(){
         return piece != null;
     }
@@ -42,7 +29,8 @@ public class Tile extends Rectangle {
         setHeight(TILE_SIZE);
 
         relocate(x * TILE_SIZE, y * TILE_SIZE);
-        setFill(light ? new ImagePattern(imgWhite): new ImagePattern(imgBlack));
+        setFill(light ? new ImagePattern(Media.getImgWhiteTile()):
+                new ImagePattern(Media.getImgBlackTile()));
 
     }
 

@@ -24,12 +24,13 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+
 
 
 import static checkers.logic.Listeners.*;
 import static checkers.logic.Logic.*;
+import static checkers.ui.Media.getIcon;
+import static checkers.ui.Media.getImgUndoButton;
 import static javafx.scene.layout.BorderPane.setMargin;
 
 public class ContentCreator {
@@ -50,7 +51,6 @@ public class ContentCreator {
             blackEat = new Text("Чёрные должны есть");
 
     private static final Button undoButton = new Button(), surrenderButton = new Button();
-    private static Image imgUndoButton, icon;
     private static final HBox bottom = new HBox(surrenderButton, undoButton);
 
 
@@ -66,16 +66,6 @@ public class ContentCreator {
     }
 
 
-
-    static {
-        try {
-            icon = new Image("C:\\ProgrammingLabSummer2022Task3\\input\\icon.png");
-            imgUndoButton = new Image(new FileInputStream("C:\\ProgrammingLabSummer2022Task3\\input\\undo.png"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static Label getUnderTopText() {
         return underTopText;
     }
@@ -88,7 +78,9 @@ public class ContentCreator {
         return whiteEat;
     }
 
-
+    public static Stage getWindow() {
+        return window;
+    }
 
     public static Label getTopText() {
         return topText;
@@ -100,14 +92,6 @@ public class ContentCreator {
 
     public static Group getTileGroup() {
         return tileGroup;
-    }
-
-    public static Image getIcon() {
-        return icon;
-    }
-
-    public static Image getImgUndoButton() {
-        return imgUndoButton;
     }
 
     public static BorderPane getBp() {
@@ -124,7 +108,7 @@ public class ContentCreator {
 
 
 
-        turn = false; //Чтобы при перезапуске белые ходили всегда первыми
+        setTurn(Piece.PieceType.WHITE); //Чтобы при перезапуске белые ходили всегда первыми
         changingTurn();
         topText.setFont(Font.font("Arial", FontWeight.BOLD, 36));
         topText.setTextFill(Color.ORANGE);
@@ -212,7 +196,7 @@ public class ContentCreator {
         getLeft().getChildren().clear();
         getRight().getChildren().clear();
 
-        turn = false;
+
         for (int x = 0; x < WIDTH; x++) {
             for (int y = 0; y < HEIGHT; y++) { //Строю начальное поле
                 Tile tile = new Tile((x + y) % 2 == 0, x, y);
@@ -244,10 +228,15 @@ public class ContentCreator {
 
     public static void eatAlarm() {
         if (isKillNeed()) {
-            getUnderTopText().setText(turn ? getBlackEat().getText() : getWhiteEat().getText());
+            getUnderTopText().setText(turn== Piece.PieceType.BLACK ? getBlackEat().getText() : getWhiteEat().getText());
         } else {
             getUnderTopText().setText("");
         }
+    }
+
+    public static void changingTurn() {
+        getTopText().setText(turn== Piece.PieceType.BLACK ? "Чёрные ходят" : "Белые ходят");
+
     }
 
 }

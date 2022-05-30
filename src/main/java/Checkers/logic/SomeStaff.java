@@ -7,16 +7,18 @@ import Checkers.UI.UIConstants;
 import java.util.Objects;
 
 public class SomeStaff {
-    public static String playerTurn = "White";
+    public static String playerTurn = "Black";
     public static final InfoCenter infoCenter = Turner.infoCenter;
+
     public static void changePlayerTurn() {
-        if (Objects.equals(playerTurn, "White")) {
-            playerTurn = "Black";
-        } else {
+        if (playerTurn.equals("Black")) {
             playerTurn = "White";
+        } else {
+            playerTurn = "Black";
         }
         infoCenter.updateMessage("Player " + playerTurn + "'s turn");
         Turner.isTurn = false;
+        Turner.resultOfLastTurn = 0;
     }
 
     public static boolean isWhiteTurn() {
@@ -24,30 +26,30 @@ public class SomeStaff {
     }
 
     public static void inline(int row, int col) {
-        CheckBoard.Check check = Turner.checkers[row][col];
-        check.label.setBackground(UIConstants.backGo);
+        CheckBoard.Checker checker = Turner.checkers[row][col];
+        checker.label.setBackground(UIConstants.BACK_GOLD);
     }
 
     public static void unline(int row, int col) {
-        CheckBoard.Check check = Turner.checkers[row][col];
-        if (check.color.equals("White")){
-            check.label.setBackground(UIConstants.backWhite);
+        CheckBoard.Checker checker = Turner.checkers[row][col];
+        if (checker.color.equals("White")){
+            checker.label.setBackground(UIConstants.BACK_WHITE);
         } else {
-            check.label.setBackground(UIConstants.backBlack);
+            checker.label.setBackground(UIConstants.BACK_BLACK);
         }
     }
 
     public static void delete(int row, int col) {
-        CheckBoard.Check check = Turner.checkers[row][col];
-        check.label.setBackground(UIConstants.backNo);
-        check.label.setText("");
-        check.color = "No";
-        check.someToEat = false;
+        CheckBoard.Checker checker = Turner.checkers[row][col];
+        checker.label.setBackground(UIConstants.BACK_NO);
+        checker.label.setText("");
+        checker.color = "No";
+        checker.someToEat = false;
     }
 
     public static void makeAKing(int row, int col) {
-        CheckBoard.Check check = Turner.checkers[row][col];
-        check.label.setText("X");
-        check.isKing = true;
+        CheckBoard.Checker checker = Turner.checkers[row][col];
+        checker.label.setText("X");
+        checker.isKing = true;
     }
 }

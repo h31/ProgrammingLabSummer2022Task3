@@ -5,17 +5,15 @@ import Checkers.UI.CheckBoard;
 import static java.lang.Math.abs;
 
 public class VerifierTurns {
-    private final CheckBoard.Check[][] checkers = CheckBoard.checks;
+    private final CheckBoard.Checker[][] checkers = CheckBoard.checkers;
     private int activeCheckerRow;
     private int activeCheckerCol;
     private String activeCheckerColor;
-    private boolean activeCheckerIsKing;
+    private boolean activeCheckerKing;
     private String enemyCheckerColor;
-    private int cnt;
-    private final Repeater repeater = new Repeater();
-
     private int eatenCheckerRow;
     private int eatenCheckerCol;
+    private final Repeater repeater = new Repeater();
 
 
 
@@ -29,7 +27,7 @@ public class VerifierTurns {
         this.activeCheckerRow = activeCheckerRow;
         this.activeCheckerCol = activeCheckerCol;
         this.activeCheckerColor = checkers[activeCheckerRow][activeCheckerCol].color;
-        this.activeCheckerIsKing = checkers[activeCheckerRow][activeCheckerCol].isKing;
+        this.activeCheckerKing = checkers[activeCheckerRow][activeCheckerCol].isKing;
 
         initEnemyColor(activeCheckerColor);
     }
@@ -44,107 +42,66 @@ public class VerifierTurns {
 
 
     public int checkTurn(int selectedCellRow, int selectedCellCol) {
-
         int difRow = abs(selectedCellRow - activeCheckerRow);
         int difCol = abs(selectedCellCol - activeCheckerCol);
         String selectedCellColor = checkers[selectedCellRow][selectedCellCol].color;
-
 
         if (selectedCellColor.equals("No") && difRow == difCol) {
             int dif = difRow;
             difRow = (selectedCellRow - activeCheckerRow) / difRow;
             difCol = (selectedCellCol - activeCheckerCol) / difCol;
-            int i = activeCheckerRow;
-            int j = activeCheckerCol;
-
-            if (activeCheckerIsKing) {
-                int cntEnemies = 0;
-                while (i != selectedCellRow) {
-                    i += difRow;
-                    j += difCol;
-                    if (!checkers[i][j].color.equals("No")) {
+            int i = activeCheckerRow + difRow;
+            int j = activeCheckerCol + difCol;
+            if (activeCheckerKing) {
+                switch (dif) {
+                    case (1) -> {
+                        return 1;
+                    }
+                    case (2) -> {
                         if (checkers[i][j].color.equals(enemyCheckerColor)) {
-                            cntEnemies++;
                             eatenCheckerRow = i;
                             eatenCheckerCol = j;
-                        } else {
-                            return 0; //This turn is impossible
+                            return 2;
                         }
                     }
                 }
-                return switch (cntEnemies) {
-                    case (0) -> 1; //You can make a turn, but it is not eat
-                    case (1) -> 2; //You can eat
-                    default -> 0; //This turn is impossible
-                };
-
-            } else {
-                switch (dif) {
-                    case (1): {
-                        if (activeCheckerColor.equals("White") && selectedCellRow < activeCheckerRow ||
-                                activeCheckerColor.equals("Black") && selectedCellRow > activeCheckerRow) {
-                            return 1; //You can make a turn, but it is not eat
+                } else {
+                    if (selectedCellRow < activeCheckerRow && activeCheckerColor.equals("White") ||
+                            selectedCellRow > activeCheckerRow && activeCheckerColor.equals("Black")) {
+                        switch (dif) {
+                            case (1) -> {
+                                return 1;
+                            }
+                            case (2) -> {
+                                if (checkers[i][j].color.equals(enemyCheckerColor)) {
+                                    eatenCheckerRow = i;
+                                    eatenCheckerCol = j;
+                                    return 2;
+                                }
+                            }
                         }
-                    }
-                    case (2): {
-                        i += difRow;
-                        j += difCol;
-                        if (checkers[i][j].color.equals(enemyCheckerColor)) {
-                            eatenCheckerRow = i;
-                            eatenCheckerCol = j;
-                            return 2; //You can eat
-                        }
-                    }
-                    default: {
-                        return 0; //This turn is impossible
                     }
                 }
             }
-        }
 
         return 0; //This turn is impossible
     }
 
 
     public int checkAllTurns() {
-        repeater.in(activeCheckerRow, activeCheckerCol);
-        if (activeCheckerIsKing) {
-            repeater.repeatRightUp(this);
-            repeater.repeatLeftUp(this);
-            repeater.repeatLeftDown(this);
-            repeater.repeatRightDown(this);
-        } else {
-            while (cnt != 2) {
-                cnt++;
-                repeater.repeatRightUp(this);
-            }
-            cnt = 0;
-            while (cnt != 2) {
-                cnt++;
-                repeater.repeatLeftUp(this);
-            }
-            cnt = 0;
-            while (cnt != 2) {
-                cnt++;
-                repeater.repeatLeftDown(this);
-            }
-            cnt = 0;
-            while (cnt != 2) {
-                cnt++;
-                repeater.repeatRightDown(this);
-            }
-            cnt = 0;
-        }
+        repeater.init(activeCheckerRow, activeCheckerCol);
+        repeater.repeatRightUp(this);
+        repeater.repeatLeftUp(this);
+        repeater.repeatLeftDown(this);
+        repeater.repeatRightDown(this);
         return repeater.getResult();
     }
 
     public boolean checkForTurns() {
-        checkAllTurns();
         return checkAllTurns() != 0;
     }
 
     public boolean checkForTakes() {
-        checkAllTurns();
         return checkAllTurns() == 2;
     }
 

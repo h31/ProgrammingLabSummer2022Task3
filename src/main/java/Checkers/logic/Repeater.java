@@ -8,20 +8,23 @@ class Repeater {
     private int activeCheckerCol;
     private int i;
     private int j;
+    private int cnt;
 
     public Repeater() {
     }
 
-    public void in(int activeCheckerRow, int activeCheckerCol) {
+    public void init(int activeCheckerRow, int activeCheckerCol) {
         this.activeCheckerRow = activeCheckerRow;
         this.activeCheckerCol = activeCheckerCol;
         result = 0;
     }
 
     public void repeatRightDown(VerifierTurns verifierTurns) {
+        cnt = 0;
         i = activeCheckerRow;
         j = activeCheckerCol;
-        while (result != 2 && i != 7 && j != 7) {
+        while (result != 2 && i != 7 && j != 7 && cnt != 2) {
+            cnt++;
             i++;
             j++;
             result = max(result, verifierTurns.checkTurn(i, j));
@@ -29,9 +32,11 @@ class Repeater {
     }
 
     public void repeatRightUp(VerifierTurns verifierTurns) {
+        cnt = 0;
         i = activeCheckerRow;
         j = activeCheckerCol;
-        while (result != 2 && i != 0 && j != 7) {
+        while (result != 2 && i != 0 && j != 7 && cnt != 2) {
+            cnt++;
             i--;
             j++;
             result = max(result, verifierTurns.checkTurn(i, j));
@@ -39,9 +44,11 @@ class Repeater {
     }
 
     public void repeatLeftUp(VerifierTurns verifierTurns) {
+        cnt = 0;
         i = activeCheckerRow;
         j = activeCheckerCol;
-        while (result != 2 && i != 0 && j != 0) {
+        while (result != 2 && i != 0 && j != 0 && cnt != 2) {
+            cnt++;
             i--;
             j--;
             result = max(result, verifierTurns.checkTurn(i, j));
@@ -49,9 +56,11 @@ class Repeater {
     }
 
     public void repeatLeftDown(VerifierTurns verifierTurns) {
+        cnt = 0;
         i = activeCheckerRow;
         j = activeCheckerCol;
-        while (result != 2 && i != 7 && j != 0) {
+        while (result != 2 && i != 7 && j != 0 && cnt != 2) {
+            cnt++;
             i++;
             j--;
             result = max(result, verifierTurns.checkTurn(i, j));

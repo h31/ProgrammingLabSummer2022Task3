@@ -56,7 +56,7 @@ public class InfoCenter {
     private EventHandler<ActionEvent> startNewGame() {
         return event -> {
             hideStartButton();
-            updateMessage("Player White's Turn");
+            updateMessage("Player Black's Turn");
             CheckBoard.isGame = true;
         };
     }

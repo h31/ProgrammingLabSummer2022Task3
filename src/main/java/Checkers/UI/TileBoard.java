@@ -10,7 +10,7 @@ import javafx.scene.text.Font;
 public class TileBoard {
 
     private final StackPane pane;
-    private final byte size = 10;
+    private final int size = UIConstants.SIZE + 2;
     private final Tile[][] tiles = new Tile[size][size];
 
     public TileBoard() {
@@ -26,8 +26,8 @@ public class TileBoard {
         String[] setLetters = {"A", "B", "C", "D", "E", "F", "G", "H"};
         String[] setDigits = {"8", "7", "6", "5", "4", "3", "2", "1"};
 
-        for (byte row = 0; row < size; row ++) {
-            for(byte col = 0; col < size; col++) {
+        for (int row = 0; row < size; row ++) {
+            for(int col = 0; col < size; col++) {
                 Label label = new Label("");
                 label.setAlignment(Pos.CENTER);
                 label.setFont(Font.font(24));
@@ -40,7 +40,7 @@ public class TileBoard {
                 } else if (col == 0 && row != 0 && row != 9 || col == 9 && row != 0 && row != 9) {
                     label.setText(setDigits[row - 1]);
                     tile.getStackPane().getChildren().add(label);
-                } else if ((col + row) % 2 == 1 && col != 0 && row != 0 && col != 9 && row != 9) {
+                } else if ((col + row) % 2 == 1 && col != 0 && row != 0) {
                     tile.pane.getChildren().remove(tile.border);
                     tile.border.setFill(Color.BLACK);
                     tile.pane.getChildren().add(tile.border);
@@ -60,9 +60,9 @@ public class TileBoard {
     private static class Tile {
         private final StackPane pane;
 
-        public Rectangle border = new Rectangle();
+        private final Rectangle border = new Rectangle();
 
-        public Tile() {
+        private Tile() {
             pane = new StackPane();
             pane.setMinSize(60, 60);
             border.setWidth(60);
@@ -77,7 +77,7 @@ public class TileBoard {
             pane.getChildren().add(label);
         }
 
-        public StackPane getStackPane() {
+        private StackPane getStackPane() {
             return pane;
         }
     }

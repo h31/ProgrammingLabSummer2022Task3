@@ -4,8 +4,6 @@ import Checkers.UI.CheckBoard;
 import Checkers.UI.InfoCenter;
 import Checkers.UI.UIConstants;
 
-import java.util.Objects;
-
 public class SomeStaff {
     public static String playerTurn = "Black";
     public static final InfoCenter infoCenter = Turner.infoCenter;
@@ -27,29 +25,30 @@ public class SomeStaff {
 
     public static void inline(int row, int col) {
         CheckBoard.Checker checker = Turner.checkers[row][col];
-        checker.label.setBackground(UIConstants.BACK_GOLD);
+        checker.labelUp.setBackground(UIConstants.CHOOSEN_CHECKER);
     }
 
     public static void unline(int row, int col) {
         CheckBoard.Checker checker = Turner.checkers[row][col];
         if (checker.color.equals("White")){
-            checker.label.setBackground(UIConstants.BACK_WHITE);
+            checker.labelUp.setBackground(UIConstants.WHITE_CHECKER);
         } else {
-            checker.label.setBackground(UIConstants.BACK_BLACK);
+            checker.labelUp.setBackground(UIConstants.BLACK_CHECKER);
         }
     }
 
     public static void delete(int row, int col) {
         CheckBoard.Checker checker = Turner.checkers[row][col];
-        checker.label.setBackground(UIConstants.BACK_NO);
-        checker.label.setText("");
+        checker.labelUp.setBackground(UIConstants.NO_CHECKER);
+        checker.labelUp.setText("");
+        checker.labelDown.setBackground(UIConstants.NO_CHECKER);
         checker.color = "No";
         checker.someToEat = false;
     }
 
     public static void makeAKing(int row, int col) {
         CheckBoard.Checker checker = Turner.checkers[row][col];
-        checker.label.setText("X");
+        checker.labelUp.setText("X");
         checker.isKing = true;
     }
 }

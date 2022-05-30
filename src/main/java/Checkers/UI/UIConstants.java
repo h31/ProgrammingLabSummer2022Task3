@@ -15,8 +15,9 @@ public class UIConstants {
 
     public static final int SIZE = 8;
 
-    public static final Background BACK_WHITE = new Background(new BackgroundFill(Color.GREEN, new CornerRadii(100), Insets.EMPTY));
-    public static final Background BACK_BLACK = new Background(new BackgroundFill(Color.RED, new CornerRadii(100), Insets.EMPTY));
-    public static final Background BACK_NO = new Background(new BackgroundFill(Color.TRANSPARENT, new CornerRadii(100), Insets.EMPTY));
-    public static final Background BACK_GOLD = new Background(new BackgroundFill(Color.GOLD, new CornerRadii(100), Insets.EMPTY));
+    public static final Background WHITE_CHECKER = new Background(new BackgroundFill(Color.WHITE, new CornerRadii(360), Insets.EMPTY));
+    public static final Background BLACK_CHECKER = new Background(new BackgroundFill(Color.RED, new CornerRadii(360), Insets.EMPTY));
+    public static final Background NO_CHECKER = new Background(new BackgroundFill(Color.TRANSPARENT, new CornerRadii(360), Insets.EMPTY));
+    public static final Background CHOOSEN_CHECKER = new Background(new BackgroundFill(Color.GOLD, new CornerRadii(360), Insets.EMPTY));
+    public static final Background BLACK_BACK = new Background(new BackgroundFill(Color.BLACK, new CornerRadii(360), Insets.EMPTY));
 }

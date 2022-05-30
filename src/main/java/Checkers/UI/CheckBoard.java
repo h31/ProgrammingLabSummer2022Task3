@@ -46,7 +46,8 @@ public class CheckBoard {
 
     public class Checker {
         private final StackPane pane;
-        public Label label;
+        public Label labelDown;
+        public Label labelUp;
         public int row;
         public int col;
         public String color;
@@ -58,36 +59,44 @@ public class CheckBoard {
             this.col = col;
 
             pane = new StackPane();
-            pane.setMinSize(51, 51);
+            pane.setMinSize(55, 55);
 
             Rectangle border = new Rectangle();
-            border.setWidth(51);
-            border.setHeight(51);
+            border.setWidth(55);
+            border.setHeight(55);
             border.setFill(Color.TRANSPARENT);
 
             pane.getChildren().add(border);
 
-            label = new Label("");
-            label.setMinWidth(51);
-            label.setMinHeight(51);
-            label.setAlignment(Pos.CENTER);
-            label.setFont(Font.font(30));
+            labelUp = new Label("");
+            labelUp.setMinWidth(51);
+            labelUp.setMinHeight(51);
+            labelUp.setAlignment(Pos.CENTER);
+            labelUp.setFont(Font.font(30));
+            labelDown = new Label("");
+            labelDown.setMinWidth(55);
+            labelDown.setMinHeight(55);
+            labelDown.setAlignment(Pos.CENTER);
+
             if ((row + col) % 2 == 1) {
                 if (row < 3) {
-                    label.setBackground(UIConstants.BACK_BLACK);
+                    labelUp.setBackground(UIConstants.BLACK_CHECKER);
+                    labelDown.setBackground(UIConstants.BLACK_BACK);
                     color = "Black";
                 } else if (row > 4) {
-                    label.setBackground(UIConstants.BACK_WHITE);
+                    labelUp.setBackground(UIConstants.WHITE_CHECKER);
+                    labelDown.setBackground(UIConstants.BLACK_BACK);
                     color = "White";
                 } else {
-                    label.setBackground(UIConstants.BACK_NO);
+                    labelUp.setBackground(UIConstants.NO_CHECKER);
                     color = "No";
                 }
             } else {
-                label.setBackground(UIConstants.BACK_NO);
+                labelUp.setBackground(UIConstants.NO_CHECKER);
                 color = "No";
             }
-            pane.getChildren().add(label);
+            pane.getChildren().add(labelDown);
+            pane.getChildren().add(labelUp);
 
 
             pane.setOnMouseClicked(event -> {

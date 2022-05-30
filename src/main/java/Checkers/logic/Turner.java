@@ -88,10 +88,11 @@ public class Turner {
             int x = verifierTurns.checkTurn(selectedCellRow, selectedCellCol);
             if (x != 0) {
                 if (x == 1 && !activeCheckerSomeToEat) { //если можно походить без взятия и взять шашка никого не может
+                    selectedChecker.labelDown.setBackground(UIConstants.BLACK_BACK);
                     if (activeCheckerColor.equals("White")) {
-                        selectedChecker.label.setBackground(UIConstants.BACK_WHITE);
+                        selectedChecker.labelUp.setBackground(UIConstants.WHITE_CHECKER);
                     } else {
-                        selectedChecker.label.setBackground(UIConstants.BACK_BLACK);
+                        selectedChecker.labelUp.setBackground(UIConstants.BLACK_CHECKER);
                     }
                     selectedChecker.color = activeCheckerColor;
                     if ((SomeStaff.isWhiteTurn() && selectedCellRow == 0 || !SomeStaff.isWhiteTurn() &&
@@ -101,7 +102,8 @@ public class Turner {
                     SomeStaff.delete(activeCheckerRow, activeCheckerCol);
                     SomeStaff.changePlayerTurn();
                 } else if (x == 2) { //все случаи, когда кого-то шашка берёт
-                    selectedChecker.label.setBackground(UIConstants.BACK_GOLD);
+                    selectedChecker.labelDown.setBackground(UIConstants.BLACK_BACK);
+                    selectedChecker.labelUp.setBackground(UIConstants.CHOOSEN_CHECKER);
                     selectedChecker.color = activeCheckerColor;
 
                     if (activeCheckerKing || (SomeStaff.isWhiteTurn() && selectedCellRow == 0 ||
@@ -126,9 +128,9 @@ public class Turner {
 
                     if (!verifierTurns.checkForTakes() || activeCheckerKing != selectedChecker.isKing) {//проверка на то, можно ли в след. позиции есть
                         if (activeCheckerColor.equals("White")) {
-                            selectedChecker.label.setBackground(UIConstants.BACK_WHITE);
+                            selectedChecker.labelUp.setBackground(UIConstants.WHITE_CHECKER);
                         } else {
-                            selectedChecker.label.setBackground(UIConstants.BACK_BLACK);
+                            selectedChecker.labelUp.setBackground(UIConstants.BLACK_CHECKER);
                         }
                         SomeStaff.changePlayerTurn();
                     }

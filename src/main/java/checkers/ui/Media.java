@@ -13,17 +13,17 @@ public class Media {
     static {
         try {
             imgWhite = new Image(new FileInputStream(
-                    "input/whitePiece.png"));
+                    "C:/ProgrammingLabSummer2022Task3/input/whitePiece.png"));
             imgBlack = new Image(new FileInputStream(
-                    "input/blackPiece.png"));
+                    "C:/ProgrammingLabSummer2022Task3/input/blackPiece.png"));
             imgCrown = new Image(new FileInputStream(
-                    "input/crown.png"));
+                    "C:/ProgrammingLabSummer2022Task3/input/crown.png"));
             imgBlackTile = new Image(new FileInputStream(
-                    "input/blackTile2.jpg"));
+                    "C:/ProgrammingLabSummer2022Task3/input/blackTile2.jpg"));
             imgWhiteTile = new Image(new FileInputStream(
-                    "input/whiteTile2.jpg"));
-            icon = new Image(new FileInputStream("input/icon.png"));
-            imgUndoButton = new Image(new FileInputStream("input/undo.png"));
+                    "C:/ProgrammingLabSummer2022Task3/input/whiteTile2.jpg"));
+            icon = new Image(new FileInputStream("C:/ProgrammingLabSummer2022Task3/input/icon.png"));
+            imgUndoButton = new Image(new FileInputStream("C:/ProgrammingLabSummer2022Task3/input/undo.png"));
         } catch (FileNotFoundException | NullPointerException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");

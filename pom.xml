@@ -49,7 +49,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M6</version>
                 <configuration>
-                    <test><!-- your test suite class name should be here --></test>
+                    <test>checkers.logic.LogicTest</test>
                 </configuration>
             </plugin>
         </plugins>

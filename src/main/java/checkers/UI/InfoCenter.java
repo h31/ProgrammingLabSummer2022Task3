@@ -12,7 +12,6 @@ public class InfoCenter {
     private final StackPane pane;
     private final Label message;
     private final Button startGameButton;
-    private PrimaryStage primaryStage;
 
     public InfoCenter() {
         pane = new StackPane();
@@ -54,9 +53,6 @@ public class InfoCenter {
     public void setStartButtonOnAction(EventHandler<ActionEvent> onAction) {
         startGameButton.setOnAction(onAction);
     }
-    public void setButtonOnAction(Button button, EventHandler<ActionEvent> onAction) {
-        button.setOnAction(onAction);
-    }
 
     private EventHandler<ActionEvent> startNewGame() {
         return event -> {
@@ -73,7 +69,6 @@ public class InfoCenter {
             updateMessage("Start New Game");
             startGameButton.setText("Start New Game");
             setStartButtonOnAction(startNewGame());
-            primaryStage = new PrimaryStage(FirstStage.root, this);
         };
     }
 
@@ -83,7 +78,6 @@ public class InfoCenter {
             startGameButton.setText("Start New Game");
             setStartButtonOnAction(startNewGame());
             FirstStage.root = FirstStage.copyOfRoot;
-            primaryStage = new PrimaryStage(FirstStage.root, this);
 
         };
     }

@@ -5,21 +5,21 @@ import checkers.UI.InfoCenter;
 import checkers.UI.UIConstants;
 
 public class Turner {
-    static int resultOfLastTurn = 0;
+    static int resultOfLastMove = 0;
     static InfoCenter infoCenter;
     public static boolean isTurn = false;
     public static CheckersBoard.Checker[][] checkers = CheckersBoard.checkers;
-    int selectedCellRow; //Ряд выбранной клетки
-    int selectedCellCol; //Столбец выбранной клетки
-    String selectedCellColor; //Цвет фигуры в выбранной клетке
-    boolean selectedCellSomeToEat; //Может ли выбранная фигура съесть
-    boolean selectedCellKing; //Является ли выбранная фигура королём
+    int selectedRow; //Ряд выбранной клетки
+    int selectedCol; //Столбец выбранной клетки
+    String selectedColor; //Цвет фигуры в выбранной клетке
+    boolean selectedSomeToEat; //Может ли выбранная фигура съесть
+    boolean selectedKing; //Является ли выбранная фигура королём
     // всё ниже аналогично тому, что выше, только для выбранной для хода шашки
-    int activeCheckerRow;
-    int activeCheckerCol;
-    String activeCheckerColor;
-    boolean activeCheckerSomeToEat;
-    boolean activeCheckerKing;
+    int activeRow;
+    int activeCol;
+    String activeColor;
+    boolean activeSomeToEat;
+    boolean activeKing;
     VerifierTurns verifierTurns = new VerifierTurns(); //Проверка хода
 
     static CheckersBoard.Checker selectedChecker;
@@ -31,86 +31,88 @@ public class Turner {
 
     public void makeATurn(int selectedCellRow, int selectedCellCol){
         selectedChecker = checkers[selectedCellRow][selectedCellCol];
-        this.selectedCellRow = selectedChecker.row;
-        this.selectedCellCol = selectedChecker.col;
-        this.selectedCellColor = selectedChecker.color;
-        this.selectedCellSomeToEat = selectedChecker.someToEat;
-        this.selectedCellKing = selectedChecker.isKing;
+        this.selectedRow = selectedChecker.row;
+        this.selectedCol = selectedChecker.col;
+        this.selectedColor = selectedChecker.color;
+        this.selectedSomeToEat = selectedChecker.someToEat;
+        this.selectedKing = selectedChecker.isKing;
 
 
-        if (!isTurn && !selectedCellColor.equals("No") && resultOfLastTurn != 2 &&
-                (SomeStaff.isWhiteTurn() && selectedCellColor.equals("White") && (selectedCellSomeToEat ||
-                        !DuringGameChecks.someToEatAllWhite) || !SomeStaff.isWhiteTurn() &&
-                        selectedCellColor.equals("Black") && (selectedCellSomeToEat ||
-                        !DuringGameChecks.someToEatAllBlack))) {
-            chooseActiveChecker();
-        }  else if (isTurn && activeCheckerRow == selectedCellRow && activeCheckerCol
-                == selectedCellCol && resultOfLastTurn != 2) {
-            canselChoose();
-        }  else if (isTurn && activeCheckerColor.equals(selectedCellColor) && resultOfLastTurn
-                != 2 && activeCheckerSomeToEat == selectedCellSomeToEat) {
-            chooseAnotherChecker();
-        } else if (isTurn) {
-                tryToMakeThisTurn();
+        if (isTurn) {
+            if (resultOfLastMove != 2) {
+                if (activeRow == selectedCellRow && activeCol == selectedCellCol) {
+                    canselChoose();
+                } else if (activeColor.equals(selectedColor) && activeSomeToEat == selectedSomeToEat) {
+                    chooseAnotherChecker();
+                }
             }
+            tryToMakeThisTurn();
+            checkAfterTurn();
+        } else {
+            if (SomeStaff.isWhiteTurn() && selectedColor.equals("White") && (selectedSomeToEat ||
+                    !DuringGameChecks.someToEatAllWhite) || !SomeStaff.isWhiteTurn() &&
+                    selectedColor.equals("Black") && (selectedSomeToEat ||
+                    !DuringGameChecks.someToEatAllBlack)) {
+                chooseActiveChecker();
+            }
+        }
 
-        checkAfterTurn();
     }
 
 
 
     private void chooseActiveChecker() {
         isTurn = true;
-        activeCheckerRow = selectedCellRow;
-        activeCheckerCol = selectedCellCol;
-        activeCheckerColor = selectedCellColor;
-        activeCheckerSomeToEat = selectedCellSomeToEat;
-        activeCheckerKing = selectedCellKing;
-        SomeStaff.inline(selectedCellRow, selectedCellCol);
+        activeRow = selectedRow;
+        activeCol = selectedCol;
+        activeColor = selectedColor;
+        activeSomeToEat = selectedSomeToEat;
+        activeKing = selectedKing;
+        SomeStaff.inline(selectedRow, selectedCol);
     }
 
     private void canselChoose() {
         isTurn = false;
-        SomeStaff.unline(activeCheckerRow, activeCheckerCol);
+        SomeStaff.unline(activeRow, activeCol);
     }
 
     private void chooseAnotherChecker() {
-        SomeStaff.unline(activeCheckerRow, activeCheckerCol);
-        activeCheckerRow = selectedCellRow;
-        activeCheckerCol = selectedCellCol;
-        activeCheckerKing = selectedCellKing;
-        SomeStaff.inline(selectedCellRow, selectedCellCol);
+        SomeStaff.unline(activeRow, activeCol);
+        activeRow = selectedRow;
+        activeCol = selectedCol;
+        activeKing = selectedKing;
+        SomeStaff.inline(selectedRow, selectedCol);
     }
 
     private void tryToMakeThisTurn() {
-        if (selectedCellColor.equals("No")) {
-            verifierTurns.init(activeCheckerRow, activeCheckerCol);
-            int x = verifierTurns.checkTurn(selectedCellRow, selectedCellCol);
+        if (selectedColor.equals("No")) {
+            verifierTurns.init(activeRow, activeCol);
+            int x = verifierTurns.checkTurn(selectedRow, selectedCol);
             if (x != 0) {
-                if (x == 1 && !activeCheckerSomeToEat) { //если можно походить без взятия и взять шашка никого не может
+                if (x == 1 && !activeSomeToEat) { //если можно походить без взятия и взять шашка никого не может
                     selectedChecker.labelDown.setBackground(UIConstants.BLACK_BACK); //Ставим нижний слой шашки
-                    if (activeCheckerColor.equals("White")) { //Ставим верхний слой шашки
+                    if (activeColor.equals("White")) { //Ставим верхний слой шашки
                         selectedChecker.labelUp.setBackground(UIConstants.WHITE_CHECKER);
                     } else {
                         selectedChecker.labelUp.setBackground(UIConstants.BLACK_CHECKER);
                     }
-                    selectedChecker.color = activeCheckerColor;
-                    if ((SomeStaff.isWhiteTurn() && selectedCellRow == 0 || !SomeStaff.isWhiteTurn() &&
-                            selectedCellRow == 7) || activeCheckerKing) { //Ставим\переносим статус дамки
-                        SomeStaff.makeAKing(selectedCellRow, selectedCellCol);
+                    selectedChecker.color = activeColor;
+                    if ((SomeStaff.isWhiteTurn() && selectedRow == 0 || !SomeStaff.isWhiteTurn() &&
+                            selectedRow == 7) || activeKing) { //Ставим\переносим статус дамки
+                        SomeStaff.makeAKing(selectedRow, selectedCol);
                     }
-                    SomeStaff.delete(activeCheckerRow, activeCheckerCol); //Удаляем старую шашку
+                    SomeStaff.delete(activeRow, activeCol); //Удаляем старую шашку
                     SomeStaff.changePlayerTurn();
                 } else if (x == 2) { //все случаи, когда кого-то шашка берёт
                     selectedChecker.labelDown.setBackground(UIConstants.BLACK_BACK); //ставим нижний слой
                     selectedChecker.labelUp.setBackground(UIConstants.CHOOSEN_CHECKER); //подсвечиваем
-                    selectedChecker.color = activeCheckerColor;
+                    selectedChecker.color = activeColor;
 
-                    if (activeCheckerKing || (SomeStaff.isWhiteTurn() && selectedCellRow == 0 ||
-                            !SomeStaff.isWhiteTurn() && selectedCellRow == 7)) { //ставим\переносим дамку
-                        SomeStaff.makeAKing(selectedCellRow, selectedCellCol);
+                    if (activeKing || (SomeStaff.isWhiteTurn() && selectedRow == 0 ||
+                            !SomeStaff.isWhiteTurn() && selectedRow == 7)) { //ставим\переносим дамку
+                        SomeStaff.makeAKing(selectedRow, selectedCol);
                     }
-                    SomeStaff.delete(activeCheckerRow, activeCheckerCol); //удаляем старую
+                    SomeStaff.delete(activeRow, activeCol); //удаляем старую
 
                     //проверяем, какой цвет взяли
                     if (checkers[verifierTurns.getEatenRow()][verifierTurns.getEatenCol()].color.equals("Black")) {
@@ -122,21 +124,21 @@ public class Turner {
                     //удаляем съеденную
                     SomeStaff.delete(verifierTurns.getEatenRow(), verifierTurns.getEatenCol());
 
-                    activeCheckerRow = selectedCellRow;
-                    activeCheckerCol = selectedCellCol;
+                    activeRow = selectedRow;
+                    activeCol = selectedCol;
 
-                    resultOfLastTurn = 2;
-                    verifierTurns.init(activeCheckerRow, activeCheckerCol);
+                    resultOfLastMove = 2;
+                    verifierTurns.init(activeRow, activeCol);
                     //проверяем, продолжатся ли взятия на следующем ходу
-                    if (!verifierTurns.checkForTakes() || activeCheckerKing != selectedChecker.isKing) {
-                        if (activeCheckerColor.equals("White")) {
+                    if (!verifierTurns.checkForTakes() || activeKing != selectedChecker.isKing) {
+                        if (activeColor.equals("White")) {
                             selectedChecker.labelUp.setBackground(UIConstants.WHITE_CHECKER);
                         } else {
                             selectedChecker.labelUp.setBackground(UIConstants.BLACK_CHECKER);
                         }
                         SomeStaff.changePlayerTurn();
                     }
-                    activeCheckerKing = selectedChecker.isKing;
+                    activeKing = selectedChecker.isKing;
                 }
             }
         }

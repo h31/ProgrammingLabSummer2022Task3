@@ -16,7 +16,7 @@ public class SomeStaff {
         }
         infoCenter.updateMessage(playerTurn + "'s turn");
         Turner.isTurn = false;
-        Turner.resultOfLastTurn = 0;
+        Turner.resultOfLastMove = 0;
     }
 
     public static boolean isWhiteTurn() {

@@ -26,5 +26,5 @@ public class UIConstants {
     public static final Background BLACK_BACK =
             new Background(new BackgroundFill(Color.BLACK, new CornerRadii(360), Insets.EMPTY));
     public static final Background KING =
-            new Background(new BackgroundFill(Color.GREEN, new CornerRadii(360), Insets.EMPTY));
+            new Background(new BackgroundFill(Color.LIGHTGREEN, new CornerRadii(360), Insets.EMPTY));
 }

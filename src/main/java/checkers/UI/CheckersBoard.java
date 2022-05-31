@@ -1,11 +1,9 @@
 package checkers.UI;
 
 import checkers.logic.DuringGameChecks;
-import checkers.logic.SomeStaff;
 import checkers.logic.Turner;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;

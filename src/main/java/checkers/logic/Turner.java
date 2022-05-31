@@ -6,19 +6,19 @@ public class Turner {
     public static int resultOfLastMove = 0;
     static InfoCenter infoCenter;
     public static boolean isTurn = false;
-    public static CheckersBoard.Checker[][] checkers = CheckersBoard.checkers;
-    public int selectedRow; //Ряд выбранной клетки
-    public int selectedCol; //Столбец выбранной клетки
+    static CheckersBoard.Checker[][] checkers = CheckersBoard.checkers;
+    int selectedRow; //Ряд выбранной клетки
+    int selectedCol; //Столбец выбранной клетки
     String selectedColor; //Цвет фигуры в выбранной клетке
     boolean selectedSomeToEat; //Может ли выбранная фигура съесть
     boolean selectedKing; //Является ли выбранная фигура королём
     // всё ниже аналогично тому, что выше, только для выбранной для хода шашки
     public int activeRow;
     public int activeCol;
-    public String activeColor;
-    public boolean activeSomeToEat;
-    public boolean activeKing;
-    public boolean isItATryToMove;
+    String activeColor;
+    boolean activeSomeToEat;
+    boolean activeKing;
+    boolean isItATryToMove;
     VerifierTurns verifierTurns = new VerifierTurns(); //Проверка хода
 
     static CheckersBoard.Checker selectedChecker;
@@ -98,18 +98,18 @@ public class Turner {
             int x = verifierTurns.checkTurn(selectedRow, selectedCol);
             if (x != 0) {
                 if (x == 1 && !activeSomeToEat) { //если можно походить без взятия и взять шашка никого не может
-                    selectedChecker.color = activeColor;
-                    selectedChecker.paintInNormalColor(activeColor);
+                    selectedChecker.color = activeColor; //переназначаем цвет у пустого поля
+                    selectedChecker.paintInNormalColor(activeColor); //перекрашиваем (передвигаем шашку)
                     if ((SomeStaff.isWhiteTurn() && selectedRow == 0 || !SomeStaff.isWhiteTurn() &&
                             selectedRow == 7) || activeKing) { //Ставим\переносим статус дамки
                         SomeStaff.makeAKing(selectedRow, selectedCol);
                     }
                     SomeStaff.delete(activeRow, activeCol); //Удаляем старую шашку
-                    SomeStaff.changePlayerTurn();
+                    SomeStaff.changePlayerTurn(); //меняем ход
                 } else if (x == 2) { //все случаи, когда кого-то шашка берёт
-                    resultOfLastMove = 2;
-                    selectedChecker.color = activeColor;
-                    selectedColor = activeColor;
+                    resultOfLastMove = 2; //для запрета переключения при поедании подряд
+                    selectedChecker.color = activeColor; //опять переназначаем цвет у пустого поля
+                    selectedColor = activeColor; //для работы в одном цикле
 
                     if (activeKing || (SomeStaff.isWhiteTurn() && selectedRow == 0 ||
                             !SomeStaff.isWhiteTurn() && selectedRow == 7)) { //ставим\переносим дамку

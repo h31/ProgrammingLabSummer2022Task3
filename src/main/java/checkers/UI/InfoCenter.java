@@ -14,12 +14,6 @@ public class InfoCenter {
     private final Button startGameButton;
     private PrimaryStage primaryStage;
 
-    public InfoCenter(boolean t) { //ONLY FOR TESTS
-        pane = null;
-        startGameButton = null;
-        message = null;
-    }
-
     public InfoCenter() {
         pane = new StackPane();
         pane.setMinSize(UIConstants.APP_WIDTH, UIConstants.INFO_CENTER_HEIGHT);

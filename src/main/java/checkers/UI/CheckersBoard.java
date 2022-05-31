@@ -150,15 +150,8 @@ public class CheckersBoard {
 
 
             pane.setOnMouseClicked(event -> {
-                if (event.getButton() == MouseButton.MIDDLE) {
-                    System.out.println(isKing);
-                }
-                if (event.getButton() == MouseButton.SECONDARY) {
-                    SomeStaff.makeAKing(row, col);
-                } else {
-                    if (isGame) {
-                        turner.makeATurn(row, col);
-                    }
+                if (isGame) {
+                    turner.makeATurn(row, col);
                     event.consume();
                 }
             });

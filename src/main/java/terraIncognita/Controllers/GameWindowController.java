@@ -9,6 +9,7 @@ import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -23,12 +24,10 @@ import terraIncognita.Model.Player;
 import terraIncognita.Utils.Point;
 import terraIncognita.Utils.Utils;
 
-import java.io.File;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.TimerTask;
+import java.util.*;
 
 public class GameWindowController extends BasicController{
 
@@ -108,13 +107,16 @@ public class GameWindowController extends BasicController{
         ImageView tile = null;
         try {
             tile = (ImageView) tileOp.get();
-        } catch (Exception e) {
+        } catch (NoSuchElementException e) {
             Utils.logErrorWithExit(e);
         }
         deskGrid.getChildren().remove(tile);
 
-        String imageFileName = App.TILES_IMG_DIR + App.game.getActivePlayer().getDesk().getTileAt(pos).getImageFileName();
-        deskGrid.add(createTileImageView(Utils.genUrlOf(imageFileName)), pos.x, pos.y);
+        InputStream imageInputStream = App.resourceLoader.getInputStreamOf(
+                App.TILES_IMG_RELATIVE_DIR +
+                        App.game.getActivePlayer().getDesk().getTileAt(pos).getImageFileName()
+        );
+        deskGrid.add(createTileImageView(imageInputStream), pos.x, pos.y);
     }
 
     private void placePlayerTo(Point newPos) {
@@ -122,8 +124,9 @@ public class GameWindowController extends BasicController{
         deskGrid.add(playerShape, newPos.x, newPos.y);
     }
 
-    private ImageView createTileImageView(@NotNull String url) {
-        ImageView imgView = new ImageView(url);
+    private ImageView createTileImageView(@NotNull InputStream input) {
+        ImageView imgView = new ImageView();
+        imgView.setImage(new Image(input));
         imgView.setFitHeight(borderSize);
         imgView.setFitWidth(borderSize);
         imgView.setSmooth(false);
@@ -138,18 +141,11 @@ public class GameWindowController extends BasicController{
 
     private void loadDeskFrom(Player player) {
         changeCircleColor(player.getColor());
-
-        //TODO - исправить эффективность. Посмотреть что-то через синглтоны
         clearGrid();
         for (int rowIndex = 0; rowIndex < vTileAmount; rowIndex++) {
             for (int colIndex = 0; colIndex < hTileAmount; colIndex++) {
-                deskGrid.add(
-                        createTileImageView(
-                                new File(App.TILES_IMG_DIR + player.getDesk().getTileAt(new Point(colIndex, rowIndex)
-                                ).getImageFileName()).toURI().toString()
-                        ),
-                        colIndex, rowIndex
-                );
+                String relativePath = App.TILES_IMG_RELATIVE_DIR + player.getDesk().getTileAt(new Point(colIndex, rowIndex)).getImageFileName();
+                deskGrid.add(createTileImageView(App.resourceLoader.getInputStreamOf(relativePath)), colIndex, rowIndex);
             }
         }
 
@@ -174,9 +170,10 @@ public class GameWindowController extends BasicController{
                 }
             }
         });
-        Player activePlayer = App.game.startGame(
-                ((StartWindowController) App.stageController.getControllerOf(App.START_WINDOW_SCENE_NAME)).getLabyrinthSource()
+        InputStream labyrinthIS = App.resourceLoader.getInputStreamOf(
+                ((StartWindowController) App.stageController.getControllerOf(App.START_WINDOW_SCENE_NAME)).getLabyrinthName()
         );
+        Player activePlayer = App.game.startGame(labyrinthIS);
 
         hTileAmount = App.game.getLabyrinthHorSize();
         vTileAmount = App.game.getLabyrinthVerSize();

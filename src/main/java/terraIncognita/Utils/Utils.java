@@ -9,50 +9,42 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 
+import org.apache.commons.io.FilenameUtils;
+import terraIncognita.App;
 import terraIncognita.Controllers.BasicController;
+import terraIncognita.Utils.Exceptions.ExceptionWrapper;
 import terraIncognita.Utils.Exceptions.ExceptionsUtils;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Utils {
 
     public static BasicController loadFXMLScene(URL resource) {
-        Parent root;
+        Parent root = null;
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(resource));
         try {
             root = loader.load();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Utils.logErrorWithExit(e);
         }
         BasicController controller = loader.getController();
         controller.setRuledScene(new Scene(root));
         return controller ;
     }
 
-    public static String genUrlOf(String file) {
-        return new File(file).toURI().toString();
-    }
-
-    public static void logError(Exception e) {
-        System.err.println(e.getMessage());
-        for (var traceEl : e.getStackTrace()) {
-            System.err.println(traceEl.toString());
-        }
-    }
-
-    public static void logErrorWithExit(Exception e) {
+    public static void logErrorWithExit(Exception err){
         if (TestUtils.isConsoleOutput()) {
-            TestUtils.pushExitException(e);
-            return;
+            if (err instanceof RuntimeException) {
+                throw (RuntimeException)err;
+            }
+            throw new ExceptionWrapper(err);
         }
+        Throwable e = Objects.requireNonNullElse(err.getCause(), err);
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(e.toString());
         alert.setHeaderText(e.getMessage());
@@ -60,6 +52,7 @@ public class Utils {
         VBox content = new VBox();
         Label label = new Label("Stack trace:");
 
+        //String stackTrace = App.getAppPath() + "\n" + ExceptionsUtils.getStackTrace(e);
         String stackTrace = ExceptionsUtils.getStackTrace(e);
         TextArea textArea = new TextArea();
         textArea.setText(stackTrace);
@@ -72,12 +65,17 @@ public class Utils {
         Platform.exit();
     }
 
-    public static List<File> loadFilesFrom(String labyrinthsDir) throws IOException {
-        try (Stream<Path> stream = Files.list(Paths.get(labyrinthsDir))) {
-            return stream
-                    .filter(path -> !Files.isDirectory(path))
-                    .map(Path::toFile)
-                    .collect(Collectors.toList());
+    public static List<String> loadSeparateLinesFrom(InputStream inputStream) throws IOException {
+        List<String> res = new LinkedList<>();
+        try(BufferedReader input = new BufferedReader(new InputStreamReader(inputStream))) {
+            String labyrinthName = input.readLine();
+            while(labyrinthName != null) {
+                res.add(labyrinthName);
+                labyrinthName = input.readLine();
+            }
+        } catch (IOException e){
+            Utils.logErrorWithExit(e);
         }
+        return res;
     }
 }

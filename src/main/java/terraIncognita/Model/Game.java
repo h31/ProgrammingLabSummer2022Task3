@@ -5,6 +5,8 @@ import terraIncognita.Model.Desk.Labyrinth;
 import terraIncognita.Model.Tiles.Tile;
 import terraIncognita.Utils.Point;
 
+import java.io.InputStream;
+
 public class Game {
 
     public static final int MIN_PLAYER_AMOUNT = 2;
@@ -68,7 +70,7 @@ public class Game {
         return playerAmount;
     }
 
-    public Player startGame(@NotNull String labyrinthSource) {
+    public Player startGame(@NotNull InputStream labyrinthSource) {
         labyrinth = Labyrinth.genLabyrinthFromExistingSource(labyrinthSource);
         players = new Player[playerAmount];
         for (int i = 0; i < playerAmount; i++) {

@@ -1,6 +1,6 @@
 package terraIncognita.Utils.Exceptions;
 
-public class SceneNotFoundException extends Exception {
+public class SceneNotFoundException extends RuntimeException {
 
     public SceneNotFoundException() {
         super();

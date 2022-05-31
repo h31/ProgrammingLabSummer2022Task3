@@ -7,54 +7,48 @@ import terraIncognita.Model.MovementDirection;
 import terraIncognita.Model.Player;
 import terraIncognita.Model.Tiles.StartTile;
 import terraIncognita.Model.Tiles.WormholeTile;
+import terraIncognita.Utils.Exceptions.ExceptionWrapper;
 import terraIncognita.Utils.Exceptions.MultipleUsageOfSingleTileException;
 import terraIncognita.Utils.Exceptions.NoNeededTileException;
+import terraIncognita.Utils.Exceptions.NothingThrownException;
 import terraIncognita.Utils.Point;
 import terraIncognita.Utils.TestUtils;
 import java.io.FileNotFoundException;
-import java.util.Queue;
-
 
 public class Tests {
 
     private static final String TEST_LABYRINTHS_DIR = "src/test/resources/labyrinths/";
 
-    private enum Comparison {
-        CLASS {
-            @Override
-            public <T> boolean comp(T a, T b) {
-                return a.getClass() == b.getClass();
-            }
-        };
-        public abstract <T> boolean comp(T a, T b);
-    }
-
-    @SafeVarargs
-    private static <T> void assertQueue (Queue<T> collection, Comparison comparator, T... objects) {
-        if (objects.length != collection.size()) {
-            fail();
-        }
-
-        boolean res = true;
-        for (T object : objects) {
-            if (!comparator.comp(object, collection.remove())) {
-                res = false;
-                break;
-            }
-        }
-        collection.clear();
-        assertTrue(res);
-
-    }
-
     private static void setupTest() {
         TestUtils.setIsConsoleOutput(true);
+    }
+
+    private static void rethrowWithoutWrapping(Runnable runnable) throws Throwable {
+        Throwable res = null;
+        try {
+            runnable.run();
+        } catch (RuntimeException e) {
+            if (e instanceof ExceptionWrapper) {
+                throw e.getCause();
+            }
+            throw e;
+        }
+        throw new NothingThrownException();
+    }
+
+    private static void assertThrowsWithUnwrapping(Class<? extends Throwable> expected, Runnable runnable) {
+        assertThrows(
+                expected,
+                () -> rethrowWithoutWrapping(runnable)
+        );
     }
 
     @Test
     void startGameTest() {
         setupTest();
-        Player player = App.game.startGame(App.LABYRINTHS_DIR + "lab1.txt");
+        Player player = App.game.startGame(
+                App.resourceLoader.getInputStreamOf(App.LABYRINTHS_RELATIVE_DIR + "lab1.txt")
+        );
         Point startPos = new Point(1, 3);
         assertEquals(player.getPosition(), startPos);
         assertTrue(player.getDesk().getTileAt(startPos) instanceof StartTile);
@@ -64,7 +58,9 @@ public class Tests {
     @Test
     void freeMovementTest() {
         setupTest();
-        Player player = App.game.startGame(TEST_LABYRINTHS_DIR + "test1.txt");
+        Player player = App.game.startGame(
+                App.resourceLoader.getInputStreamOf(TEST_LABYRINTHS_DIR + "test1.txt")
+        );
         Point startPos = player.getPosition();
 
         player.move(MovementDirection.UP);
@@ -80,7 +76,9 @@ public class Tests {
     @Test
     void wallsMovementTest() {
         setupTest();
-        Player player = App.game.startGame(TEST_LABYRINTHS_DIR + "test2.txt");
+        Player player = App.game.startGame(
+                App.resourceLoader.getInputStreamOf(TEST_LABYRINTHS_DIR + "test2.txt")
+        );
         Point startPos = player.getPosition();
 
         player.move(MovementDirection.UP);
@@ -105,54 +103,96 @@ public class Tests {
     @Test
     void notFoundLabyrinthTest() {
         setupTest();
-        App.game.startGame(TEST_LABYRINTHS_DIR + "asdfasdf.txt");
-        assertEquals(TestUtils.popExceptions().remove().getClass(), FileNotFoundException.class);
+
+        assertThrowsWithUnwrapping(
+                FileNotFoundException.class,
+                () -> App.game.startGame(
+                        App.resourceLoader.getInputStreamOf(TEST_LABYRINTHS_DIR + "asdasdsad.txt")
+                )
+        );
     }
 
     @Test
     void invalidLabyrinthTest() {
         setupTest();
-        App.game.startGame(TEST_LABYRINTHS_DIR + "test3.txt"); // two starts
-        assertQueue(TestUtils.popExceptions(), Comparison.CLASS, new MultipleUsageOfSingleTileException());
+        assertThrowsWithUnwrapping(
+                MultipleUsageOfSingleTileException.class,
+                () -> App.game.startGame(
+                        App.resourceLoader.getInputStreamOf(TEST_LABYRINTHS_DIR + "test3.txt") // two starts
+                )
+        );
 
-        App.game.startGame(TEST_LABYRINTHS_DIR + "test4.txt"); // two ends
-        assertQueue(TestUtils.popExceptions(), Comparison.CLASS, new MultipleUsageOfSingleTileException());
+        assertThrowsWithUnwrapping(
+                MultipleUsageOfSingleTileException.class,
+                () -> App.game.startGame(
+                        App.resourceLoader.getInputStreamOf(TEST_LABYRINTHS_DIR + "test4.txt") // two ends
+                )
+        );
 
-        App.game.startGame(TEST_LABYRINTHS_DIR + "test5.txt"); // two treasures
-        assertQueue(TestUtils.popExceptions(), Comparison.CLASS, new MultipleUsageOfSingleTileException());
+        assertThrowsWithUnwrapping(
+                MultipleUsageOfSingleTileException.class,
+                () -> App.game.startGame(
+                        App.resourceLoader.getInputStreamOf(TEST_LABYRINTHS_DIR + "test5.txt") // two treasures
+                )
+        );
 
-        App.game.startGame(TEST_LABYRINTHS_DIR + "test6.txt"); // no start
-        assertEquals(TestUtils.popExceptions().remove().getClass(), NoNeededTileException.class);
 
-        App.game.startGame(TEST_LABYRINTHS_DIR + "test7.txt"); // no end
-        assertQueue(TestUtils.popExceptions(), Comparison.CLASS, new NoNeededTileException());
+        assertThrowsWithUnwrapping(
+                NoNeededTileException.class,
+                () -> App.game.startGame(
+                        App.resourceLoader.getInputStreamOf(TEST_LABYRINTHS_DIR + "test6.txt") // no start
+                )
+        );
 
-        App.game.startGame(TEST_LABYRINTHS_DIR + "test8.txt"); // no treasure
-        assertQueue(TestUtils.popExceptions(), Comparison.CLASS, new NoNeededTileException());
+        assertThrowsWithUnwrapping(
+                NoNeededTileException.class,
+                () -> App.game.startGame(
+                        App.resourceLoader.getInputStreamOf(TEST_LABYRINTHS_DIR + "test7.txt") // no end
+                )
+        );
 
-        assertThrows(
+        assertThrowsWithUnwrapping(
+                NoNeededTileException.class,
+                () -> App.game.startGame(
+                        App.resourceLoader.getInputStreamOf(TEST_LABYRINTHS_DIR + "test8.txt") // no treasure
+                )
+        );
+
+        assertThrowsWithUnwrapping(
                 IllegalArgumentException.class,
-                () -> App.game.startGame(TEST_LABYRINTHS_DIR + "test10.txt")
+                () -> App.game.startGame(
+                        App.resourceLoader.getInputStreamOf(TEST_LABYRINTHS_DIR + "test10.txt")
+                )
         );
     }
 
     @Test
     void wormholeTest() {
         setupTest();
-        Player player = App.game.startGame(TEST_LABYRINTHS_DIR + "test9.txt");
+        Player player = App.game.startGame(
+                App.resourceLoader.getInputStreamOf(TEST_LABYRINTHS_DIR + "test9.txt")
+        );
         Point startPos = player.getPosition();
         var unlockedTiles = player.move(MovementDirection.RIGHT);
         assertEquals(player.getPosition(), new Point(1, 3));
         assertEquals(2, unlockedTiles.size());
 
-        assertThrows(IllegalArgumentException.class, () -> WormholeTile.getInstance('p'));
-        assertThrows(IndexOutOfBoundsException.class, () -> App.game.getNextWormholePosition(4));
+        assertThrowsWithUnwrapping(
+                IllegalArgumentException.class,
+                () -> WormholeTile.getInstance('p')
+        );
+        assertThrowsWithUnwrapping(
+                IndexOutOfBoundsException.class,
+                () -> App.game.getNextWormholePosition(4)
+        );
     }
 
     @Test
     void conditionsTest() {
         setupTest();
-        Player player = App.game.startGame(TEST_LABYRINTHS_DIR + "test11.txt");
+        Player player = App.game.startGame(
+                App.resourceLoader.getInputStreamOf(TEST_LABYRINTHS_DIR + "test11.txt")
+        );
         assertFalse(player.isEndGame());
         assertFalse(player.isHasTreasure());
 

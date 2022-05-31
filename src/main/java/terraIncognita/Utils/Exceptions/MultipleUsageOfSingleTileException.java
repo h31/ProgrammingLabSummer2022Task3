@@ -1,6 +1,6 @@
 package terraIncognita.Utils.Exceptions;
 
-public class MultipleUsageOfSingleTileException extends Exception {
+public class MultipleUsageOfSingleTileException extends RuntimeException {
 
     public MultipleUsageOfSingleTileException() {
         super();

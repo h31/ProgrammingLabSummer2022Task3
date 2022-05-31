@@ -1,6 +1,6 @@
 package terraIncognita.Utils.Exceptions;
 
-public class NoNeededTileException extends Exception {
+public class NoNeededTileException extends RuntimeException {
 
     public NoNeededTileException() {
         super();

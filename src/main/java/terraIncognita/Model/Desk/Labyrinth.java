@@ -7,9 +7,8 @@ import terraIncognita.Utils.Exceptions.NoNeededTileException;
 import terraIncognita.Utils.Point;
 import terraIncognita.Utils.Utils;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+
 public class Labyrinth extends Desk {
 
     private Point startPosition;
@@ -22,11 +21,11 @@ public class Labyrinth extends Desk {
         super(vCount, hCount);
     }
 
-    public static Labyrinth genLabyrinthFromExistingSource(String source) {
+    public static Labyrinth genLabyrinthFromExistingSource(InputStream source) {
         StringBuilder sb = new StringBuilder();
         int lineCount = 0;
         int lineLength = -1;
-        try(BufferedReader input = new BufferedReader(new FileReader(source))) {
+        try(BufferedReader input = new BufferedReader(new InputStreamReader(source))) {
             String line = input.readLine();
             while(line != null) {
                 if (line.equals("")) {
@@ -54,7 +53,7 @@ public class Labyrinth extends Desk {
                     case 'S' -> StartTile.INSTANCE;
                     case 'E' -> EndTile.INSTANCE;
                     case 'T' -> TreasureTile.INSTANCE;
-                    default -> throw new IllegalArgumentException("Unexpected token " + (char) ch + " in file " + source);
+                    default -> throw new IllegalArgumentException("Unexpected token " + ch + " in file " + source);
                 };
 
                 labyrinth.insertTile(tile, new Point(x, y));

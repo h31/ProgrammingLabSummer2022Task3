@@ -8,17 +8,14 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.util.StringConverter;
-
-import org.apache.commons.io.FilenameUtils;
 
 import terraIncognita.App;
 import terraIncognita.Model.Game;
 import terraIncognita.Utils.Utils;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -27,7 +24,7 @@ public class StartWindowController extends BasicController {
     @FXML
     private Label playerAmountLabel;
     @FXML
-    private ComboBox<File> labyrinthComboBox;
+    private ComboBox<String> labyrinthComboBox;
     @FXML
     private Button startBtn;
     @FXML
@@ -45,8 +42,8 @@ public class StartWindowController extends BasicController {
     private final BooleanProperty incPlayerAmountBtnDisabled = new SimpleBooleanProperty(false);
     private final BooleanProperty decPlayerAmountBtnDisabled = new SimpleBooleanProperty(true);
 
-    public String getLabyrinthSource() {
-        return labyrinthComboBox.getValue().getPath();
+    public String getLabyrinthName() {
+        return App.LABYRINTHS_RELATIVE_DIR + labyrinthComboBox.getValue();
     }
 
     @Override
@@ -59,25 +56,15 @@ public class StartWindowController extends BasicController {
 
     @Override
     public void setup(Object... args) {
-        List<File> files = null;
+        List<String> filesName;
         try {
-            files = Utils.loadFilesFrom(App.LABYRINTHS_DIR);
+            filesName = Utils.loadSeparateLinesFrom(App.resourceLoader.getInputStreamOf(App.LABYRINTHS_RELATIVE_DIR + "labyrinths.list"));
         } catch (IOException e) {
             Utils.logErrorWithExit(e);
             return;
         }
-        labyrinthComboBox.setItems(FXCollections.observableList(files));
-        labyrinthComboBox.setConverter(new StringConverter<File>() {
-            @Override
-            public String toString(File object) {
-                return FilenameUtils.getBaseName(object.getPath());
-            }
-
-            @Override
-            public File fromString(String string) {
-                return null;
-            }
-        });
+        filesName.sort(Comparator.naturalOrder());
+        labyrinthComboBox.setItems(FXCollections.observableList(filesName));
         labyrinthComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             startButtonDisabled.set(Objects.isNull(newVal));
             tryChangeStartBtnEnable();
@@ -88,11 +75,11 @@ public class StartWindowController extends BasicController {
     private void tryChangeStartBtnEnable() {
         if (startButtonDisabled.get()) {
             startBtnImage.setImage(new Image(
-                    Utils.genUrlOf(App.IMG_DIR + START_IMAGE_NAME_DISABLED)
+                    App.resourceLoader.getInputStreamOf(App.IMG_RELATIVE_DIR + START_IMAGE_NAME_DISABLED)
             ));
         } else {
             startBtnImage.setImage(new Image(
-                    Utils.genUrlOf(App.IMG_DIR + START_IMAGE_NAME_ENABLED)
+                    App.resourceLoader.getInputStreamOf(App.IMG_RELATIVE_DIR + START_IMAGE_NAME_ENABLED)
             ));
         }
     }

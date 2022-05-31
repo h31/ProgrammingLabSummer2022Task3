@@ -2,12 +2,12 @@ package checkers.logic;
 
 import checkers.ui.Piece;
 import checkers.ui.Tile;
-import org.junit.jupiter.api.BeforeAll;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static checkers.logic.Logic.*;
-import static checkers.logic.Logic.getBoard;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class LogicTest {

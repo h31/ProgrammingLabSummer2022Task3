@@ -1,18 +1,19 @@
 package checkers;
 
 
+import checkers.ui.Media;
 import checkers.ui.WelcomePage;
 import javafx.application.Application;
 import javafx.scene.Scene;
-
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 import static checkers.ui.Media.getIcon;
 
 public class Checkers extends Application {
-
-
-
 
     public static void main(String[] args) {
         launch(args);

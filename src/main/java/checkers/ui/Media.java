@@ -6,25 +6,21 @@ import javafx.scene.image.Image;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+
 public class Media {
     private static Image imgBlack, imgWhite, imgCrown,
             imgBlackTile, imgWhiteTile, icon, imgUndoButton;
 
-    static {
+   static  {
         try {
-            imgWhite = new Image(new FileInputStream(
-                    "/input/whitePiece.png"));
-            imgBlack = new Image(new FileInputStream(
-                    "/input/blackPiece.png"));
-            imgCrown = new Image(new FileInputStream(
-                    "/input/crown.png"));
-            imgBlackTile = new Image(new FileInputStream(
-                    "/input/blackTile2.jpg"));
-            imgWhiteTile = new Image(new FileInputStream(
-                    "/input/whiteTile2.jpg"));
-            icon = new Image(new FileInputStream("/input/icon.png"));
-            imgUndoButton = new Image(new FileInputStream("/input/undo.png"));
-        } catch (FileNotFoundException | NullPointerException e) {
+            imgWhite = new Image(new FileInputStream("src/main/resources/whitePiece.png"));
+            imgBlack = new Image(new FileInputStream("src/main/resources/blackPiece.png"));
+            imgCrown = new Image(new FileInputStream("src/main/resources/crown.png"));
+            imgBlackTile = new Image(new FileInputStream("src/main/resources/blackTile.jpg"));
+            imgWhiteTile = new Image(new FileInputStream("src/main/resources/whiteTile.jpg"));
+            icon = new Image(new FileInputStream("src/main/resources/icon.png"));
+            imgUndoButton = new Image(new FileInputStream("src/main/resources/undo.png"));
+        } catch (NullPointerException | FileNotFoundException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText("Media Error");

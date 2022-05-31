@@ -1,8 +1,6 @@
 package checkers.logic;
 
-import checkers.UI.CheckersBoard;
-import checkers.UI.InfoCenter;
-import checkers.UI.UIConstants;
+import checkers.UI.*;
 
 public class SomeStaff {
     public static String playerTurn = "Black";

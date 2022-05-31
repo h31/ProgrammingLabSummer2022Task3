@@ -1,6 +1,6 @@
 package checkers.logic;
 
-import checkers.UI.CheckersBoard;
+import checkers.UI.*;
 
 import static java.lang.Math.abs;
 

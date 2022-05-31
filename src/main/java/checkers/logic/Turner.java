@@ -1,8 +1,6 @@
 package checkers.logic;
 
-import checkers.UI.CheckersBoard;
-import checkers.UI.InfoCenter;
-import checkers.UI.UIConstants;
+import checkers.UI.*;
 
 public class Turner {
     static int resultOfLastMove = 0;
@@ -20,6 +18,7 @@ public class Turner {
     String activeColor;
     boolean activeSomeToEat;
     boolean activeKing;
+    boolean isItATryToMove;
     VerifierTurns verifierTurns = new VerifierTurns(); //Проверка хода
 
     static CheckersBoard.Checker selectedChecker;
@@ -39,15 +38,20 @@ public class Turner {
 
 
         if (isTurn) {
+            isItATryToMove = true;
             if (resultOfLastMove != 2) {
                 if (activeRow == selectedCellRow && activeCol == selectedCellCol) {
                     canselChoose();
+                    isItATryToMove = false;
                 } else if (activeColor.equals(selectedColor) && activeSomeToEat == selectedSomeToEat) {
                     chooseAnotherChecker();
+                    isItATryToMove = false;
                 }
             }
-            tryToMakeThisTurn();
-            checkAfterTurn();
+            if (isItATryToMove) {
+                tryToMakeThisTurn();
+                checkAfterTurn();
+            }
         } else {
             if (SomeStaff.isWhiteTurn() && selectedColor.equals("White") && (selectedSomeToEat ||
                     !DuringGameChecks.someToEatAllWhite) || !SomeStaff.isWhiteTurn() &&

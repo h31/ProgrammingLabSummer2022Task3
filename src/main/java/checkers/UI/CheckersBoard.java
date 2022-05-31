@@ -1,7 +1,6 @@
 package checkers.UI;
 
 import checkers.logic.DuringGameChecks;
-import checkers.logic.SomeStaff;
 import checkers.logic.Turner;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;

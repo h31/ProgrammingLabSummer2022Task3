@@ -3,27 +3,28 @@ package checkers.logic;
 import checkers.UI.*;
 
 public class Turner {
-    static int resultOfLastMove = 0;
+    public static int resultOfLastMove = 0;
     static InfoCenter infoCenter;
     public static boolean isTurn = false;
     public static CheckersBoard.Checker[][] checkers = CheckersBoard.checkers;
-    int selectedRow; //Ряд выбранной клетки
-    int selectedCol; //Столбец выбранной клетки
+    public int selectedRow; //Ряд выбранной клетки
+    public int selectedCol; //Столбец выбранной клетки
     String selectedColor; //Цвет фигуры в выбранной клетке
     boolean selectedSomeToEat; //Может ли выбранная фигура съесть
     boolean selectedKing; //Является ли выбранная фигура королём
     // всё ниже аналогично тому, что выше, только для выбранной для хода шашки
-    int activeRow;
-    int activeCol;
-    String activeColor;
-    boolean activeSomeToEat;
-    boolean activeKing;
-    boolean isItATryToMove;
+    public int activeRow;
+    public int activeCol;
+    public String activeColor;
+    public boolean activeSomeToEat;
+    public boolean activeKing;
+    public boolean isItATryToMove;
     VerifierTurns verifierTurns = new VerifierTurns(); //Проверка хода
 
     static CheckersBoard.Checker selectedChecker;
 
-
+    public Turner() { //THIS IS ONLY FOR TESTS!!!!!! DO NOT USE IT
+    }
     public Turner(InfoCenter infoCenter) {
         Turner.infoCenter = infoCenter;
     }
@@ -41,11 +42,11 @@ public class Turner {
             isItATryToMove = true;
             if (resultOfLastMove != 2) {
                 if (activeRow == selectedCellRow && activeCol == selectedCellCol) {
+                    isItATryToMove = false;
                     canselChoose();
-                    isItATryToMove = false;
                 } else if (activeColor.equals(selectedColor) && activeSomeToEat == selectedSomeToEat) {
-                    chooseAnotherChecker();
                     isItATryToMove = false;
+                    chooseAnotherChecker();
                 }
             }
             if (isItATryToMove) {
@@ -81,10 +82,13 @@ public class Turner {
     }
 
     private void chooseAnotherChecker() {
-        SomeStaff.unline(activeRow, activeCol);
+        int a = activeRow;
+        int b = activeCol;
+
         activeRow = selectedRow;
         activeCol = selectedCol;
         activeKing = selectedKing;
+        SomeStaff.unline(a, b);
         SomeStaff.inline(selectedRow, selectedCol);
     }
 
@@ -94,13 +98,8 @@ public class Turner {
             int x = verifierTurns.checkTurn(selectedRow, selectedCol);
             if (x != 0) {
                 if (x == 1 && !activeSomeToEat) { //если можно походить без взятия и взять шашка никого не может
-                    selectedChecker.labelDown.setBackground(UIConstants.BLACK_BACK); //Ставим нижний слой шашки
-                    if (activeColor.equals("White")) { //Ставим верхний слой шашки
-                        selectedChecker.labelUp.setBackground(UIConstants.WHITE_CHECKER);
-                    } else {
-                        selectedChecker.labelUp.setBackground(UIConstants.BLACK_CHECKER);
-                    }
                     selectedChecker.color = activeColor;
+                    selectedChecker.paintInNormalColor(activeColor);
                     if ((SomeStaff.isWhiteTurn() && selectedRow == 0 || !SomeStaff.isWhiteTurn() &&
                             selectedRow == 7) || activeKing) { //Ставим\переносим статус дамки
                         SomeStaff.makeAKing(selectedRow, selectedCol);
@@ -108,15 +107,15 @@ public class Turner {
                     SomeStaff.delete(activeRow, activeCol); //Удаляем старую шашку
                     SomeStaff.changePlayerTurn();
                 } else if (x == 2) { //все случаи, когда кого-то шашка берёт
-                    selectedChecker.labelDown.setBackground(UIConstants.BLACK_BACK); //ставим нижний слой
-                    selectedChecker.labelUp.setBackground(UIConstants.CHOOSEN_CHECKER); //подсвечиваем
+                    resultOfLastMove = 2;
                     selectedChecker.color = activeColor;
+                    selectedColor = activeColor;
 
                     if (activeKing || (SomeStaff.isWhiteTurn() && selectedRow == 0 ||
                             !SomeStaff.isWhiteTurn() && selectedRow == 7)) { //ставим\переносим дамку
                         SomeStaff.makeAKing(selectedRow, selectedCol);
+                        selectedKing = selectedChecker.isKing;
                     }
-                    SomeStaff.delete(activeRow, activeCol); //удаляем старую
 
                     //проверяем, какой цвет взяли
                     if (checkers[verifierTurns.getEatenRow()][verifierTurns.getEatenCol()].color.equals("Black")) {
@@ -128,21 +127,23 @@ public class Turner {
                     //удаляем съеденную
                     SomeStaff.delete(verifierTurns.getEatenRow(), verifierTurns.getEatenCol());
 
+
+                    verifierTurns.init(selectedRow, selectedCol);
+                    //проверяем, продолжатся ли взятия на следующем ходу или не произошло ли смены на дамку
+                    if (!verifierTurns.checkForTakes() || activeKing != selectedChecker.isKing) {
+                        selectedChecker.paintInNormalColor(activeColor);
+                        SomeStaff.changePlayerTurn();
+                    } else {
+                        selectedChecker.paintInGold();
+                    }
+
+                    SomeStaff.delete(activeRow, activeCol); //удаляем старую
                     activeRow = selectedRow;
                     activeCol = selectedCol;
+                    activeKing = selectedKing;
+                    activeColor = selectedColor;
 
-                    resultOfLastMove = 2;
-                    verifierTurns.init(activeRow, activeCol);
-                    //проверяем, продолжатся ли взятия на следующем ходу
-                    if (!verifierTurns.checkForTakes() || activeKing != selectedChecker.isKing) {
-                        if (activeColor.equals("White")) {
-                            selectedChecker.labelUp.setBackground(UIConstants.WHITE_CHECKER);
-                        } else {
-                            selectedChecker.labelUp.setBackground(UIConstants.BLACK_CHECKER);
-                        }
-                        SomeStaff.changePlayerTurn();
-                    }
-                    activeKing = selectedChecker.isKing;
+
                 }
             }
         }

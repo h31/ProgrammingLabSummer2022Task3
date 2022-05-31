@@ -1,9 +1,11 @@
 package checkers.UI;
 
 import checkers.logic.DuringGameChecks;
+import checkers.logic.SomeStaff;
 import checkers.logic.Turner;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -11,11 +13,23 @@ import javafx.scene.text.Font;
 
 public class CheckersBoard {
     private final StackPane pane;
-    final InfoCenter infoCenter;
+    private final InfoCenter infoCenter;
     private static final byte size = UIConstants.SIZE;
     public static Checker[][] checkers = new Checker[size][size];
     public static boolean isGame = false;
-    Turner turner;
+    private Turner turner;
+
+    public CheckersBoard() {
+        //THIS INIT FOR LOGIC TESTS!!!!
+        pane = null;
+        infoCenter = null;
+        for (byte row = 0; row < size; row++) {
+            for (byte col = 0; col < size; col++) {
+                Checker checker = new Checker(row, col, true);
+                checkers[row][col] = checker;
+            }
+        }
+    }
 
     public CheckersBoard(InfoCenter infoCenter) {
         this.infoCenter = infoCenter;
@@ -59,6 +73,23 @@ public class CheckersBoard {
         public String color;
         public boolean isKing = false;
         public boolean someToEat = false;
+        public Checker(int row, int col, boolean withoutGraphic) {
+            //THIS INIT FOR LOGIC TESTS!!!!
+            pane = null;
+            this.row = row;
+            this.col = col;
+            if ((row + col) % 2 == 1) {
+                if (row < 3) {
+                    color = "Black";
+                } else if (row > 4) {
+                    color = "White";
+                } else {
+                    color = "No";
+                }
+            } else {
+                color = "No";
+            }
+        }
 
         public Checker(int row, int col) {
             this.row = row;
@@ -119,12 +150,59 @@ public class CheckersBoard {
 
 
             pane.setOnMouseClicked(event -> {
-                turner.makeATurn(row, col);
-                event.consume();
+                if (event.getButton() == MouseButton.MIDDLE) {
+                    System.out.println(isKing);
+                }
+                if (event.getButton() == MouseButton.SECONDARY) {
+                    SomeStaff.makeAKing(row, col);
+                } else {
+                    if (isGame) {
+                        turner.makeATurn(row, col);
+                    }
+                    event.consume();
+                }
             });
 
 
         }
+
+        public void inline() {
+            labelUp.setBackground(UIConstants.CHOOSEN_CHECKER);
+        }
+
+        public void unline() {
+            if (color.equals("White")) {
+                labelUp.setBackground(UIConstants.WHITE_CHECKER);
+            } else {
+                labelUp.setBackground(UIConstants.BLACK_CHECKER);
+            }
+
+        }
+
+        public void clearGraphic() {
+            labelUp.setBackground(UIConstants.NO_CHECKER);
+            labelKing.setBackground(UIConstants.NO_CHECKER);
+            labelDown.setBackground(UIConstants.NO_CHECKER);
+        }
+
+        public void makeAKingGraphic() {
+            labelKing.setBackground(UIConstants.KING);
+        }
+
+        public void paintInNormalColor(String activeColor) {
+            labelDown.setBackground(UIConstants.BLACK_BACK);
+            if (activeColor.equals("White")) {
+                labelUp.setBackground(UIConstants.WHITE_CHECKER);
+            } else {
+                labelUp.setBackground(UIConstants.BLACK_CHECKER);
+            }
+        }
+
+        public void paintInGold() {
+            labelDown.setBackground(UIConstants.BLACK_BACK);
+            labelUp.setBackground(UIConstants.CHOOSEN_CHECKER);
+        }
+
 
         public StackPane getStackPane() {
             return pane;

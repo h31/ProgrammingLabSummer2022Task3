@@ -12,9 +12,9 @@ public class SomeStaff {
         } else {
             playerTurn = "Black";
         }
-        infoCenter.updateMessage(playerTurn + "'s turn");
         Turner.isTurn = false;
         Turner.resultOfLastMove = 0;
+        infoCenter.updateMessage(playerTurn + "'s turn");
     }
 
     public static boolean isWhiteTurn() {
@@ -23,30 +23,25 @@ public class SomeStaff {
 
     public static void inline(int row, int col) {
         CheckersBoard.Checker checker = Turner.checkers[row][col];
-        checker.labelUp.setBackground(UIConstants.CHOOSEN_CHECKER);
+        checker.inline();
     }
 
     public static void unline(int row, int col) {
         CheckersBoard.Checker checker = Turner.checkers[row][col];
-        if (checker.color.equals("White")){
-            checker.labelUp.setBackground(UIConstants.WHITE_CHECKER);
-        } else {
-            checker.labelUp.setBackground(UIConstants.BLACK_CHECKER);
-        }
+        checker.unline();
     }
 
     public static void delete(int row, int col) {
         CheckersBoard.Checker checker = Turner.checkers[row][col];
-        checker.labelUp.setBackground(UIConstants.NO_CHECKER);
-        checker.labelKing.setBackground(UIConstants.NO_CHECKER);
-        checker.labelDown.setBackground(UIConstants.NO_CHECKER);
         checker.color = "No";
         checker.someToEat = false;
+        checker.isKing = false;
+        checker.clearGraphic();
     }
 
     public static void makeAKing(int row, int col) {
         CheckersBoard.Checker checker = Turner.checkers[row][col];
-        checker.labelKing.setBackground(UIConstants.KING);
         checker.isKing = true;
+        checker.makeAKingGraphic();
     }
 }

@@ -12,6 +12,13 @@ public class InfoCenter {
     private final StackPane pane;
     private final Label message;
     private final Button startGameButton;
+    private PrimaryStage primaryStage;
+
+    public InfoCenter(boolean t) { //ONLY FOR TESTS
+        pane = null;
+        startGameButton = null;
+        message = null;
+    }
 
     public InfoCenter() {
         pane = new StackPane();
@@ -39,18 +46,20 @@ public class InfoCenter {
     }
 
     public void updateMessage(String message) {
-        this.message.setText(message);
+        try {
+            this.message.setText(message);
+        } catch (NullPointerException ignored) {}
     }
 
     public void showStartButton() {
         startGameButton.setVisible(true);
     }
 
-    public void hideStartButton() {
+    private void hideStartButton() {
         startGameButton.setVisible(false);
     }
 
-    public void setStartButtonOnAction(EventHandler<ActionEvent> onAction) {
+    private void setStartButtonOnAction(EventHandler<ActionEvent> onAction) {
         startGameButton.setOnAction(onAction);
     }
 
@@ -69,6 +78,7 @@ public class InfoCenter {
             updateMessage("Start New Game");
             startGameButton.setText("Start New Game");
             setStartButtonOnAction(startNewGame());
+            primaryStage = new PrimaryStage(FirstStage.root, this);
         };
     }
 
@@ -78,7 +88,7 @@ public class InfoCenter {
             startGameButton.setText("Start New Game");
             setStartButtonOnAction(startNewGame());
             FirstStage.root = FirstStage.copyOfRoot;
-
+            primaryStage = new PrimaryStage(FirstStage.root, this);
         };
     }
 }

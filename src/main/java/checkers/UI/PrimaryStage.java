@@ -3,7 +3,8 @@ package checkers.UI;
 import javafx.scene.layout.BorderPane;
 
 public class PrimaryStage {
-    InfoCenter infoCenter;
+    private final InfoCenter infoCenter;
+
     public PrimaryStage(BorderPane root, InfoCenter infoCenter) {
         this.infoCenter = infoCenter;
         initLayout(root);

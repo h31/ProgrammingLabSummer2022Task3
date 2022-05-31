@@ -11,12 +11,12 @@ public class DuringGameChecks {
 
     public static void checkForWinner() {
         if (cntBlack == 0) {
-            Turner.infoCenter.updateMessage("White Won!!!");
             CheckersBoard.isGame = false;
+            Turner.infoCenter.updateMessage("White Won!!!");
         }
         if (cntWhite == 0) {
-            Turner.infoCenter.updateMessage("Black Won!!!");
             CheckersBoard.isGame = false;
+            Turner.infoCenter.updateMessage("Black Won!!!");
         }
 
         if (!CheckersBoard.isGame) {
@@ -26,8 +26,8 @@ public class DuringGameChecks {
 
     public static void checkForDraw(boolean isThatNoDraw) {
         if (!isThatNoDraw) {
-            Turner.infoCenter.updateMessage("Draw!!!");
             CheckersBoard.isGame = false;
+            Turner.infoCenter.updateMessage("Draw!!!");
         }
     }
 }

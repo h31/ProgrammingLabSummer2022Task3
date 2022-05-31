@@ -13,9 +13,7 @@ public class FirstStage {
     }
 
 
-
-
-    private void initInfoCenter(BorderPane root) {
+     void initInfoCenter(BorderPane root) {
         InfoCenter infoCenter = new InfoCenter();
         root.getChildren().add(infoCenter.getStackPane());
     }

@@ -57,7 +57,7 @@ public class InfoCenter {
         startGameButton.setOnAction(onAction);
     }
 
-    private EventHandler<ActionEvent> startNewGame() {
+    private EventHandler<ActionEvent> startNewGame() { //стартует игру
         return event -> {
             hideStartButton();
             updateMessage("Black's Turn");
@@ -67,8 +67,8 @@ public class InfoCenter {
         };
     }
 
-    private EventHandler<ActionEvent> createNewField() {
-        return event -> {
+    private EventHandler<ActionEvent> createNewField() { //Инициирует создание новой расстановки шашек и переключает
+        return event -> { // кнопку в режим начала игры
             updateMessage("Start New Game");
             startGameButton.setText("Start New Game");
             setStartButtonOnAction(startNewGame());
@@ -76,7 +76,7 @@ public class InfoCenter {
         };
     }
 
-    private EventHandler<ActionEvent> restart() {
+    private EventHandler<ActionEvent> restart() { //пересоздаем поле
         return event -> {
             updateMessage("Start New Game");
             startGameButton.setText("Start New Game");

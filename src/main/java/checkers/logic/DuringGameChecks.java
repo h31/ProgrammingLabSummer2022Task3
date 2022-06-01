@@ -29,5 +29,9 @@ public class DuringGameChecks {
             CheckersBoard.isGame = false;
             Turner.infoCenter.updateMessage("Draw!!!");
         }
+
+        if (!CheckersBoard.isGame) {
+            Turner.infoCenter.showStartButton();
+        }
     }
 }

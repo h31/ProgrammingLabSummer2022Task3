@@ -1,6 +1,7 @@
 package checkers.UI;
 
 import checkers.logic.DuringGameChecks;
+import checkers.logic.SomeStaff;
 import checkers.logic.Turner;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -41,6 +42,7 @@ public class CheckersBoard {
         DuringGameChecks.cntWhite = 12;
         DuringGameChecks.someToEatAllBlack = false;
         DuringGameChecks.someToEatAllWhite = false;
+        SomeStaff.playerTurn = "Black";
 
         addAllChecks();
     }

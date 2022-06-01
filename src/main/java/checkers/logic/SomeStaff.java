@@ -3,7 +3,7 @@ package checkers.logic;
 import checkers.UI.*;
 
 public class SomeStaff {
-    public static String playerTurn = "Black";
+    public static String playerTurn;
     public static final InfoCenter infoCenter = Turner.infoCenter;
 
     public static void changePlayerTurn() {

@@ -15,9 +15,6 @@ import java.util.*;
 
 public class Controller implements Initializable {
 
-    //10 как константа
-    //enum для phase
-
     //region FXML variables
     @FXML
     private Text textWin;
@@ -58,29 +55,39 @@ public class Controller implements Initializable {
     private Text textSize;
     //endregion
 
-    private int gamePhase = 0;
+    Phase gamePhase = Phase.PLACEMENT;
 
-    private Field fieldPlayer = new Field(fieldPlayerView);
-    private Field fieldAI = new Field(fieldAIView);
+    Field fieldPlayer = new Field(fieldPlayerView);
+    Field fieldAI = new Field(fieldAIView);
 
-    // Не изменять это
-    private final List<ShipType> shipTypeList = new ArrayList<>();
+    List<ShipType> shipList = new ArrayList<>();
     private int selectedShip = 0;
 
     private AIController aiController = new AIController(fieldPlayer);
 
+    public boolean isTest;
 
-    //!!!
-    public void setShipList() {
-        shipTypeList.clear();
 
-        shipTypeList.add(new ShipType(true, 4, 1));
-        shipTypeList.add(new ShipType(true, 3, 2));
-        shipTypeList.add(new ShipType(true, 2, 3));
-        shipTypeList.add(new ShipType(true, 1, 4));
+    public Controller() {
+
     }
 
-    private void newGame() {
+
+    public void setShipList() {
+        shipList = Arrays.asList(
+                new ShipType(true, 4, 1),
+                new ShipType(true, 3, 2),
+                new ShipType(true, 2, 3),
+                new ShipType(true, 1, 4));
+    }
+
+    void newGame() {
+        if (isTest) {
+            fieldPlayer = new Field(true);
+            fieldAI = new Field(true);
+            setShipList();
+            return;
+        }
         setShipList();
 
         fieldPlayerView.setGridLinesVisible(false);
@@ -99,7 +106,7 @@ public class Controller implements Initializable {
     }
 
     private void randomShipPlacement(Field field, boolean isVisible) {
-        for (ShipType shipType : shipTypeList) {
+        for (ShipType shipType : shipList) {
             while (shipType.count > 0) {
                 if (new Random().nextInt(2) == 0) shipType.changeRotation();
 
@@ -107,9 +114,9 @@ public class Controller implements Initializable {
                 Coordinate randomCoordinate = allowList.get(new Random().nextInt(allowList.size()));
 
                 for (int i = 0; i < shipType.size; i++) {
-                    field.fillCell(randomCoordinate.getX() + (shipType.isHorisontal ? i : 0),
-                            randomCoordinate.getY() + (shipType.isHorisontal ? 0 : i),
-                            Cell.SHIP, isVisible);
+                    int dx = randomCoordinate.getX() + (shipType.isHorisontal ? i : 0);
+                    int dy = randomCoordinate.getY() + (shipType.isHorisontal ? 0 : i);
+                    field.fillCell(dx, dy, Cell.SHIP, isVisible);
                 }
 
                 shipType.count--;
@@ -121,7 +128,7 @@ public class Controller implements Initializable {
     void clearField() {
         newGame();
 
-        gamePhase = 0;
+        gamePhase = Phase.PLACEMENT;
 
         updateTexts();
     }
@@ -130,15 +137,15 @@ public class Controller implements Initializable {
     void quickPlacement() {
         randomShipPlacement(fieldPlayer, true);
 
-        gamePhase = 1;
+        gamePhase = Phase.READY_START;
 
         updateTexts();
     }
 
     @FXML
     void startGame() {
-        if (gamePhase == 1) {
-            gamePhase = 2;
+        if (gamePhase == Phase.READY_START) {
+            gamePhase = Phase.MOVE_PLAYER;;
 
             pane.getChildren().remove(buttonRotation);
             pane.getChildren().remove(buttonSize);
@@ -157,15 +164,15 @@ public class Controller implements Initializable {
     }
 
     private void clickField(int x, int y, boolean isPlayer) {
-        if (gamePhase == 0 && isPlayer) placeShip(shipTypeList.get(selectedShip), x, y);
+        if (gamePhase == Phase.PLACEMENT && isPlayer) placeShip(shipList.get(selectedShip), x, y);
 
-        if (gamePhase == 2 && !isPlayer && fieldAI.isAllowFire(x, y)) {
+        if (gamePhase == Phase.MOVE_PLAYER && !isPlayer && fieldAI.isAllowFire(x, y)) {
             if (!fieldAI.attackCell(x, y)) {
-                gamePhase = 3;
+                gamePhase = Phase.MOVE_AI;
                 aiController.startAttack();
 
                 if (fieldPlayer.checkWin()) endGame(false);
-                else gamePhase = 2;
+                else gamePhase = Phase.MOVE_PLAYER;
             }
             else if (fieldAI.checkWin()) endGame(true);
         }
@@ -173,37 +180,37 @@ public class Controller implements Initializable {
 
     private void endGame(boolean isPlayerWin) {
         textWin.setText(isPlayerWin ? "Победа" : "Поражение");
-        gamePhase = 4;
+        gamePhase = Phase.END;
 
         pane.getChildren().add(textWin);
         pane.getChildren().add(buttonRestartGame);
     }
 
-    //в отдельный метод
-    //fieldPlayer.fillCell(x + (shipType.isHorisontal ? i : 0), y + (!shipType.isHorisontal ? i : 0), Cell.SHIP, true);
-    private void placeShip(ShipType shipType, int x, int y) {
+    void placeShip(ShipType shipType, int x, int y) {
         if (shipType.count > 0 && fieldPlayer.isAllowPlaceShip(shipType.size, shipType.isHorisontal, x, y)) {
-            for (int i = 0; i < shipType.size; i++)
-                fieldPlayer.fillCell(x + (shipType.isHorisontal ? i : 0), y + (!shipType.isHorisontal ? i : 0), Cell.SHIP, true);
+            for (int i = 0; i < shipType.size; i++) {
+                int dx = x + (shipType.isHorisontal ? i : 0);
+                int dy = y + (shipType.isHorisontal ? 0 : i);
+                fieldPlayer.fillCell(dx, dy, Cell.SHIP, true);
+            }
 
             shipType.count--;
 
             updateTexts();
 
             boolean hasShips = true;
-            for (ShipType s : shipTypeList)
+            for (ShipType s : shipList)
                 if (s.count > 0) {
                     hasShips = false;
                     break;
                 }
-            if (hasShips) gamePhase = 1;
+            if (hasShips) gamePhase = Phase.READY_START;
         }
     }
 
     @FXML
     private void changeRotation() {
-        //метод с ротацией!!!!!
-        shipTypeList.get(selectedShip).changeRotation();
+        shipList.get(selectedShip).changeRotation();
 
         updateTexts();
     }
@@ -217,9 +224,10 @@ public class Controller implements Initializable {
     }
 
     private void updateTexts() {
-        textCount.setText("Кол-во: " + shipTypeList.get(selectedShip).count);
-        textRotation.setText(shipTypeList.get(selectedShip).isHorisontal ? "гориз." : "верт.");
-        textSize.setText("" + shipTypeList.get(selectedShip).size);
+        if (isTest) return;
+        textCount.setText("Кол-во: " + shipList.get(selectedShip).count);
+        textRotation.setText(shipList.get(selectedShip).isHorisontal ? "гориз." : "верт.");
+        textSize.setText("" + shipList.get(selectedShip).size);
     }
 
     @Override
@@ -239,8 +247,8 @@ public class Controller implements Initializable {
     }
 
     private void addTiles(GridPane gridPane) {
-        for (int j = 0; j < 10; j++) {
-            for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < Constants.fieldSize; j++) {
+            for (int i = 0; i < Constants.fieldSize; i++) {
                 Tile tile = new Tile(i, j, gridPane == fieldPlayerView);
                 tile.setPrefSize(20, 20);
                 gridPane.add(tile, i, j);

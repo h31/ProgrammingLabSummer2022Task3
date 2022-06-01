@@ -8,8 +8,8 @@ public class AIController {
 
     private final Field field;
 
-    private Coordinate lastSuccessAttack;
-    private List<Coordinate> nextAttackList = new ArrayList<>();
+    Coordinate lastSuccessAttack;
+    private final List<Coordinate> nextAttackList = new ArrayList<>();
 
     public AIController(Field field) {
         this.field = field;
@@ -49,24 +49,22 @@ public class AIController {
                 nextAttackList.add(new Coordinate(lastSuccessAttack.getX(), lastSuccessAttack.getY() - 1));
         }
 
-        //nextAttackList.get(0) вынести в переменную
-        if (field.attackCell(nextAttackList.get(0).getX(), nextAttackList.get(0).getY())) {
-            if (field.isKill(nextAttackList.get(0).getX(), nextAttackList.get(0).getY())) {
+        int attackX = nextAttackList.get(0).getX();
+        int attackY = nextAttackList.get(0).getY();
+        if (field.attackCell(attackX, attackY)) {
+            if (field.isKill(attackX, attackY)) {
                 lastSuccessAttack = null;
                 nextAttackList.clear();
                 return true;
             }
 
-            int newX = nextAttackList.get(0).getX();
-            int newY = nextAttackList.get(0).getY();
+            if (attackX > lastSuccessAttack.getX()) attackX++;
+            if (attackX < lastSuccessAttack.getX()) attackX--;
+            if (attackY > lastSuccessAttack.getY()) attackY++;
+            if (attackY < lastSuccessAttack.getY()) attackY--;
 
-            if (newX > lastSuccessAttack.getX()) newX++;
-            if (newX < lastSuccessAttack.getX()) newX--;
-            if (newY > lastSuccessAttack.getY()) newY++;
-            if (newY < lastSuccessAttack.getY()) newY--;
-
-            if (field.isAllowFire(newX, newY)) {
-                Coordinate newCoordinate = new Coordinate(newX, newY);
+            if (field.isAllowFire(attackX, attackY)) {
+                Coordinate newCoordinate = new Coordinate(attackX, attackY);
                 nextAttackList.add(newCoordinate);
             }
 

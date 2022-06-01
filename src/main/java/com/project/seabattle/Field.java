@@ -12,29 +12,33 @@ import java.util.List;
 import java.util.Map;
 
 public class Field {
-    private final Map<Coordinate, Cell> field = new HashMap<>();
-    private int shipwreckCount = 0;
-    private final GridPane fieldView;
+    final Map<Coordinate, Cell> field = new HashMap<>();
+    int shipwreckCount = 0;
+    private GridPane fieldView = new GridPane();
+
+    public boolean isTest = false;
+
+    public Field(boolean isTest) { this.isTest = isTest; }
 
     public Field(GridPane fieldView) {
         this.fieldView = fieldView;
     }
 
-    public void clear() {
-        field.clear();
-    }
+    public void clear() { field.clear(); }
 
     public boolean isFreeCell(int x, int y) {
-        return (x >= 0 && y >= 0 && x < 10 && y < 10) && !field.containsKey(new Coordinate(x, y));
+        return (x >= 0 && y >= 0 && x < Constants.fieldSize &&
+                y < Constants.fieldSize) &&
+                !field.containsKey(new Coordinate(x, y));
     }
 
     public boolean isAllowFire(int x, int y) {
-        return (x >= 0 && y >= 0 && x < 10 && y < 10) &&
+        return (x >= 0 && y >= 0 && x < Constants.fieldSize && y < Constants.fieldSize) &&
                 (!field.containsKey(new Coordinate(x, y)) || field.get(new Coordinate(x, y)) == Cell.SHIP);
     }
 
     public void fillCell(int x, int y, Cell cell, boolean isVisible) {
-        if (isVisible && (x >= 0 && y >= 0 && x < 10 && y < 10)) {
+        if (isVisible && (x >= 0 && y >= 0 && x < Constants.fieldSize && y < Constants.fieldSize)) {
             if (cell == Cell.SHIP) {
                 Rectangle rectangle = new Rectangle(20, 20);
                 rectangle.setFill(Paint.valueOf(Color.SHIP));
@@ -59,8 +63,8 @@ public class Field {
     public List<Coordinate> allowPlaceCells(int size, boolean isHorisontal) {
         List<Coordinate> result = new ArrayList<>();
 
-        for (int y = 0; y < 10; y++) {
-            for (int x = 0; x < 10; x++) {
+        for (int y = 0; y < Constants.fieldSize; y++) {
+            for (int x = 0; x < Constants.fieldSize; x++) {
                 if (isAllowPlaceShip(size, isHorisontal, x, y)) result.add(new Coordinate(x, y));
             }
         }
@@ -103,8 +107,8 @@ public class Field {
     public List<Coordinate> allowFireCells() {
         List<Coordinate> result = new ArrayList<>();
 
-        for (int y = 0; y < 10; y++)
-            for (int x = 0; x < 10; x++)
+        for (int y = 0; y < Constants.fieldSize; y++)
+            for (int x = 0; x < Constants.fieldSize; x++)
                 if (isAllowFire(x, y))
                     result.add(new Coordinate(x, y));
 
@@ -135,12 +139,10 @@ public class Field {
     }
 
     private boolean checkDirection(int x, int y, int dx, int dy) {
-        int i = 1;
-        //в переменную
-        //new Coordinate(x + dx * i, y + dy * i)
-        while (field.get(new Coordinate(x + dx * i, y + dy * i)) != Cell.SHIP) {
-            if (!field.containsKey(new Coordinate(x + dx * i, y + dy * i)) || field.get(new Coordinate(x + dx * i, y + dy * i)) == Cell.MISS) return true;
-            i++;
+        Coordinate coordinate = new Coordinate(x + dx, y + dy);
+        while (field.get(coordinate) != Cell.SHIP) {
+            if (!field.containsKey(coordinate) || field.get(coordinate) == Cell.MISS) return true;
+            coordinate = new Coordinate(coordinate.getX() + dx, coordinate.getY() + dy);
         }
 
         return false;
@@ -154,18 +156,21 @@ public class Field {
     }
 
     private void fillDirection(int x, int y, int dx, int dy) {
-        int i = 0;
-        while (field.get(new Coordinate(x + dx * i, y + dy * i)) == Cell.SHIPWRECK) {
+        int checkX = x;
+        int checkY = y;
+        while (field.get(new Coordinate(checkX, checkY)) == Cell.SHIPWRECK) {
             for (int b = -1; b < 2; b++)
-                for (int a = -1; a < 2; a++)
-                    if (!field.containsKey(new Coordinate(x + dx * i + a, y + dy * i + b)))
-                        fillCell(x + dx * i + a, y + dy * i + b, Cell.MISS, true);
-            i++;
+                for (int a = -1; a < 2; a++){
+                    Coordinate coordinate = new Coordinate(checkX + a, checkY + b);
+                    if (!field.containsKey(coordinate))
+                        fillCell(coordinate.getX(), coordinate.getY(), Cell.MISS, true);
+                }
+            checkX += dx;
+            checkY += dy;
         }
     }
 
     public boolean checkWin() {
-        //константа
-        return shipwreckCount == 20;
+        return shipwreckCount == Constants.shipElementsCount;
     }
 }

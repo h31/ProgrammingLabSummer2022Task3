@@ -19,7 +19,7 @@ class DiagonalChecker {
         result = 0;
     }
 
-    public void repeatRightDown(VerifierTurns verifierTurns) {
+    public void checkRightDown(VerifierTurns verifierTurns) {
         cnt = 0;
         i = activeCheckerRow;
         j = activeCheckerCol;
@@ -31,7 +31,7 @@ class DiagonalChecker {
         }
     }
 
-    public void repeatRightUp(VerifierTurns verifierTurns) {
+    public void checkRightUp(VerifierTurns verifierTurns) {
         cnt = 0;
         i = activeCheckerRow;
         j = activeCheckerCol;
@@ -43,7 +43,7 @@ class DiagonalChecker {
         }
     }
 
-    public void repeatLeftUp(VerifierTurns verifierTurns) {
+    public void checkLeftUp(VerifierTurns verifierTurns) {
         cnt = 0;
         i = activeCheckerRow;
         j = activeCheckerCol;
@@ -55,7 +55,7 @@ class DiagonalChecker {
         }
     }
 
-    public void repeatLeftDown(VerifierTurns verifierTurns) {
+    public void checkLeftDown(VerifierTurns verifierTurns) {
         cnt = 0;
         i = activeCheckerRow;
         j = activeCheckerCol;

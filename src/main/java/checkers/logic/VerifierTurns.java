@@ -11,8 +11,8 @@ public class VerifierTurns {
     private String activeCheckerColor;
     private boolean activeCheckerKing;
     private String enemyCheckerColor;
-    private int eatenCheckerRow;
-    private int eatenCheckerCol;
+    private int capturedCheckerRow;
+    private int capturedCheckerCol;
     private final DiagonalChecker diagonalChecker = new DiagonalChecker();
 
 
@@ -51,16 +51,16 @@ public class VerifierTurns {
             difCol = (selectedCellCol - activeCheckerCol) / difCol;
             int i = activeCheckerRow + difRow;
             int j = activeCheckerCol + difCol;
-            if (activeCheckerKing || selectedCellRow < activeCheckerRow && activeCheckerColor.equals("White") ||
-                    selectedCellRow > activeCheckerRow && activeCheckerColor.equals("Black")) {
+
+            if (activeCheckerKing || directionRightForActiveColor(selectedCellRow)) {
                 switch (dif) {
                     case (1) -> {
                         return 1;
                     }
                     case (2) -> {
                         if (checkers[i][j].color.equals(enemyCheckerColor)) {
-                            eatenCheckerRow = i;
-                            eatenCheckerCol = j;
+                            capturedCheckerRow = i;
+                            capturedCheckerCol = j;
                             return 2;
                         }
                     }
@@ -74,28 +74,33 @@ public class VerifierTurns {
 
 
 
-    public int checkAllTurns() {
+    public int checkAllDirectionsForPossibleTurns() {
         diagonalChecker.init(activeCheckerRow, activeCheckerCol);
-        diagonalChecker.repeatRightUp(this);
-        diagonalChecker.repeatLeftUp(this);
-        diagonalChecker.repeatLeftDown(this);
-        diagonalChecker.repeatRightDown(this);
+        diagonalChecker.checkRightUp(this);
+        diagonalChecker.checkLeftUp(this);
+        diagonalChecker.checkLeftDown(this);
+        diagonalChecker.checkRightDown(this);
         return diagonalChecker.getResult();
     }
 
-    public boolean checkForTurns() {
-        return checkAllTurns() != 0;
+    public boolean movementAvailable() {
+        return checkAllDirectionsForPossibleTurns() != 0;
     }
 
-    public boolean checkForTakes() {
-        return checkAllTurns() == 2;
+    public boolean eatAvailable() {
+        return checkAllDirectionsForPossibleTurns() == 2;
     }
 
-    public int getEatenRow() {
-        return eatenCheckerRow;
+    public int getCapturedRow() {
+        return capturedCheckerRow;
     }
 
-    public int getEatenCol() {
-        return eatenCheckerCol;
+    public int getCapturedCol() {
+        return capturedCheckerCol;
+    }
+
+    public boolean directionRightForActiveColor(int selectedCellRow) {
+        return selectedCellRow < activeCheckerRow && activeCheckerColor.equals("White") ||
+                selectedCellRow > activeCheckerRow && activeCheckerColor.equals("Black");
     }
 }

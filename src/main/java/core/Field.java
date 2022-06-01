@@ -7,8 +7,8 @@ import java.util.List;
 public class Field {
     Food food = new Food();
 
-    public static int rows = 20;
-    public static int columns = rows;
+    public static final int ROWS = 20;
+    public static final int COLUMNS = 20;
     private boolean gameOver = false;
     private int score = 0;
     private final List<Point> snakeBody = new ArrayList<>();
@@ -22,7 +22,7 @@ public class Field {
 
     public void createSnake() {
         for (int i = 0; i < 3; i++) {
-            snakeBody.add(new Point(columns / 2, rows / 2));
+            snakeBody.add(new Point(COLUMNS / 2, ROWS / 2));
         }
     }
 
@@ -60,7 +60,7 @@ public class Field {
     //выход за границы поля + соприкосновение с хвостом
     public void gameOver() {
         if (snakeHead.x < 0 || snakeHead.y < 0 ||
-                snakeHead.x >= rows || snakeHead.y >= columns) {
+                snakeHead.x >= ROWS || snakeHead.y >= COLUMNS) {
             gameOver = true;
             return;
         }
@@ -82,11 +82,11 @@ public class Field {
     }
 
     public int getRows() {
-        return rows;
+        return ROWS;
     }
 
     public int getColumns() {
-        return columns;
+        return COLUMNS;
     }
 
     public boolean GameIsOver() {

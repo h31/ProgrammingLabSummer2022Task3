@@ -17,7 +17,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import static core.Field.rows;
+import static core.Field.ROWS;
 
 
 public class SnakeGame extends Application {
@@ -29,9 +29,9 @@ public class SnakeGame extends Application {
             "ThirdCoin.png"};
     private Image foodImage;
 
-    private final int width = 800;
-    private final int height = 800;
-    private final int squareSize = width / rows;
+    private static final int WIDTH = 800;
+    private static final int HEIGHT = 800;
+    private final int squareSize = WIDTH / ROWS;
 
     private GraphicsContext graphicsContext;
     Timeline timeLine = new Timeline(new KeyFrame(Duration.millis(250), e -> run(graphicsContext, field)));
@@ -48,7 +48,7 @@ public class SnakeGame extends Application {
         //создание окна
         primaryStage.setTitle("Snake");
         Group root = new Group();
-        Canvas canvas = new Canvas(width, height);
+        Canvas canvas = new Canvas(WIDTH, HEIGHT);
         root.getChildren().add(canvas);
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);

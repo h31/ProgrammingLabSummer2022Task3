@@ -3,8 +3,8 @@ package core;
 import java.awt.*;
 import java.util.List;
 
-import static core.Field.columns;
-import static core.Field.rows;
+import static core.Field.COLUMNS;
+import static core.Field.ROWS;
 
 public class Food {
     private Point food;
@@ -14,7 +14,7 @@ public class Food {
     public void generateFood(List<Point> snakeBody) {
 
         do {
-            food = new Point((int) (Math.random() * rows), (int) (Math.random() * columns));
+            food = new Point((int) (Math.random() * ROWS), (int) (Math.random() * COLUMNS));
             fruitInSnake = false;
             for (Point snakeElement : snakeBody) {
                 if (snakeElement.getX() == food.x && snakeElement.getY() == food.y) {

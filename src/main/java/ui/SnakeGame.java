@@ -25,8 +25,8 @@ public class SnakeGame extends Application {
     boolean pressFlag = false;
 
     private Field field;
-    private final String[] fruitImages = new String[]{"FirstCoin.png", "SecondCoin.png",
-            "ThirdCoin.png"};
+    private final String[] fruitImages = new String[] {"Apple.png", "Peach.png",
+            "Berry.png", "Banana.png", "Grape.png", "Lemon.png"};
     private Image foodImage;
 
     private static final int WIDTH = 800;
@@ -77,8 +77,8 @@ public class SnakeGame extends Application {
         } else drawRules();
 
         field.eatFood();
-        if (field.getFruitFlag()) getImage();
-        field.setFalseFruitFlag();
+        if (field.getNeedForImage()) getImage();
+        field.setFalseNeedForImage();
     }
 
     //Управление

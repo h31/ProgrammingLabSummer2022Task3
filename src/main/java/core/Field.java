@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Field {
-    Food food = new Food();
-
     public static final int ROWS = 20;
     public static final int COLUMNS = 20;
-    private boolean gameOver = false;
-    private int score = 0;
+
     private final List<Point> snakeBody = new ArrayList<>();
     private final Point snakeHead;
+    private final Food food = new Food();
+    private boolean gameOver = false;
+    private int score = 0;
 
     public Field() {
         createSnake();
@@ -101,11 +101,11 @@ public class Field {
         return food;
     }
 
-    public boolean getFruitFlag() {
-        return food.getFruitFlag();
+    public boolean getNeedForImage() {
+        return food.getNeedForImage();
     }
 
-    public void setFalseFruitFlag() {
-        food.setFruitFlag(false);
+    public void setFalseNeedForImage() {
+        food.setNeedForImage(false);
     }
 }

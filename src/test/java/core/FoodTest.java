@@ -14,7 +14,6 @@ class FoodTest {
         int foodY = field.getFood().getY();
         field.getSnakeBody().add(new Point(foodX, foodY));
         field.getFood().generateFood(field.getSnakeBody());
-        assertFalse(field.getFood().getFruitInSnake());
-        assertTrue(field.getFruitFlag());
+        assertTrue(field.getNeedForImage());
     }
 }

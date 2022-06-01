@@ -8,11 +8,10 @@ import static core.Field.ROWS;
 
 public class Food {
     private Point food;
-    private boolean fruitFlag;
-    private boolean fruitInSnake;
+    private boolean needForImage;
 
     public void generateFood(List<Point> snakeBody) {
-
+        boolean fruitInSnake;
         do {
             food = new Point((int) (Math.random() * ROWS), (int) (Math.random() * COLUMNS));
             fruitInSnake = false;
@@ -23,19 +22,15 @@ public class Food {
                 }
             }
         } while (fruitInSnake);
-        fruitFlag = true;
+        needForImage = true;
     }
 
-    public boolean getFruitFlag() {
-        return fruitFlag;
+    public boolean getNeedForImage() {
+        return needForImage;
     }
 
-    public void setFruitFlag(boolean flag) {
-        this.fruitFlag = flag;
-    }
-
-    public boolean getFruitInSnake() {
-        return fruitInSnake;
+    public void setNeedForImage(boolean flag) {
+        this.needForImage = flag;
     }
 
     public int getX() {

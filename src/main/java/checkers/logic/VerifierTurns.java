@@ -4,6 +4,7 @@ import checkers.ui.*;
 
 import static java.lang.Math.abs;
 import static checkers.ui.Constants.SIDES;
+import static checkers.ui.Constants.WAYTOMOVE;
 
 public class VerifierTurns {
     private final CheckersBoard.Checker[][] checkers = CheckersBoard.checkers;
@@ -26,7 +27,7 @@ public class VerifierTurns {
     public void init(int activeCheckerRow, int activeCheckerCol) {
         this.activeRow = activeCheckerRow;
         this.activeCol = activeCheckerCol;
-        this.activeCheckerKing = checkers[activeCheckerRow][activeCheckerCol].isKing;
+        this.activeCheckerKing = checkers[activeCheckerRow][activeCheckerCol].king;
         this.activeSide = checkers[activeCheckerRow][activeCheckerCol].side;
 
         if (activeSide.equals(SIDES.white)) enemySide = SIDES.black;
@@ -50,13 +51,13 @@ public class VerifierTurns {
             if (activeCheckerKing || directionRightForActiveColor(selectedRow)) {
                 switch (dif) {
                     case (1) -> {
-                        return 1;
+                        return 1; //просто ход
                     }
                     case (2) -> {
                         if (checkers[i][j].side.equals(enemySide)) {
                             capturedRow = i;
                             capturedCol = j;
-                            return 2;
+                            return 2; //в результате будет взятие
                         }
                     }
                 }
@@ -66,10 +67,13 @@ public class VerifierTurns {
         return 0; //This turn is impossible
     }
 
+    private boolean directionRightForActiveColor(int selectedCellRow) {
+        return selectedCellRow < activeRow && activeSide.equals(SIDES.white) ||
+                selectedCellRow > activeRow && activeSide.equals(SIDES.black);
+    }
 
 
-
-    public int isAnyTurnAvailable() {
+    private int isAnyTurnAvailable() {
         diagonalChecker.init(activeRow, activeCol);
         diagonalChecker.checkRightUp(this);
         diagonalChecker.checkLeftUp(this);
@@ -94,8 +98,5 @@ public class VerifierTurns {
         return capturedCol;
     }
 
-    public boolean directionRightForActiveColor(int selectedCellRow) {
-        return selectedCellRow < activeRow && activeSide.equals(SIDES.white) ||
-                selectedCellRow > activeRow && activeSide.equals(SIDES.black);
-    }
+
 }

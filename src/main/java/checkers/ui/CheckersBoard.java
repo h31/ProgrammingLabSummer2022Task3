@@ -1,7 +1,6 @@
 package checkers.ui;
 
 import checkers.logic.GameSituation;
-import checkers.logic.Utils;
 import checkers.logic.Turner;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -63,7 +62,7 @@ public class CheckersBoard {
         private final Label labelKing = new Label("");
         public int row;
         public int col;
-        public boolean isKing = false;
+        public boolean king = false;
         public boolean canEat = false;
         public SIDES side = Constants.SIDES.no;
 
@@ -136,7 +135,7 @@ public class CheckersBoard {
         private void initForRestart() {
             initCheckerColor();
             labelKing.setBackground(Constants.NO_CHECKER);
-            isKing = false;
+            king = false;
             canEat = false;
         }
 
@@ -164,9 +163,9 @@ public class CheckersBoard {
             labelKing.setBackground(Constants.KING);
         }
 
-        public void paintInNormalColor(SIDES activeSide) {
+        public void paintInNormalColor() {
             labelShadow.setBackground(Constants.BLACK_BACK);
-            if (activeSide.equals(SIDES.white)) {
+            if (side.equals(SIDES.white)) {
                 labelColor.setBackground(Constants.WHITE_CHECKER);
             } else {
                 labelColor.setBackground(Constants.BLACK_CHECKER);

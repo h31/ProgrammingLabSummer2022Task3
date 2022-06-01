@@ -14,10 +14,16 @@ public class Constants {
     public static final int TILE_BOARD_HEIGHT = 480;
 
     public static final int SIZE = 8;
-    public static enum SIDES{
+    public enum SIDES{
         white,
         black,
         no
+    }
+
+    public enum WAYTOMOVE {
+        no,
+        move,
+        eat
     }
 
     public static final Background WHITE_CHECKER =

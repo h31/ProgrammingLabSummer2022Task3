@@ -27,9 +27,9 @@ public class Field {
     public void clear() { field.clear(); }
 
     public boolean isFreeCell(int x, int y) {
-        return (x >= 0 && y >= 0 && x < Constants.fieldSize &&
-                y < Constants.fieldSize) &&
-                !field.containsKey(new Coordinate(x, y));
+        return (x < 0 || y < 0 || x >= Constants.fieldSize ||
+                y >= Constants.fieldSize) ||
+                field.containsKey(new Coordinate(x, y));
     }
 
     public boolean isAllowFire(int x, int y) {
@@ -75,12 +75,12 @@ public class Field {
     public boolean isAllowPlaceShip(int size, boolean isHorisontal, int x, int y) {
         for (int i = 0; i < size; i++) {
             if (isHorisontal) {
-                if (!isFreeCell(x + i, y)) {
+                if (isFreeCell(x + i, y)) {
                     return false;
                 }
             }
             else {
-                if (!isFreeCell(x, y + i)) {
+                if (isFreeCell(x, y + i)) {
                     return false;
                 }
             }

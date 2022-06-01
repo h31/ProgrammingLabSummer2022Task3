@@ -7,6 +7,10 @@ import checkers.ui.Tile;
 
 import java.util.Stack;
 
+import static checkers.ui.BoardPainter.boardPainter;
+import static checkers.ui.ConfirmBox.confirmation;
+import static checkers.ui.changeContent.changingTurn;
+
 
 public class Logic {
     public static final int TILE_SIZE = 75;
@@ -15,8 +19,8 @@ public class Logic {
     private static Tile[][] board = new Tile[WIDTH][HEIGHT];
     public static int amountOfPieces;
 
-    private static final Stack<Step> stepsStack = new Stack<>();
 
+    private static final Stack<Step> stepsStack = new Stack<>();
 
 
     public static Piece.PieceType turn = Piece.PieceType.WHITE;
@@ -128,7 +132,7 @@ public class Logic {
         int x0 = toBoard(piece.getStartFromX());
         int y0 = toBoard(piece.getStartFromY());
 
-        
+
         //Нормальная шашка
         if (!piece.isCrown()) {
             if (Math.abs(newX - x0) == 1 && newY - y0 == piece.getPieceType().moveDir) {
@@ -150,7 +154,7 @@ public class Logic {
             if (Math.abs(dx) != Math.abs(dy)) {
                 return new MoveResult(MoveType.NONE);
             }
-            
+
             for (int i = 1; i <= Math.abs(dx); i++) {
                 int currX = (dx > 0) ? x0 + i : x0 - i; //Если вправо - наращиваем X, и наоборот
                 int currY = (dy > 0) ? y0 + i : y0 - i; //Если вниз - наращиваем Y, и наоборот
@@ -172,7 +176,7 @@ public class Logic {
                 if (board[currX][currY].hasPiece() &&
                         board[currX][currY].getPiece().getPieceType() != piece.getPieceType()) {  //Считаем шашки врага,
                     // идущие подряд
-                    piecesOnLineInA_Row ++;
+                    piecesOnLineInA_Row++;
                     x1 = currX;
                     y1 = currY; //Координаты "потенциально убитой" шашки
                 }
@@ -188,17 +192,77 @@ public class Logic {
         return (int) (pixel + TILE_SIZE / 2) / TILE_SIZE;
     }
 
-    public static void move(Piece piece, int x, int y, MoveResult result){
-        if( result.getMoveType()!=MoveType.NONE){
+    public static void move(Piece piece, int x, int y, MoveResult result) {
+        if (result.getMoveType() != MoveType.NONE) {
             getBoard()[toBoard(piece.getStartFromX())][toBoard(piece.getStartFromY())].setPiece(null); // Очищаем предыдущую клетку
             getBoard()[x][y].setPiece(piece); //Ставим на новую
         }
         if (result.getMoveType() == MoveType.KILL) {
+            //Очищаем клетку съеденной шашки
             getBoard()[toBoard(result.getPiece().getStartFromX())][toBoard(result.getPiece().getStartFromY())].setPiece(null);
         }
+        //Отрисовка в новой позиции
+        piece.drawer(x, y);
 
-        piece.drawer(x,y);
+        //Проверяем не стала ли дамкой
+        if (piece.getPieceType() == Piece.PieceType.BLACK && y == (HEIGHT - 1) && !piece.isCrown() ||
+                piece.getPieceType() == Piece.PieceType.WHITE && y == 0 && !piece.isCrown()) {
+            crownPiece(piece);
+            result.setWasCrowned(true);
+        }
 
+    }
+
+    public static void crownPiece(Piece piece) {
+        piece.setCrown(true);
+        piece.getCrownView().setVisible(true); //Стала дамкой = видно корону
+
+    }
+
+    public static void allowedMovements() {
+        boolean gameOver = true;
+        for (int x = 0; x < WIDTH; x++) {
+            for (int y = 0; y < HEIGHT; y++) {
+                Piece piece;
+                if (board[x][y].hasPiece()) {
+                    piece = board[x][y].getPiece();
+                    if (canMove(piece, x, y)
+                            && (piece.getPieceType() == turn)) {
+                        gameOver = false;
+
+                    }
+                }
+            }
+        }
+        if (gameOver) {
+            String message = turn == Piece.PieceType.BLACK ? "\n      Поражение чёрных" :
+                    "\n      Поражение белых";
+            if (confirmation("Движения невозможно. Хотите перезапустить игру?", message)) {
+                setTurn(Piece.PieceType.WHITE); //Чтобы при перезапуске белые ходили всегда первыми
+                boardPainter();
+                changingTurn();
+                getStepsStack().clear();
+            }
+        }
+    }
+
+    public static boolean canMove(Piece piece, int x, int y) {
+        if (!piece.isCrown()) {
+            return tryMove(piece, x + 1, y + piece.getPieceType().moveDir).getMoveType() == MoveType.NORMAL ||
+                    tryMove(piece, x - 1, y + piece.getPieceType().moveDir).getMoveType() == MoveType.NORMAL;
+
+        } else {
+            for (int i = 1; i < HEIGHT; i++) {
+                if (tryMove(piece, x + i, y + i).getMoveType() == MoveType.NORMAL ||
+                        tryMove(piece, x + i, y - i).getMoveType() == MoveType.NORMAL ||
+                        tryMove(piece, x - i, y + i).getMoveType() == MoveType.NORMAL ||
+                        tryMove(piece, x - i, y - i).getMoveType() == MoveType.NORMAL)
+                    return true;
+                }
+            }
+        //Если до этого не вернуло true и ещё и есть не должна шашка, то игра закончена.
+        //Так как ходящая сторона обездвижена
+        return canKill(piece,x,y);
     }
 
 

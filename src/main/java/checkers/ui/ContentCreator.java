@@ -15,60 +15,48 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import static checkers.logic.Listeners.*;
 import static checkers.logic.Logic.*;
+import static checkers.ui.BoardPainter.boardPainter;
 import static checkers.ui.Media.getIcon;
 import static checkers.ui.changeContent.changingTurn;
 import static javafx.scene.layout.BorderPane.setMargin;
 
 public class ContentCreator {
-
     private static final Stage window = new Stage();
     private static final BorderPane bp = new BorderPane();
-
-    private static final Group tileGroup = new Group();//Сюда будут наноситься клетки
-    private static final Group pieceGroup = new Group(); //Сюда будут наноситься шашки
+    private static final Group tileGroup = new Group(), pieceGroup = new Group();//Сюда будут наноситься клетки и шашки
     private static final Pane root = new Pane();
     private static final VBox top = new VBox();
     private static final Label topText = new Label(), underTopText = new Label(); //Текст для хода
     // и напоминание о еде
     private static final Text whiteEat = new Text("Белые должны есть"),
             blackEat = new Text("Чёрные должны есть");
-
     private static final HBox bottom = new HBox(Buttons.getSurrenderButton(), Buttons.getUndoButton());
     private static final FlowPane right = new FlowPane(Orientation.HORIZONTAL),
             left = new FlowPane(Orientation.HORIZONTAL);
-
     public static FlowPane getLeft() {
         return left;
     }
-
     public static FlowPane getRight() {
         return right;
     }
-
     public static Label getUnderTopText() {
         return underTopText;
     }
-
     public static Text getBlackEat() {
         return blackEat;
     }
-
     public static Text getWhiteEat() {
         return whiteEat;
     }
-
     public static Stage getWindow() {
         return window;
     }
-
     public static Label getTopText() {
         return topText;
     }
-
     public static Group getPieceGroup() {
         return pieceGroup;
     }
-
     public static Group getTileGroup() {
         return tileGroup;
     }
@@ -130,45 +118,5 @@ public class ContentCreator {
         window.show();
         window.setOnCloseRequest(closeProgram(window));
     }
-
-    public static void boardPainter() {
-        //Отрисовка начальной доски
-        getPieceGroup().getChildren().clear();
-        getTileGroup().getChildren().clear();
-
-        setKillNeed(false);
-        getUnderTopText().setText("");
-        getLeft().getChildren().clear();
-        getRight().getChildren().clear();
-
-
-        for (int x = 0; x < WIDTH; x++) {
-            for (int y = 0; y < HEIGHT; y++) { //Строю начальное поле
-                Tile tile = new Tile((x + y) % 2 == 0, x, y);
-                //Закрашиваю клетки нужным цветом
-                getBoard()[x][y] = tile;
-
-                tileGroup.getChildren().add(tile);
-
-                Piece piece = null;
-
-                if (y <= 2 && (x + y) % 2 != 0) {
-                    piece = new Piece(Piece.PieceType.BLACK, x, y);
-                    amountOfPieces++;
-                }
-
-                if (y >= 5 && (x + y) % 2 != 0) {
-                    piece = new Piece(Piece.PieceType.WHITE, x, y);
-                }
-
-                if (piece != null) {
-                    tile.setPiece(piece);
-                    pieceGroup.getChildren().add(piece);
-                }
-
-            }
-        }
-    }
-
 
 }

@@ -6,6 +6,7 @@ import java.util.Optional;
 
 
 import static checkers.logic.Logic.getStepsStack;
+import static checkers.ui.BoardPainter.boardPainter;
 import static checkers.ui.Buttons.getNoButton;
 import static checkers.ui.Buttons.getYesButton;
 import static checkers.ui.ContentCreator.*;

@@ -49,7 +49,5 @@ public class Buttons {
                 " -fx-font: 22 arial");
         surrenderButton.addEventHandler(MouseEvent.MOUSE_CLICKED, surrender());
 
-
-
     }
 }

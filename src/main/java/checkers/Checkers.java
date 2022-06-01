@@ -1,6 +1,7 @@
 package checkers;
 
 
+import checkers.ui.Media;
 import checkers.ui.WelcomePage;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -8,7 +9,9 @@ import javafx.stage.Stage;
 
 import static checkers.ui.Media.getIcon;
 
+
 public class Checkers extends Application {
+    Media media=new Media();
 
     public static void main(String[] args) {
         launch(args);

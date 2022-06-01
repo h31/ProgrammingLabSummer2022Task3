@@ -13,6 +13,7 @@ import javafx.stage.WindowEvent;
 
 import static checkers.logic.Logic.*;
 
+import static checkers.ui.BoardPainter.boardPainter;
 import static checkers.ui.ConfirmBox.confirmation;
 import static checkers.ui.ContentCreator.*;
 import static checkers.ui.Piece.deadPiece;
@@ -53,31 +54,19 @@ public class Listeners {
                 piece.abortMove(); //Если какая-то шашка должна съесть, а выбрана другая - сброс
 
             }
-
-
             //Отмена неправильного хода
             if (result.getMoveType() == MoveType.NONE) {
                 piece.abortMove();
 
-            } else { //Один из правильных ходов
-                //Следим за превращением в дамку
-                if (piece.getPieceType() == Piece.PieceType.BLACK && newY == (HEIGHT - 1) && !piece.isCrown() ||
-                        piece.getPieceType() == Piece.PieceType.WHITE && newY == 0 && !piece.isCrown()) {
-
-                    piece.setCrown(true);
-                    piece.getCrownView().setVisible(true); //Стала дамкой = видно корону
-                    result.setWasCrowned(true);
-                }
             }
-            if (result.getMoveType() == MoveType.NORMAL && !isKillNeed() || result.getMoveType() == MoveType.KILL && isKillNeed()) { //Если шашка должна съедать дальше, эти движения не устраивают
+            if (result.getMoveType() == MoveType.NORMAL && !isKillNeed() ||
+                    result.getMoveType() == MoveType.KILL && isKillNeed()) { //Если шашка должна съедать дальше, эти движения не устраивают
 
                 //Запоминаем расположение
                 getStepsStack().push(new Step(x0, y0, result, piece));
 
                 //Перемещаем на доске в логике
                 move(piece, newX, newY, result);
-
-
                 if (result.getMoveType() == MoveType.NORMAL) {
                     switchTurn(); //Смена хода
                     changingTurn();
@@ -112,6 +101,7 @@ public class Listeners {
             }
             eatAlarm(); //Напоминание о том, что нужно есть
             Logic.anyThreat();
+            Logic.allowedMovements();
         });
     }
 

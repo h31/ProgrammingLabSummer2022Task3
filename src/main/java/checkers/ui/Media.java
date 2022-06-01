@@ -2,15 +2,11 @@ package checkers.ui;
 
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
-
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.net.URISyntaxException;
 
 public class Media {
     private static Image imgBlack, imgWhite, imgCrown, imgBlackTile, imgWhiteTile, icon, imgUndoButton;
-    private static File imgBlackF = new File("blackPiece.png"),
+    private final File imgBlackF = new File("blackPiece.png"),
             imgWhiteF = new File("whitePiece.png"),
             imgCrownF = new File("crown.png"),
             imgBlackTileF = new File("blackTile.jpg"),
@@ -18,8 +14,7 @@ public class Media {
             iconF = new File("icon.png"),
             imgUndoButtonF= new File("undo.png");
 
-
-    static {
+    {
         try {
             imgWhite = new Image(imgWhiteF.getPath());
             imgBlack = new Image(imgBlackF.getPath());

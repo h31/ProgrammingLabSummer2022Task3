@@ -1,5 +1,6 @@
 package checkers.logic;
 
+import checkers.ui.Media;
 import checkers.ui.Piece;
 import checkers.ui.Tile;
 
@@ -11,6 +12,7 @@ import static checkers.logic.Logic.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LogicTest {
+
 
     static Tile[][] board = new Tile[Logic.WIDTH][Logic.WIDTH];
 
@@ -67,5 +69,33 @@ class LogicTest {
         move(board[4][5].getPiece(),5,4,new MoveResult(MoveType.NORMAL));
         MoveResult result = tryMove(board[5][4].getPiece(), 7, 2);
         assertEquals(MoveType.KILL, result.getMoveType());
+    }
+
+    @Test
+    void turnToCrown(){
+        Piece piece = board[2][7].getPiece();
+        board[1][0].setPiece(null);
+        assertFalse(piece.isCrown());
+        assertSame(piece.getPieceType(), Piece.PieceType.WHITE);
+        move(piece, 1, 0, new MoveResult(MoveType.NORMAL));
+        assertTrue(piece.isCrown());
+
+    }
+
+
+    @Test
+    void IllegalMove(){
+        Piece piece = board[2][7].getPiece();
+        assertEquals(MoveType.NONE, tryMove(piece, 10,20).getMoveType());
+        assertEquals(MoveType.NONE, tryMove(piece, 3,4).getMoveType());
+    }
+
+    @Test
+    void crownCanKill(){
+        move(board[2][5].getPiece(),3,4, new MoveResult(MoveType.NORMAL));
+        switchTurn();
+        board[5][2].getPiece().setCrown(true);
+        Piece crown = board[5][2].getPiece();
+        assertTrue(canKill(crown,5,2));
     }
 }

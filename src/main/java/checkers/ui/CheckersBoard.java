@@ -9,8 +9,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import static checkers.ui.Constants.SIDES;
 
 public class CheckersBoard {
+
     private final StackPane pane;
     private final InfoCenter infoCenter;
     private static final byte size = Constants.SIZE;
@@ -43,7 +45,6 @@ public class CheckersBoard {
 
     public static void initAllForRestart() {
         GameSituation.initRestart();
-        GameSituation.playerTurn = "Black";
         for (byte row = 0; row < size; row++) {
             for (byte col = 0; col < size; col++) {
                 checkers[row][col].initForRestart();
@@ -62,10 +63,9 @@ public class CheckersBoard {
         private final Label labelKing = new Label("");
         public int row;
         public int col;
-        public String color = "No";
         public boolean isKing = false;
         public boolean canEat = false;
-        public Constants.SIDES side = Constants.SIDES.no;
+        public SIDES side = Constants.SIDES.no;
 
         public Checker(int row, int col) {
             this.row = row;
@@ -115,14 +115,21 @@ public class CheckersBoard {
                 if (row < 3) {
                     labelColor.setBackground(Constants.BLACK_CHECKER);
                     labelShadow.setBackground(Constants.BLACK_BACK);
-                    side = Constants.SIDES.black;
-                    color = "Black";
+                    side = SIDES.black;
                 } else if (row > 4) {
                     labelColor.setBackground(Constants.WHITE_CHECKER);
                     labelShadow.setBackground(Constants.BLACK_BACK);
-                    side = Constants.SIDES.white;
-                    color = "White";
+                    side = SIDES.white;
+                } else {
+                    labelColor.setBackground(Constants.NO_CHECKER);
+                    labelShadow.setBackground(Constants.NO_CHECKER);
+                    side = SIDES.no;
                 }
+            }
+             else {
+                labelColor.setBackground(Constants.NO_CHECKER);
+                labelShadow.setBackground(Constants.NO_CHECKER);
+                side = SIDES.no;
             }
         }
 
@@ -139,7 +146,7 @@ public class CheckersBoard {
         }
 
         public void removeHighlight() {
-            if (color.equals("White")) {
+            if (side.equals(SIDES.white)) {
                 labelColor.setBackground(Constants.WHITE_CHECKER);
             } else {
                 labelColor.setBackground(Constants.BLACK_CHECKER);
@@ -157,9 +164,9 @@ public class CheckersBoard {
             labelKing.setBackground(Constants.KING);
         }
 
-        public void paintInNormalColor(String activeColor) {
+        public void paintInNormalColor(SIDES activeSide) {
             labelShadow.setBackground(Constants.BLACK_BACK);
-            if (activeColor.equals("White")) {
+            if (activeSide.equals(SIDES.white)) {
                 labelColor.setBackground(Constants.WHITE_CHECKER);
             } else {
                 labelColor.setBackground(Constants.BLACK_CHECKER);

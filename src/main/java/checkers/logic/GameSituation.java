@@ -1,13 +1,14 @@
 package checkers.logic;
 
 import checkers.ui.CheckersBoard;
+import checkers.ui.Constants.SIDES;
 
 public class GameSituation {
 
-    public static String playerTurn = "Black";
+    public static SIDES activePlayer = SIDES.black;
 
-    static boolean someToEatAllWhite = false;
-    static boolean someToEatAllBlack = false;
+    static boolean whiteCanEat = false;
+    static boolean blackCanEat = false;
 
     static int cntBlack = 12;
     static int cntWhite = 12;
@@ -15,8 +16,9 @@ public class GameSituation {
     public static void initRestart() {
         cntWhite = 12;
         cntBlack = 12;
-        someToEatAllBlack = false;
-        someToEatAllWhite = false;
+        blackCanEat = false;
+        whiteCanEat = false;
+        activePlayer = SIDES.black;
     }
 
     public static void declareWinner() {

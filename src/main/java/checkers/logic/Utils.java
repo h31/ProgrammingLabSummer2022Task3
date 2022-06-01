@@ -2,28 +2,31 @@ package checkers.logic;
 
 import checkers.ui.*;
 
-import static checkers.logic.GameSituation.playerTurn;
+import static checkers.logic.GameSituation.activePlayer;
 import static checkers.logic.Turner.activeCheckerChoosed;
 import static checkers.logic.Turner.resultOfLastMove;
+import static checkers.ui.Constants.SIDES;
 
 public class Utils {
 
     public static final InfoCenter infoCenter = Turner.infoCenter;
 
     public static void changePlayerTurn() {
-        if (playerTurn.equals("Black")) {
-            playerTurn = "White";
+        if (activePlayer.equals(SIDES.black)) {
+            activePlayer = SIDES.white;
         } else {
-            playerTurn = "Black";
+            activePlayer = SIDES.black;
         }
         activeCheckerChoosed = false;
         resultOfLastMove = 0;
 
-        infoCenter.updateMessage(playerTurn + "'s turn");
+        String out = activePlayer.toString().substring(0, 1).toUpperCase() + activePlayer.toString().substring(1);
+
+        infoCenter.updateMessage(out + "'s turn");
     }
 
     public static boolean isWhiteTurn() {
-        return playerTurn.equals("White");
+        return activePlayer.equals(SIDES.white);
     }
 
     public static void highlight(int row, int col) {
@@ -31,14 +34,14 @@ public class Utils {
         checker.highlight();
     }
 
-    public static void removeHighlight(int row, int col) {
+    public static void unHighlight(int row, int col) {
         CheckersBoard.Checker checker = Turner.checkers[row][col];
         checker.removeHighlight();
     }
 
     public static void delete(int row, int col) {
         CheckersBoard.Checker checker = Turner.checkers[row][col];
-        checker.color = "No";
+        checker.side = Constants.SIDES.no;
         checker.canEat = false;
         checker.isKing = false;
         checker.clearGraphic();
@@ -48,5 +51,11 @@ public class Utils {
         CheckersBoard.Checker checker = Turner.checkers[row][col];
         checker.isKing = true;
         checker.makeKingGraphic();
+    }
+
+
+    public static boolean checkerSideFitsPlayerSide(SIDES activeSide) {
+        return activePlayer.equals(SIDES.black) && activeSide.equals(SIDES.black) ||
+                activePlayer.equals(SIDES.white) && activeSide.equals(SIDES.white);
     }
 }

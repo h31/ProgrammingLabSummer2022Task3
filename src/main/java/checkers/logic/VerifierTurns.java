@@ -3,17 +3,18 @@ package checkers.logic;
 import checkers.ui.*;
 
 import static java.lang.Math.abs;
+import static checkers.ui.Constants.SIDES;
 
 public class VerifierTurns {
     private final CheckersBoard.Checker[][] checkers = CheckersBoard.checkers;
-    private int activeCheckerRow;
-    private int activeCheckerCol;
-    private String activeCheckerColor;
+    private int activeRow;
+    private int activeCol;
     private boolean activeCheckerKing;
-    private String enemyCheckerColor;
-    private int capturedCheckerRow;
-    private int capturedCheckerCol;
+    private SIDES enemySide;
+    private int capturedRow;
+    private int capturedCol;
     private final DiagonalChecker diagonalChecker = new DiagonalChecker();
+    private SIDES activeSide;
 
 
 
@@ -23,44 +24,38 @@ public class VerifierTurns {
 
 
     public void init(int activeCheckerRow, int activeCheckerCol) {
-        this.activeCheckerRow = activeCheckerRow;
-        this.activeCheckerCol = activeCheckerCol;
-        this.activeCheckerColor = checkers[activeCheckerRow][activeCheckerCol].color;
+        this.activeRow = activeCheckerRow;
+        this.activeCol = activeCheckerCol;
         this.activeCheckerKing = checkers[activeCheckerRow][activeCheckerCol].isKing;
+        this.activeSide = checkers[activeCheckerRow][activeCheckerCol].side;
 
-        initEnemyColor(activeCheckerColor);
+        if (activeSide.equals(SIDES.white)) enemySide = SIDES.black;
+        else enemySide = SIDES.white;
     }
 
 
 
-    private void initEnemyColor(String activeCheckerColor) {
-        if (activeCheckerColor.equals("White")) enemyCheckerColor = "Black";
-        else enemyCheckerColor = "White";
-    }
+    public int checkTurn(int selectedRow, int selectedCol) {
+        int difRow = abs(selectedRow - activeRow);
+        int difCol = abs(selectedCol - activeCol);
+        SIDES selectedSide = checkers[selectedRow][selectedCol].side;
 
-
-
-    public int checkTurn(int selectedCellRow, int selectedCellCol) {
-        int difRow = abs(selectedCellRow - activeCheckerRow);
-        int difCol = abs(selectedCellCol - activeCheckerCol);
-        String selectedCellColor = checkers[selectedCellRow][selectedCellCol].color;
-
-        if (selectedCellColor.equals("No") && difRow == difCol) {
+        if (selectedSide.equals(SIDES.no) && difRow == difCol) {
             int dif = difRow;
-            difRow = (selectedCellRow - activeCheckerRow) / difRow;
-            difCol = (selectedCellCol - activeCheckerCol) / difCol;
-            int i = activeCheckerRow + difRow;
-            int j = activeCheckerCol + difCol;
+            difRow = (selectedRow - activeRow) / difRow;
+            difCol = (selectedCol - activeCol) / difCol;
+            int i = activeRow + difRow;
+            int j = activeCol + difCol;
 
-            if (activeCheckerKing || directionRightForActiveColor(selectedCellRow)) {
+            if (activeCheckerKing || directionRightForActiveColor(selectedRow)) {
                 switch (dif) {
                     case (1) -> {
                         return 1;
                     }
                     case (2) -> {
-                        if (checkers[i][j].color.equals(enemyCheckerColor)) {
-                            capturedCheckerRow = i;
-                            capturedCheckerCol = j;
+                        if (checkers[i][j].side.equals(enemySide)) {
+                            capturedRow = i;
+                            capturedCol = j;
                             return 2;
                         }
                     }
@@ -74,8 +69,8 @@ public class VerifierTurns {
 
 
 
-    public int checkAllDirectionsForPossibleTurns() {
-        diagonalChecker.init(activeCheckerRow, activeCheckerCol);
+    public int isAnyTurnAvailable() {
+        diagonalChecker.init(activeRow, activeCol);
         diagonalChecker.checkRightUp(this);
         diagonalChecker.checkLeftUp(this);
         diagonalChecker.checkLeftDown(this);
@@ -84,23 +79,23 @@ public class VerifierTurns {
     }
 
     public boolean movementAvailable() {
-        return checkAllDirectionsForPossibleTurns() != 0;
+        return isAnyTurnAvailable() != 0;
     }
 
     public boolean eatAvailable() {
-        return checkAllDirectionsForPossibleTurns() == 2;
+        return isAnyTurnAvailable() == 2;
     }
 
     public int getCapturedRow() {
-        return capturedCheckerRow;
+        return capturedRow;
     }
 
     public int getCapturedCol() {
-        return capturedCheckerCol;
+        return capturedCol;
     }
 
     public boolean directionRightForActiveColor(int selectedCellRow) {
-        return selectedCellRow < activeCheckerRow && activeCheckerColor.equals("White") ||
-                selectedCellRow > activeCheckerRow && activeCheckerColor.equals("Black");
+        return selectedCellRow < activeRow && activeSide.equals(SIDES.white) ||
+                selectedCellRow > activeRow && activeSide.equals(SIDES.black);
     }
 }

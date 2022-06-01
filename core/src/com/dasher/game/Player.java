@@ -8,25 +8,40 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 import static com.dasher.game.DasherMain.PPM;
 
-public abstract class Player {
-    protected byte hp; // характеристики персонажа
-    protected byte dmg;
-    protected float moveSpeed;
-    protected boolean isAlive = true;
-    protected boolean isDash = false;
+public class Player {
+    private byte hp; // характеристики персонажа
+    private byte dmg;
+    private float moveSpeed;
+    private String typeName;
+    public boolean isAlive = true;
+    public boolean isDash = false;
 
     protected Body body; // тело персонажа
 
-    protected final Vector3 playerStartPosition = new Vector3(); // начальные координаты
+    public Player(String type) {
+        switch (type) {
+            case "Goblin":
+                this.hp = 3;
+                this.dmg = 2;
+                this.moveSpeed = 25;
+                this.typeName = "Goblin.png";
+                break;
+            case "Hobgoblin":
+                this.hp = 5;
+                this.dmg = 2;
+                this.moveSpeed = 18;
+                this.typeName = "Hobgoblin.png";
+                break;
+        }
+    }
 
     /**
      * инициализация тела персонажа
      */
-    protected Body createBody() {
-
+    public Body createBody() {
         BodyDef definitions = new BodyDef();
         definitions.type = BodyDef.BodyType.DynamicBody;
-        definitions.position.set(playerStartPosition.x, playerStartPosition.y);
+        definitions.position.set(0.4f, 0.5f);
         definitions.fixedRotation = true;
         definitions.linearDamping = 10f;
 
@@ -52,5 +67,9 @@ public abstract class Player {
 
     public float getMoveSpeed() {
         return moveSpeed;
+    }
+
+    public String getTypeName() {
+        return typeName;
     }
 }

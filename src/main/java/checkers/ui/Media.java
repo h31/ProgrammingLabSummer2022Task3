@@ -7,7 +7,7 @@ import javafx.scene.image.Image;
 public class Media {
     private static Image imgBlack, imgWhite, imgCrown, imgBlackTile, imgWhiteTile, icon, imgUndoButton;
 
-   static  {
+    {
         try {
             imgWhite = new Image("whitePiece.png");
             imgBlack = new Image("blackPiece.png");

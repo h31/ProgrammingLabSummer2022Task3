@@ -15,8 +15,6 @@ import terraIncognita.utils.exceptions.ExceptionsUtils;
 
 import java.io.*;
 import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -37,7 +35,7 @@ public class Utils {
     }
 
     public static void logErrorWithExit(Exception err){
-        if (TestUtils.isConsoleOutput()) {
+        if (TestUtils.isTestScope()) {
             if (err instanceof RuntimeException) {
                 throw (RuntimeException)err;
             }

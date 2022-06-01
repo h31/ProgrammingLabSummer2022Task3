@@ -20,7 +20,7 @@ public class Tests {
     private static final String TEST_LABYRINTHS_DIR = "src/test/resources/labyrinths/";
 
     private static void setupTest() {
-        TestUtils.setIsConsoleOutput(true);
+        TestUtils.setIsTestScope(true);
     }
 
     private static void rethrowWithoutWrapping(Runnable runnable) throws Throwable {

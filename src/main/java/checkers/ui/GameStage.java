@@ -21,7 +21,7 @@ public class GameStage {
     }
 
     private void initCheckers(BorderPane root) {
-        CheckersBoard checkersBoard = new CheckersBoard(infoCenter);
+        CheckersBoard checkersBoard = new CheckersBoard(infoCenter, false);
         root.getChildren().add(checkersBoard.getStackPane());
     }
 }

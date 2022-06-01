@@ -9,30 +9,32 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 
 public class InfoCenter {
-    private final StackPane pane;
-    private final Label message;
-    private final Button startGameButton;
+    private StackPane pane = null;
+    private  Label message = null;
+    private  Button startGameButton = null;
     private GameStage gameStage;
 
-    public InfoCenter() {
-        pane = new StackPane();
-        pane.setMinSize(Constants.APP_WIDTH, Constants.INFO_CENTER_HEIGHT);
-        pane.setTranslateX((double) Constants.APP_WIDTH / 2);
-        pane.setTranslateY((double) Constants.INFO_CENTER_HEIGHT / 2);
+    public InfoCenter(boolean thatForTests) {
+        if (!thatForTests) {
+            pane = new StackPane();
+            pane.setMinSize(Constants.APP_WIDTH, Constants.INFO_CENTER_HEIGHT);
+            pane.setTranslateX((double) Constants.APP_WIDTH / 2);
+            pane.setTranslateY((double) Constants.INFO_CENTER_HEIGHT / 2);
 
-        message = new Label("English Checkers");
-        message.setMinSize(Constants.APP_WIDTH, Constants.INFO_CENTER_HEIGHT);
-        message.setFont(Font.font(24));
-        message.setAlignment(Pos.CENTER);
-        message.setTranslateY(-20);
-        pane.getChildren().add(message);
+            message = new Label("English Checkers");
+            message.setMinSize(Constants.APP_WIDTH, Constants.INFO_CENTER_HEIGHT);
+            message.setFont(Font.font(24));
+            message.setAlignment(Pos.CENTER);
+            message.setTranslateY(-20);
+            pane.getChildren().add(message);
 
-        startGameButton = new Button("Create New Field");
-        startGameButton.setMinSize(135, 30);
-        startGameButton.setTranslateY(20);
-        setStartButtonOnAction(createNewField());
+            startGameButton = new Button("Create New Field");
+            startGameButton.setMinSize(135, 30);
+            startGameButton.setTranslateY(20);
+            setStartButtonOnAction(createNewField());
 
-        pane.getChildren().add(startGameButton);
+            pane.getChildren().add(startGameButton);
+        }
     }
 
     public StackPane getStackPane() {
@@ -40,9 +42,7 @@ public class InfoCenter {
     }
 
     public void updateMessage(String message) {
-        try {
-            this.message.setText(message);
-        } catch (NullPointerException ignored) {}
+        this.message.setText(message);
     }
 
     public void showStartButton() {

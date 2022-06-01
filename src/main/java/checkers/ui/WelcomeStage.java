@@ -12,7 +12,7 @@ public class WelcomeStage {
 
 
      void initInfoCenter(BorderPane root) {
-        InfoCenter infoCenter = new InfoCenter();
+        InfoCenter infoCenter = new InfoCenter(false);
         root.getChildren().add(infoCenter.getStackPane());
     }
 }

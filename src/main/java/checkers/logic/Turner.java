@@ -3,7 +3,7 @@ package checkers.logic;
 import checkers.ui.*;
 import static checkers.ui.Constants.SIDES;
 import static checkers.ui.Constants.WAYTOMOVE;
-import static checkers.logic.GameSituation.activePlayer;
+import static checkers.logic.GameStatistic.activePlayer;
 
 public class Turner {
 
@@ -38,10 +38,11 @@ public class Turner {
         this.selectedSide = selectedChecker.side;
         this.selectedCanEat = selectedChecker.canEat;
         this.selectedKing = selectedChecker.king;
+
         if (activePlayer.equals(SIDES.black)) {
-            this.activePlayerCanEat = GameSituation.blackCanEat;
+            this.activePlayerCanEat = GameStatistic.blackCanEat;
         } else {
-            this.activePlayerCanEat = GameSituation.whiteCanEat;
+            this.activePlayerCanEat = GameStatistic.whiteCanEat;
         }
 
 
@@ -107,7 +108,7 @@ public class Turner {
                 if (move.equals(WAYTOMOVE.move) && !activeCanEat) { //если можно походить без взятия и взять шашка никого не может
                     selectedChecker.side = activeSide; //переназначаем сторону у пустого поля
                     moveChecker();
-                    Utils.delete(activeRow, activeCol);
+                    Utils.deleteChecker(activeRow, activeCol);
                     Utils.changePlayerTurn(); //меняем ход
                 } else if (move.equals(WAYTOMOVE.eat)) { //все случаи, когда кого-то шашка берёт
                     lastActionIsEat = true; //для запрета переключения при поедании подряд
@@ -117,12 +118,12 @@ public class Turner {
 
                     //проверяем, какой цвет взяли
                     if (checkers[verifierTurns.getCapturedRow()][verifierTurns.getCapturedCol()].side.equals(SIDES.black)) {
-                        GameSituation.cntBlack--;
+                        GameStatistic.cntBlack--;
                     } else {
-                        GameSituation.cntWhite--;
+                        GameStatistic.cntWhite--;
                     }
 
-                    Utils.delete(verifierTurns.getCapturedRow(), verifierTurns.getCapturedCol());
+                    Utils.deleteChecker(verifierTurns.getCapturedRow(), verifierTurns.getCapturedCol());
 
 
                     verifierTurns.init(selectedRow, selectedCol);
@@ -133,7 +134,7 @@ public class Turner {
                         selectedChecker.paintInGold();
                     }
 
-                    Utils.delete(activeRow, activeCol); //удаляем старую
+                    Utils.deleteChecker(activeRow, activeCol); //удаляем старую
                     activeRow = selectedRow;
                     activeCol = selectedCol;
                     activeKing = selectedKing;
@@ -145,27 +146,39 @@ public class Turner {
     }
 
     private void checkAfterTurn() {
-        boolean isDraw = true;
-        GameSituation.whiteCanEat = false;
-        GameSituation.blackCanEat = false;
+        boolean isDraw = false;
+        boolean whiteHaveMoves = false;
+        boolean blackHaveMoves = false;
+        GameStatistic.whiteCanEat = false;
+        GameStatistic.blackCanEat = false;
         for (byte i = 0; i < Constants.SIZE; i ++) {
             for(byte j = 0; j < Constants.SIZE; j++) {
                 if (!checkers[i][j].side.equals(SIDES.no)) {
                     verifierTurns.init(i, j);
-                    if (verifierTurns.movementAvailable()) isDraw = false;
+                    if (verifierTurns.movementAvailable()) {
+                        if (checkers[i][j].side.equals(SIDES.white)) {
+                            whiteHaveMoves = true;
+                        } else {
+                            blackHaveMoves = true;
+                        }
+                    }
                     if (verifierTurns.eatAvailable()) {
                         checkers[i][j].canEat = true;
                         if (checkers[i][j].side.equals(SIDES.white)) {
-                            GameSituation.whiteCanEat = true;
+                            GameStatistic.whiteCanEat = true;
                         } else {
-                            GameSituation.blackCanEat = true;
+                            GameStatistic.blackCanEat = true;
                         }
                     } else checkers[i][j].canEat = false;
                 }
             }
         }
-        GameSituation.declareWinner();
-        GameSituation.declareDraw(isDraw);
+        if (activePlayer.equals(SIDES.black) && !blackHaveMoves ||
+                activePlayer.equals(SIDES.white) && !whiteHaveMoves) {
+            isDraw = true;
+        }
+        GameStatistic.declareWinner();
+        GameStatistic.declareDraw(isDraw);
     }
 
     private void moveChecker() {
@@ -173,7 +186,7 @@ public class Turner {
 
         if ((activePlayer.equals(SIDES.white) && selectedRow == 0 || activePlayer.equals(SIDES.black) &&
                 selectedRow == 7) || activeKing) { //Ставим\переносим статус дамки
-            Utils.makeAKing(selectedRow, selectedCol);
+            Utils.makeKing(selectedRow, selectedCol);
             selectedKing = selectedChecker.king;
         }
     }

@@ -2,7 +2,7 @@ package checkers.logic;
 
 import checkers.ui.*;
 
-import static checkers.logic.GameSituation.activePlayer;
+import static checkers.logic.GameStatistic.activePlayer;
 import static checkers.logic.Turner.*;
 import static checkers.ui.Constants.SIDES;
 
@@ -21,7 +21,8 @@ public class Utils {
 
         String out = activePlayer.toString().substring(0, 1).toUpperCase() + activePlayer.toString().substring(1);
 
-        infoCenter.updateMessage(out + "'s turn");
+        if (!GameStatistic.thatForTests)
+            infoCenter.updateMessage(out + "'s turn");
     }
 
     public static void highlight(int row, int col) {
@@ -34,15 +35,15 @@ public class Utils {
         checker.removeHighlight();
     }
 
-    public static void delete(int row, int col) {
+    public static void deleteChecker(int row, int col) {
         CheckersBoard.Checker checker = Turner.checkers[row][col];
-        checker.side = Constants.SIDES.no;
+        checker.side = SIDES.no;
         checker.canEat = false;
         checker.king = false;
         checker.clearGraphic();
     }
 
-    public static void makeAKing(int row, int col) {
+    public static void makeKing(int row, int col) {
         CheckersBoard.Checker checker = Turner.checkers[row][col];
         checker.king = true;
         checker.makeKingGraphic();

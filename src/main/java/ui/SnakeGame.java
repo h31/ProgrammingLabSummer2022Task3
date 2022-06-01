@@ -31,7 +31,7 @@ public class SnakeGame extends Application {
 
     private static final int WIDTH = 800;
     private static final int HEIGHT = 800;
-    private final int squareSize = WIDTH / ROWS;
+    private static final int squareSize = WIDTH / ROWS;
 
     private GraphicsContext graphicsContext;
     Timeline timeLine = new Timeline(new KeyFrame(Duration.millis(250), e -> run(graphicsContext, field)));

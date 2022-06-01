@@ -57,8 +57,8 @@ public class Controller implements Initializable {
 
     Phase gamePhase = Phase.PLACEMENT;
 
-    Field fieldPlayer = new Field(fieldPlayerView);
-    Field fieldAI = new Field(fieldAIView);
+    Field fieldPlayer;
+    Field fieldAI;
 
     List<ShipType> shipList = new ArrayList<>();
     private int selectedShip = 0;
@@ -139,7 +139,7 @@ public class Controller implements Initializable {
     @FXML
     void startGame() {
         if (gamePhase == Phase.READY_START) {
-            gamePhase = Phase.MOVE_PLAYER;;
+            gamePhase = Phase.MOVE_PLAYER;
 
             pane.getChildren().remove(buttonRotation);
             pane.getChildren().remove(buttonSize);
@@ -221,7 +221,7 @@ public class Controller implements Initializable {
         if (isTest) return;
         textCount.setText("Кол-во: " + shipList.get(selectedShip).count);
         textRotation.setText(shipList.get(selectedShip).isHorisontal ? "гориз." : "верт.");
-        textSize.setText("" + shipList.get(selectedShip).size);
+        textSize.setText(String.valueOf(shipList.get(selectedShip).size));
     }
 
     @Override
@@ -264,13 +264,9 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    void restartGame() {
+    void restartGame() throws IOException {
         Stage stage = (Stage) buttonRestartGame.getScene().getWindow();
         stage.close();
-        try {
-            new Main().start(new Stage());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        new Main().start(new Stage());
     }
 }

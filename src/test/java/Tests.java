@@ -2,17 +2,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 import terraIncognita.App;
-import terraIncognita.Model.Game;
-import terraIncognita.Model.MovementDirection;
-import terraIncognita.Model.Player;
-import terraIncognita.Model.Tiles.StartTile;
-import terraIncognita.Model.Tiles.WormholeTile;
-import terraIncognita.Utils.Exceptions.ExceptionWrapper;
-import terraIncognita.Utils.Exceptions.MultipleUsageOfSingleTileException;
-import terraIncognita.Utils.Exceptions.NoNeededTileException;
-import terraIncognita.Utils.Exceptions.NothingThrownException;
-import terraIncognita.Utils.Point;
-import terraIncognita.Utils.TestUtils;
+import terraIncognita.model.Game;
+import terraIncognita.model.MovementDirection;
+import terraIncognita.model.Player;
+import terraIncognita.model.tiles.StartTile;
+import terraIncognita.model.tiles.WormholeTile;
+import terraIncognita.utils.exceptions.ExceptionWrapper;
+import terraIncognita.utils.exceptions.MultipleUsageOfSingleTileException;
+import terraIncognita.utils.exceptions.NoNeededTileException;
+import terraIncognita.utils.exceptions.NothingThrownException;
+import terraIncognita.utils.Point;
+import terraIncognita.utils.TestUtils;
 import java.io.FileNotFoundException;
 
 public class Tests {

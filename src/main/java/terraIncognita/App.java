@@ -2,18 +2,17 @@ package terraIncognita;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.apache.commons.io.FilenameUtils;
-import terraIncognita.Controllers.StageController;
-import terraIncognita.Model.Game;
-import terraIncognita.Utils.ResourceLoader;
-import terraIncognita.Utils.Utils;
+import terraIncognita.controllers.StageController;
+import terraIncognita.model.Game;
+import terraIncognita.utils.ResourceLoader;
+import terraIncognita.utils.Utils;
 
 import java.util.Objects;
 import java.util.Timer;
 
 public class App extends Application {
     public static final String IMG_RELATIVE_DIR = "img/";
-    public static final String TILES_IMG_RELATIVE_DIR = IMG_RELATIVE_DIR + "Tiles/";
+    public static final String TILES_IMG_RELATIVE_DIR = IMG_RELATIVE_DIR + "tiles/";
     public static final String LABYRINTHS_RELATIVE_DIR = "labyrinths/";
 
     public static final String START_WINDOW_SCENE_NAME = "StartWindow";

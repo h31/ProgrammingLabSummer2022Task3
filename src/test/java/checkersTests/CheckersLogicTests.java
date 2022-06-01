@@ -15,18 +15,18 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CheckersLogicTests {
     void initCheckerBoard() {
         new CheckersBoard(new InfoCenter(true), true);
-        CheckersBoard.initAllForRestart();
+        CheckersBoard.restart();
         CheckersBoard.isGame = true;
     }
 
     @Test
     public void utilsTests() {
         initCheckerBoard();
-        assertEquals(SIDES.black, GameStatistic.activePlayer);
+        assertEquals(SIDES.black, GameStatistic.activePlayerSide);
         Utils.changePlayerTurn();
-        assertEquals(SIDES.white, GameStatistic.activePlayer);
+        assertEquals(SIDES.white, GameStatistic.activePlayerSide);
         Utils.changePlayerTurn();
-        assertEquals(SIDES.black, GameStatistic.activePlayer);
+        assertEquals(SIDES.black, GameStatistic.activePlayerSide);
 
         assertEquals(SIDES.black, CheckersBoard.checkers[0][1].side);
         CheckersBoard.checkers[0][1].canEat = true;
@@ -78,7 +78,7 @@ public class CheckersLogicTests {
         assertEquals(2, verifierTurns.checkTurn(4, 3));
         assertEquals(3, verifierTurns.getCapturedRow());
         assertEquals(2, verifierTurns.getCapturedCol());
-        assertTrue(verifierTurns.movementAvailable());
+        assertTrue(verifierTurns.moveOrEatAvailable());
         assertTrue(verifierTurns.eatAvailable());
     }
 
@@ -137,6 +137,11 @@ public class CheckersLogicTests {
         assertEquals(SIDES.no, CheckersBoard.checkers[4][3].side);
         assertEquals(SIDES.no, CheckersBoard.checkers[5][2].side);
         assertEquals(SIDES.black, CheckersBoard.checkers[6][1].side);
+        assertEquals(11, GameStatistic.cntWhite);
+
+        turner.makeATurn(7, 0);
+        turner.makeATurn(5, 2);
+        assertEquals(11, GameStatistic.cntBlack);
     }
 
     @Test

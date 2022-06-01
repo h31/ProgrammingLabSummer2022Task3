@@ -20,8 +20,8 @@ public class Constants {
         no
     }
 
-    public enum WAYTOMOVE {
-        no,
+    public enum MOVERESULT {
+        notPossible,
         move,
         eat
     }

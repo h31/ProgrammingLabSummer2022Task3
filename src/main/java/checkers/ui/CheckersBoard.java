@@ -13,7 +13,6 @@ import static checkers.ui.Constants.SIDES;
 public class CheckersBoard {
 
     private StackPane pane = null;
-    private InfoCenter infoCenter = null;
     private static final byte size = Constants.SIZE;
     public static Checker[][] checkers = new Checker[size][size];
     public static boolean isGame = false;
@@ -23,8 +22,6 @@ public class CheckersBoard {
     public CheckersBoard(InfoCenter infoCenter, boolean thatForTests) {
         this.thatForTests = thatForTests;
         if (!thatForTests) {
-            this.infoCenter = infoCenter;
-
             pane = new StackPane();
             pane.setMinSize(Constants.APP_WIDTH, Constants.TILE_BOARD_HEIGHT);
             pane.setTranslateX((double) Constants.APP_WIDTH / 2);
@@ -50,14 +47,15 @@ public class CheckersBoard {
         }
     }
 
-    public static void initAllForRestart() {
+    public static void restart() {
         GameStatistic.initRestart();
         for (byte row = 0; row < size; row++) {
             for (byte col = 0; col < size; col++) {
-                checkers[row][col].initForRestart();
+                checkers[row][col].restart();
             }
         }
     }
+
 
     public StackPane getStackPane() {
         return pane;
@@ -86,8 +84,8 @@ public class CheckersBoard {
 
                 pane.getChildren().add(border);
 
-                initThreeLabels();
-                initCheckerColor();
+                initGraphicLevels();
+                initSideAndColor();
 
                 pane.getChildren().add(labelShadow);
                 pane.getChildren().add(labelColor);
@@ -103,11 +101,11 @@ public class CheckersBoard {
             } else {
                 this.row = row;
                 this.col = col;
-                initCheckerColor();
+                initSideAndColor();
             }
         }
 
-        private void initThreeLabels() {
+        private void initGraphicLevels() {
             labelKing = new Label("");
             labelKing.setMinSize(15, 15);
             labelKing.setMaxSize(15, 15);
@@ -127,7 +125,7 @@ public class CheckersBoard {
             labelShadow.setTranslateY(1);
         }
 
-        private void initCheckerColor() {
+        private void initSideAndColor() {
             if ((row + col) % 2 == 1) {
                 if (row < 3) {
                     if (!thatForTests) {
@@ -158,8 +156,8 @@ public class CheckersBoard {
             }
         }
 
-        private void initForRestart() {
-            initCheckerColor();
+        private void restart() {
+            initSideAndColor();
             if (!thatForTests)
                 labelKing.setBackground(Constants.NO_CHECKER);
             king = false;
@@ -167,11 +165,11 @@ public class CheckersBoard {
         }
 
 
-        public void highlight() {
+        public void highlightGraphic() {
             if (!thatForTests) labelColor.setBackground(Constants.CHOOSEN_CHECKER);
         }
 
-        public void removeHighlight() {
+        public void unHighlightGraphic() {
             if (!thatForTests)
                 if (side.equals(SIDES.white)) {
                     labelColor.setBackground(Constants.WHITE_CHECKER);
@@ -193,7 +191,7 @@ public class CheckersBoard {
             if (!thatForTests) labelKing.setBackground(Constants.KING);
         }
 
-        public void paintInNormalColor() {
+        public void setSideColorGraphic() {
             if (!thatForTests) {
                 labelShadow.setBackground(Constants.BLACK_BACK);
                 if (side.equals(SIDES.white)) {
@@ -201,13 +199,6 @@ public class CheckersBoard {
                 } else {
                     labelColor.setBackground(Constants.BLACK_CHECKER);
                 }
-            }
-        }
-
-        public void paintInGold() {
-            if (!thatForTests) {
-                labelShadow.setBackground(Constants.BLACK_BACK);
-                labelColor.setBackground(Constants.CHOOSEN_CHECKER);
             }
         }
 

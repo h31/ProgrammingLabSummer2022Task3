@@ -5,7 +5,7 @@ import checkers.ui.Constants.SIDES;
 
 public class GameStatistic {
 
-    public static SIDES activePlayer = SIDES.black;
+    public static SIDES activePlayerSide = SIDES.black;
 
     static boolean whiteCanEat = false;
     static boolean blackCanEat = false;
@@ -19,7 +19,7 @@ public class GameStatistic {
         cntBlack = 12;
         blackCanEat = false;
         whiteCanEat = false;
-        activePlayer = SIDES.black;
+        activePlayerSide = SIDES.black;
     }
 
     public static void declareWinner() {
@@ -50,6 +50,14 @@ public class GameStatistic {
         if (!CheckersBoard.isGame) {
             if (!thatForTests)
                 Turner.infoCenter.showStartButton();
+        }
+    }
+
+    static void changeScore(int row, int col) {
+        if (CheckersBoard.checkers[row][col].side.equals(SIDES.black)) {
+            GameStatistic.cntBlack--;
+        } else {
+            GameStatistic.cntWhite--;
         }
     }
 }

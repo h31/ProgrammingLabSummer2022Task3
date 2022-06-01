@@ -82,7 +82,7 @@ public class InfoCenter {
             updateMessage("Start New Game");
             startGameButton.setText("Start New Game");
             setStartButtonOnAction(startNewGame());
-            CheckersBoard.initAllForRestart();
+            CheckersBoard.restart();
         };
     }
 }

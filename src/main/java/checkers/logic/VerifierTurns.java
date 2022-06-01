@@ -4,7 +4,6 @@ import checkers.ui.*;
 
 import static java.lang.Math.abs;
 import static checkers.ui.Constants.SIDES;
-import static checkers.ui.Constants.WAYTOMOVE;
 
 public class VerifierTurns {
     private final CheckersBoard.Checker[][] checkers = CheckersBoard.checkers;
@@ -82,7 +81,7 @@ public class VerifierTurns {
         return diagonalChecker.getResult();
     }
 
-    public boolean movementAvailable() {
+    public boolean moveOrEatAvailable() {
         return isAnyTurnAvailable() != 0;
     }
 

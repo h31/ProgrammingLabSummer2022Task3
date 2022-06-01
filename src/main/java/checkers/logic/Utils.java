@@ -2,24 +2,24 @@ package checkers.logic;
 
 import checkers.ui.*;
 
-import static checkers.logic.GameStatistic.activePlayer;
+import static checkers.logic.GameStatistic.activePlayerSide;
 import static checkers.logic.Turner.*;
 import static checkers.ui.Constants.SIDES;
 
 public class Utils {
 
-    public static final InfoCenter infoCenter = Turner.infoCenter;
+    private static final InfoCenter infoCenter = Turner.infoCenter;
 
     public static void changePlayerTurn() {
-        if (activePlayer.equals(SIDES.black)) {
-            activePlayer = SIDES.white;
+        if (activePlayerSide.equals(SIDES.black)) {
+            activePlayerSide = SIDES.white;
         } else {
-            activePlayer = SIDES.black;
+            activePlayerSide = SIDES.black;
         }
         activeCheckerChoosed = false;
         lastActionIsEat = false;
 
-        String out = activePlayer.toString().substring(0, 1).toUpperCase() + activePlayer.toString().substring(1);
+        String out = activePlayerSide.toString().substring(0, 1).toUpperCase() + activePlayerSide.toString().substring(1);
 
         if (!GameStatistic.thatForTests)
             infoCenter.updateMessage(out + "'s turn");
@@ -27,12 +27,12 @@ public class Utils {
 
     public static void highlight(int row, int col) {
         CheckersBoard.Checker checker = Turner.checkers[row][col];
-        checker.highlight();
+        checker.highlightGraphic();
     }
 
     public static void unHighlight(int row, int col) {
         CheckersBoard.Checker checker = Turner.checkers[row][col];
-        checker.removeHighlight();
+        checker.unHighlightGraphic();
     }
 
     public static void deleteChecker(int row, int col) {

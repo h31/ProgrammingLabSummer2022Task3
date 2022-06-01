@@ -38,12 +38,6 @@ public class CheckersBoard {
         pane.setTranslateX((double) UIConstants.APP_WIDTH / 2);
         pane.setTranslateY((double) (UIConstants.TILE_BOARD_HEIGHT / 2) + UIConstants.INFO_CENTER_HEIGHT);
 
-        DuringGameChecks.cntBlack = 12;
-        DuringGameChecks.cntWhite = 12;
-        DuringGameChecks.someToEatAllBlack = false;
-        DuringGameChecks.someToEatAllWhite = false;
-        SomeStaff.playerTurn = "Black";
-
         addAllChecks();
     }
 
@@ -55,6 +49,19 @@ public class CheckersBoard {
                 checker.getStackPane().setTranslateY((row * 60) - 210);
                 pane.getChildren().add(checker.getStackPane());
                 checkers[row][col] = checker;
+            }
+        }
+    }
+
+    public static void initAllForRestart() {
+        DuringGameChecks.cntBlack = 12;
+        DuringGameChecks.cntWhite = 12;
+        DuringGameChecks.someToEatAllBlack = false;
+        DuringGameChecks.someToEatAllWhite = false;
+        SomeStaff.playerTurn = "Black";
+        for (byte row = 0; row < size; row++) {
+            for (byte col = 0; col < size; col++) {
+                checkers[row][col].initForRestart();
             }
         }
     }
@@ -157,6 +164,31 @@ public class CheckersBoard {
             });
 
 
+        }
+
+        void initForRestart() {
+            if ((row + col) % 2 == 1) {
+                if (row < 3) {
+                    labelUp.setBackground(UIConstants.BLACK_CHECKER);
+                    labelDown.setBackground(UIConstants.BLACK_BACK);
+                    color = "Black";
+                } else if (row > 4) {
+                    labelUp.setBackground(UIConstants.WHITE_CHECKER);
+                    labelDown.setBackground(UIConstants.BLACK_BACK);
+                    color = "White";
+                } else {
+                    labelUp.setBackground(UIConstants.NO_CHECKER);
+                    labelDown.setBackground(UIConstants.NO_CHECKER);
+                    color = "No";
+                }
+            } else {
+                labelUp.setBackground(UIConstants.NO_CHECKER);
+                labelDown.setBackground(UIConstants.NO_CHECKER);
+                color = "No";
+            }
+            labelKing.setBackground(UIConstants.NO_CHECKER);
+            isKing = false;
+            someToEat = false;
         }
 
         public void inline() {

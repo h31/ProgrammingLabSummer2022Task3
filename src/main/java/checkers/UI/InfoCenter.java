@@ -81,8 +81,7 @@ public class InfoCenter {
             updateMessage("Start New Game");
             startGameButton.setText("Start New Game");
             setStartButtonOnAction(startNewGame());
-            FirstStage.root = FirstStage.copyOfRoot;
-            primaryStage = new PrimaryStage(FirstStage.root, this);
+            CheckersBoard.initAllForRestart();
         };
     }
 }

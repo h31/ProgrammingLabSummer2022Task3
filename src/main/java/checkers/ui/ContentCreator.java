@@ -17,7 +17,7 @@ import static checkers.logic.Listeners.*;
 import static checkers.logic.Logic.*;
 import static checkers.ui.BoardPainter.boardPainter;
 import static checkers.ui.Media.getIcon;
-import static checkers.ui.changeContent.changingTurn;
+import static checkers.ui.ChangeContent.changingTurn;
 import static javafx.scene.layout.BorderPane.setMargin;
 
 public class ContentCreator {

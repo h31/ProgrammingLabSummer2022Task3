@@ -6,7 +6,7 @@ import checkers.logic.Step;
 import static checkers.logic.Logic.*;
 
 import static checkers.ui.ContentCreator.getUnderTopText;
-import static checkers.ui.changeContent.changingTurn;
+import static checkers.ui.ChangeContent.changingTurn;
 
 public class StepBackDrawer {
 

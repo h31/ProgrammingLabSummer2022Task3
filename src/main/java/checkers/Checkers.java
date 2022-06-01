@@ -11,7 +11,6 @@ import static checkers.ui.Media.getIcon;
 
 
 public class Checkers extends Application {
-    Media media=new Media();
 
     public static void main(String[] args) {
         launch(args);
@@ -19,7 +18,7 @@ public class Checkers extends Application {
 
     @Override
     public void start(Stage window) {
-        Scene scene= new Scene(WelcomePage.startPage(window));
+        Scene scene = new Scene(WelcomePage.startPage(window));
         window.setResizable(false);
         window.getIcons().add(getIcon());
         window.setTitle("Checkers");

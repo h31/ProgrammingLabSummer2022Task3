@@ -2,27 +2,20 @@ package checkers.ui;
 
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
-import java.io.File;
+
 
 public class Media {
     private static Image imgBlack, imgWhite, imgCrown, imgBlackTile, imgWhiteTile, icon, imgUndoButton;
-    private final File imgBlackF = new File("blackPiece.png"),
-            imgWhiteF = new File("whitePiece.png"),
-            imgCrownF = new File("crown.png"),
-            imgBlackTileF = new File("blackTile.jpg"),
-            imgWhiteTileF = new File("whiteTile.jpg"),
-            iconF = new File("icon.png"),
-            imgUndoButtonF= new File("undo.png");
 
-    {
+   static  {
         try {
-            imgWhite = new Image(imgWhiteF.getPath());
-            imgBlack = new Image(imgBlackF.getPath());
-            imgCrown = new Image(imgCrownF.getPath());
-            imgBlackTile = new Image(imgBlackTileF.getPath());
-            imgWhiteTile = new Image(imgWhiteTileF.getPath());
-            icon = new Image(iconF.getPath());
-            imgUndoButton = new Image(imgUndoButtonF.getPath());
+            imgWhite = new Image("whitePiece.png");
+            imgBlack = new Image("blackPiece.png");
+            imgCrown = new Image("crown.png");
+            imgBlackTile = new Image("blackTile.jpg");
+            imgWhiteTile = new Image("whiteTile.jpg");
+            icon = new Image("icon.png");
+            imgUndoButton = new Image("undo.png");
         } catch (NullPointerException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");

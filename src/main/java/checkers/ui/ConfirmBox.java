@@ -10,7 +10,7 @@ import static checkers.ui.BoardPainter.boardPainter;
 import static checkers.ui.Buttons.getNoButton;
 import static checkers.ui.Buttons.getYesButton;
 import static checkers.ui.ContentCreator.*;
-import static checkers.ui.changeContent.changingTurn;
+import static checkers.ui.ChangeContent.changingTurn;
 
 public class ConfirmBox {
 

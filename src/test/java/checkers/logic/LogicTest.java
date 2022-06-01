@@ -4,11 +4,13 @@ import checkers.ui.Media;
 import checkers.ui.Piece;
 import checkers.ui.Tile;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static checkers.logic.Logic.*;
 
+import static checkers.logic.Scanning.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LogicTest {
@@ -17,6 +19,10 @@ class LogicTest {
     static Tile[][] board = new Tile[Logic.WIDTH][Logic.WIDTH];
 
 
+    @AfterEach
+    void clear(){
+        getStepsStack().clear();
+    }
     @BeforeEach
     void setUp() {
         setTurn(Piece.PieceType.WHITE);
@@ -66,13 +72,13 @@ class LogicTest {
     @Test
     void eatMove() {
         move(board[7][2].getPiece(), 6, 3, new MoveResult(MoveType.NORMAL));
-        move(board[4][5].getPiece(),5,4,new MoveResult(MoveType.NORMAL));
+        move(board[4][5].getPiece(), 5, 4, new MoveResult(MoveType.NORMAL));
         MoveResult result = tryMove(board[5][4].getPiece(), 7, 2);
         assertEquals(MoveType.KILL, result.getMoveType());
     }
 
     @Test
-    void turnToCrown(){
+    void turnToCrown() {
         Piece piece = board[2][7].getPiece();
         board[1][0].setPiece(null);
         assertFalse(piece.isCrown());
@@ -84,33 +90,51 @@ class LogicTest {
 
 
     @Test
-    void IllegalMove(){
+    void IllegalMove() {
         Piece piece = board[2][7].getPiece();
-        assertEquals(MoveType.NONE, tryMove(piece, 10,20).getMoveType());
-        assertEquals(MoveType.NONE, tryMove(piece, 3,4).getMoveType());
+        assertEquals(MoveType.NONE, tryMove(piece, 10, 20).getMoveType());
+        assertEquals(MoveType.NONE, tryMove(piece, 3, 4).getMoveType());
     }
 
     @Test
-    void crownCanKill(){
-        move(board[2][5].getPiece(),3,4, new MoveResult(MoveType.NORMAL));
+    void crownCanKill() {
+        move(board[2][5].getPiece(), 3, 4, new MoveResult(MoveType.NORMAL));
         switchTurn();
         board[5][2].getPiece().setCrown(true);
         Piece crown = board[5][2].getPiece();
-        assertTrue(canKill(crown,5,2));
+        assertTrue(canKill(crown, 5, 2));
     }
 
     @Test
-    void possibilities(){
-        assertFalse(canMove(board[2][7].getPiece(),2,7));
-        assertFalse(canKill(board[2][7].getPiece(),2,7));
-        assertTrue(canMove(board[2][5].getPiece(),2,5));
+    void possibilities() {
+        assertFalse(canMove(board[2][7].getPiece(), 2, 7));
+        assertFalse(canKill(board[2][7].getPiece(), 2, 7));
+        assertTrue(canMove(board[2][5].getPiece(), 2, 5));
     }
 
+
+    /**
+     * Двигаем шашки друг к другу, проверяем должны ли они съесть
+     */
     @Test
-    void threatCheck(){
+    void threatCheck() {
         move(board[7][2].getPiece(), 6, 3, new MoveResult(MoveType.NORMAL));
-        move(board[4][5].getPiece(),5,4,new MoveResult(MoveType.NORMAL));
+        move(board[4][5].getPiece(), 5, 4, new MoveResult(MoveType.NORMAL));
         anyThreat();
         assertTrue(isKillNeed());
+    }
+
+    /**
+     * То же, что и предыдущее, но шашку не пододвигали
+     */
+    @Test
+    void threatCheckForCrown() {
+        allowedMovements();
+        board[4][5].getPiece().setCrown(true);
+        assertTrue(canMove(board[4][5].getPiece(),4,5));
+        move(board[7][2].getPiece(), 6, 3, new MoveResult(MoveType.NORMAL));
+        anyThreat();
+        assertTrue(isKillNeed());
+        assertEquals(1, getStepsStack().size());
     }
 }

@@ -13,12 +13,13 @@ import javafx.stage.WindowEvent;
 
 import static checkers.logic.Logic.*;
 
+import static checkers.logic.Scanning.canKill;
 import static checkers.ui.BoardPainter.boardPainter;
 import static checkers.ui.ConfirmBox.confirmation;
 import static checkers.ui.ContentCreator.*;
 import static checkers.ui.Piece.deadPiece;
-import static checkers.ui.changeContent.changingTurn;
-import static checkers.ui.changeContent.eatAlarm;
+import static checkers.ui.ChangeContent.changingTurn;
+import static checkers.ui.ChangeContent.eatAlarm;
 
 public class Listeners {
     public static EventHandler<MouseEvent> moveStart(Piece piece) {
@@ -47,8 +48,6 @@ public class Listeners {
 
             MoveResult result = tryMove(piece, newX, newY);
 
-            int y0 = toBoard(piece.getStartFromY());
-            int x0 = toBoard(piece.getStartFromX());
 
             if (isKillNeed() && !piece.isKiller()) {
                 piece.abortMove(); //Если какая-то шашка должна съесть, а выбрана другая - сброс
@@ -57,13 +56,12 @@ public class Listeners {
             //Отмена неправильного хода
             if (result.getMoveType() == MoveType.NONE) {
                 piece.abortMove();
+                return;
 
             }
             if (result.getMoveType() == MoveType.NORMAL && !isKillNeed() ||
                     result.getMoveType() == MoveType.KILL && isKillNeed()) { //Если шашка должна съедать дальше, эти движения не устраивают
 
-                //Запоминаем расположение
-                getStepsStack().push(new Step(x0, y0, result, piece));
 
                 //Перемещаем на доске в логике
                 move(piece, newX, newY, result);
@@ -100,8 +98,8 @@ public class Listeners {
                 }
             }
             eatAlarm(); //Напоминание о том, что нужно есть
-            Logic.anyThreat();
-            Logic.allowedMovements();
+            Scanning.anyThreat();
+            Scanning.allowedMovements();
         });
     }
 

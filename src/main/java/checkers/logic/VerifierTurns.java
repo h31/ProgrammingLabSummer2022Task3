@@ -1,6 +1,6 @@
 package checkers.logic;
 
-import checkers.UI.*;
+import checkers.ui.*;
 
 import static java.lang.Math.abs;
 
@@ -13,7 +13,7 @@ public class VerifierTurns {
     private String enemyCheckerColor;
     private int eatenCheckerRow;
     private int eatenCheckerCol;
-    private final Repeater repeater = new Repeater();
+    private final DiagonalChecker diagonalChecker = new DiagonalChecker();
 
 
 
@@ -23,7 +23,6 @@ public class VerifierTurns {
 
 
     public void init(int activeCheckerRow, int activeCheckerCol) {
-
         this.activeCheckerRow = activeCheckerRow;
         this.activeCheckerCol = activeCheckerCol;
         this.activeCheckerColor = checkers[activeCheckerRow][activeCheckerCol].color;
@@ -76,12 +75,12 @@ public class VerifierTurns {
 
 
     public int checkAllTurns() {
-        repeater.init(activeCheckerRow, activeCheckerCol);
-        repeater.repeatRightUp(this);
-        repeater.repeatLeftUp(this);
-        repeater.repeatLeftDown(this);
-        repeater.repeatRightDown(this);
-        return repeater.getResult();
+        diagonalChecker.init(activeCheckerRow, activeCheckerCol);
+        diagonalChecker.repeatRightUp(this);
+        diagonalChecker.repeatLeftUp(this);
+        diagonalChecker.repeatLeftDown(this);
+        diagonalChecker.repeatRightDown(this);
+        return diagonalChecker.getResult();
     }
 
     public boolean checkForTurns() {

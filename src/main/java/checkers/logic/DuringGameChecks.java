@@ -1,6 +1,6 @@
 package checkers.logic;
 
-import checkers.UI.CheckersBoard;
+import checkers.ui.CheckersBoard;
 
 public class DuringGameChecks {
     public static boolean someToEatAllWhite = false;

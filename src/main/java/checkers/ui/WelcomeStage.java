@@ -1,12 +1,12 @@
-package checkers.UI;
+package checkers.ui;
 
 import javafx.scene.layout.BorderPane;
 
-public class FirstStage {
+public class WelcomeStage {
     static BorderPane root;
 
-    public FirstStage(BorderPane root) {
-        FirstStage.root = root;
+    public WelcomeStage(BorderPane root) {
+        WelcomeStage.root = root;
         initInfoCenter(root);
     }
 

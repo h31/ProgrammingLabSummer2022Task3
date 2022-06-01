@@ -1,4 +1,4 @@
-package checkers.UI;
+package checkers.ui;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -12,16 +12,16 @@ public class InfoCenter {
     private final StackPane pane;
     private final Label message;
     private final Button startGameButton;
-    private PrimaryStage primaryStage;
+    private GameStage gameStage;
 
     public InfoCenter() {
         pane = new StackPane();
-        pane.setMinSize(UIConstants.APP_WIDTH, UIConstants.INFO_CENTER_HEIGHT);
-        pane.setTranslateX((double) UIConstants.APP_WIDTH / 2);
-        pane.setTranslateY((double) UIConstants.INFO_CENTER_HEIGHT / 2);
+        pane.setMinSize(Constants.APP_WIDTH, Constants.INFO_CENTER_HEIGHT);
+        pane.setTranslateX((double) Constants.APP_WIDTH / 2);
+        pane.setTranslateY((double) Constants.INFO_CENTER_HEIGHT / 2);
 
         message = new Label("English Checkers");
-        message.setMinSize(UIConstants.APP_WIDTH, UIConstants.INFO_CENTER_HEIGHT);
+        message.setMinSize(Constants.APP_WIDTH, Constants.INFO_CENTER_HEIGHT);
         message.setFont(Font.font(24));
         message.setAlignment(Pos.CENTER);
         message.setTranslateY(-20);
@@ -57,22 +57,23 @@ public class InfoCenter {
         startGameButton.setOnAction(onAction);
     }
 
-    private EventHandler<ActionEvent> startNewGame() { //стартует игру
-        return event -> {
-            hideStartButton();
-            updateMessage("Black's Turn");
-            CheckersBoard.isGame = true;
-            startGameButton.setText("Restart");
-            setStartButtonOnAction(restart());
-        };
-    }
-
     private EventHandler<ActionEvent> createNewField() { //Инициирует создание новой расстановки шашек и переключает
         return event -> { // кнопку в режим начала игры
             updateMessage("Start New Game");
             startGameButton.setText("Start New Game");
             setStartButtonOnAction(startNewGame());
-            primaryStage = new PrimaryStage(FirstStage.root, this);
+            gameStage = new GameStage(WelcomeStage.root, this);
+        };
+    }
+
+    private EventHandler<ActionEvent> startNewGame() { //стартует игру
+        return event -> {
+            hideStartButton();
+            updateMessage("Black's Turn");
+            CheckersBoard.isGame = true;
+
+            startGameButton.setText("Restart");
+            setStartButtonOnAction(restart());
         };
     }
 

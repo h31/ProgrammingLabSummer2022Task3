@@ -1,6 +1,6 @@
 package checkers.logic;
 
-import checkers.UI.*;
+import checkers.ui.*;
 
 public class Turner {
     public static int resultOfLastMove = 0;
@@ -22,9 +22,6 @@ public class Turner {
     VerifierTurns verifierTurns = new VerifierTurns(); //Проверка хода
 
     static CheckersBoard.Checker selectedChecker;
-
-    public Turner() { //THIS IS ONLY FOR TESTS!!!!!! DO NOT USE IT
-    }
     public Turner(InfoCenter infoCenter) {
         Turner.infoCenter = infoCenter;
     }
@@ -34,7 +31,7 @@ public class Turner {
         this.selectedRow = selectedChecker.row;
         this.selectedCol = selectedChecker.col;
         this.selectedColor = selectedChecker.color;
-        this.selectedSomeToEat = selectedChecker.someToEat;
+        this.selectedSomeToEat = selectedChecker.canEat;
         this.selectedKing = selectedChecker.isKing;
 
 
@@ -43,30 +40,22 @@ public class Turner {
             if (resultOfLastMove != 2) {
                 if (activeRow == selectedCellRow && activeCol == selectedCellCol) {
                     isItATryToMove = false;
-                    try {
-                        canselChoose();
-                    } catch (NullPointerException ignored) {}
+                    canselChoose();
                 } else if (activeColor.equals(selectedColor) && activeSomeToEat == selectedSomeToEat) {
                     isItATryToMove = false;
-                    try {
-                        chooseAnotherChecker();
-                    } catch (NullPointerException ignored) {}
+                    chooseAnotherChecker();
                 }
             }
             if (isItATryToMove) {
                 tryToMakeThisTurn();
-                try {
-                    checkAfterTurn();
-                } catch (NullPointerException ignored) {}
+                checkAfterTurn();
             }
         } else {
             if (SomeStaff.isWhiteTurn() && selectedColor.equals("White") && (selectedSomeToEat ||
                     !DuringGameChecks.someToEatAllWhite) || !SomeStaff.isWhiteTurn() &&
                     selectedColor.equals("Black") && (selectedSomeToEat ||
                     !DuringGameChecks.someToEatAllBlack)) {
-                try {
-                    chooseActiveChecker();
-                } catch (NullPointerException ignored) {}
+                chooseActiveChecker();
             }
         }
 
@@ -107,22 +96,14 @@ public class Turner {
             if (x != 0) {
                 if (x == 1 && !activeSomeToEat) { //если можно походить без взятия и взять шашка никого не может
                     selectedChecker.color = activeColor; //переназначаем цвет у пустого поля
-                    try {
-                        selectedChecker.paintInNormalColor(activeColor); //перекрашиваем (передвигаем шашку)
-                    } catch (NullPointerException ignored) {
-                    }
+                    selectedChecker.paintInNormalColor(activeColor); //перекрашиваем (передвигаем шашку)
 
                     if ((SomeStaff.isWhiteTurn() && selectedRow == 0 || !SomeStaff.isWhiteTurn() &&
                             selectedRow == 7) || activeKing) { //Ставим\переносим статус дамки
-                        try {
-                            SomeStaff.makeAKing(selectedRow, selectedCol);
-                        } catch (NullPointerException ignored) {
-                        }
+                        SomeStaff.makeAKing(selectedRow, selectedCol);
                     }
-                    try {
-                        SomeStaff.delete(activeRow, activeCol); //Удаляем старую шашку
-                    } catch (NullPointerException ignored) {
-                    }
+
+                    SomeStaff.delete(activeRow, activeCol); //Удаляем старую шашку
                     SomeStaff.changePlayerTurn(); //меняем ход
                 } else if (x == 2) { //все случаи, когда кого-то шашка берёт
                     resultOfLastMove = 2; //для запрета переключения при поедании подряд
@@ -131,10 +112,7 @@ public class Turner {
 
                     if (activeKing || (SomeStaff.isWhiteTurn() && selectedRow == 0 ||
                             !SomeStaff.isWhiteTurn() && selectedRow == 7)) { //ставим\переносим дамку
-                        try {
-                            SomeStaff.makeAKing(selectedRow, selectedCol);
-                        } catch (NullPointerException ignored) {
-                        }
+                        SomeStaff.makeAKing(selectedRow, selectedCol);
                         selectedKing = selectedChecker.isKing;
                     }
 
@@ -187,14 +165,14 @@ public class Turner {
         boolean thereIsNoDraw = false;
         boolean tWhite = false;
         boolean tBlack = false;
-        int size = UIConstants.SIZE;
+        int size = Constants.SIZE;
         for (byte i = 0; i < size; i ++) {
             for(byte j = 0; j < size; j++) {
                 if (!checkers[i][j].color.equals("No")) {
                     verifierTurns.init(i, j);
                     thereIsNoDraw = thereIsNoDraw || verifierTurns.checkForTurns();
                     if (verifierTurns.checkForTakes()) {
-                        checkers[i][j].someToEat = true;
+                        checkers[i][j].canEat = true;
                         if (checkers[i][j].color.equals("White")) {
                             DuringGameChecks.someToEatAllWhite = true;
                             tWhite = true;
@@ -202,7 +180,7 @@ public class Turner {
                             DuringGameChecks.someToEatAllBlack = true;
                             tBlack = true;
                         }
-                    } else checkers[i][j].someToEat = false;
+                    } else checkers[i][j].canEat = false;
                 }
             }
         }

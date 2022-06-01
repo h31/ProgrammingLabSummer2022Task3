@@ -1,11 +1,11 @@
-package checkers.UI;
+package checkers.ui;
 
 import javafx.scene.layout.BorderPane;
 
-public class PrimaryStage {
+public class GameStage {
     private final InfoCenter infoCenter;
 
-    public PrimaryStage(BorderPane root, InfoCenter infoCenter) {
+    public GameStage(BorderPane root, InfoCenter infoCenter) {
         this.infoCenter = infoCenter;
         initLayout(root);
     }

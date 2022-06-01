@@ -1,6 +1,6 @@
 package checkers.logic;
 
-import checkers.UI.*;
+import checkers.ui.*;
 
 public class SomeStaff {
     public static String playerTurn = "Black";
@@ -25,18 +25,18 @@ public class SomeStaff {
 
     public static void inline(int row, int col) {
         CheckersBoard.Checker checker = Turner.checkers[row][col];
-        checker.inline();
+        checker.highlight();
     }
 
     public static void unline(int row, int col) {
         CheckersBoard.Checker checker = Turner.checkers[row][col];
-        checker.unline();
+        checker.removeHighlight();
     }
 
     public static void delete(int row, int col) {
         CheckersBoard.Checker checker = Turner.checkers[row][col];
         checker.color = "No";
-        checker.someToEat = false;
+        checker.canEat = false;
         checker.isKing = false;
         checker.clearGraphic();
     }
@@ -44,6 +44,6 @@ public class SomeStaff {
     public static void makeAKing(int row, int col) {
         CheckersBoard.Checker checker = Turner.checkers[row][col];
         checker.isKing = true;
-        checker.makeAKingGraphic();
+        checker.makeKingGraphic();
     }
 }

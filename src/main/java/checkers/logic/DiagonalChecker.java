@@ -2,7 +2,7 @@ package checkers.logic;
 
 import static java.lang.Math.max;
 
-class Repeater {
+class DiagonalChecker {
     private int result;
     private int activeCheckerRow;
     private int activeCheckerCol;
@@ -10,7 +10,7 @@ class Repeater {
     private int j;
     private int cnt;
 
-    public Repeater() {
+    public DiagonalChecker() {
     }
 
     public void init(int activeCheckerRow, int activeCheckerCol) {

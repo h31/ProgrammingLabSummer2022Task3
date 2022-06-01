@@ -1,4 +1,4 @@
-package checkers.UI;
+package checkers.ui;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -10,14 +10,14 @@ import javafx.scene.text.Font;
 public class TileBoard {
 
     private final StackPane pane;
-    private final int size = UIConstants.SIZE;
+    private final int size = Constants.SIZE;
     private final Tile[][] tiles = new Tile[size][size];
 
     public TileBoard() {
         pane = new StackPane();
-        pane.setMinSize(UIConstants.APP_WIDTH, UIConstants.TILE_BOARD_HEIGHT);
-        pane.setTranslateX((double) UIConstants.APP_WIDTH / 2);
-        pane.setTranslateY((double) (UIConstants.TILE_BOARD_HEIGHT / 2) + UIConstants.INFO_CENTER_HEIGHT);
+        pane.setMinSize(Constants.APP_WIDTH, Constants.TILE_BOARD_HEIGHT);
+        pane.setTranslateX((double) Constants.APP_WIDTH / 2);
+        pane.setTranslateY((double) (Constants.TILE_BOARD_HEIGHT / 2) + Constants.INFO_CENTER_HEIGHT);
 
         addAllTiles();
     }

@@ -4,5 +4,5 @@ module enCheckers {
     requires java.desktop;
 
     exports checkers;
-    exports checkers.UI;
+    exports checkers.ui;
 }

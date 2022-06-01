@@ -1,43 +1,41 @@
 package core;
 
 import java.awt.*;
+import java.util.List;
 
 public class Food {
     private Point food;
-    private boolean newFruitFlag;
+    private boolean fruitFlag;
+    private boolean fruitInSnake;
 
-    public void generateFood(Field field) {
-        while (true) {
-            food = new Point((int)(Math.random() * field.getRows()), (int)(Math.random() * field.getColumns()));
-            boolean fruitInSnake = false;
-            for (Point snakeElement: field.getSnakeBody()) {
+    public void generateFood(List<Point> snakeBody) {
+
+        do {
+            food = new Point((int)(Math.random() * 20), (int)(Math.random() * 20));
+            fruitInSnake = false;
+            for (Point snakeElement: snakeBody) {
                 if (snakeElement.getX() == food.x && snakeElement.getY() == food.y) {
                     fruitInSnake = true;
+                    break;
                 }
             }
             if (!fruitInSnake) {
-                newFruitFlag = true;
+                fruitFlag = true;
                 return;
             }
-        }
+        } while (true);
     }
 
-    //добавление нового элемента в змейку
-    public void eatFood(Field field) {
-        if (field.getSnakeHead().getX() == food.x && field.getSnakeHead().getY() == food.y) {
-            field.getSnakeBody().add(new Point(-1, -1));
-            generateFood(field);
-            newFruitFlag = true;
-            field.score += 5;
-        }
+    public boolean getFruitFlag() {
+        return fruitFlag;
     }
 
-    public boolean getNewFruitFlag() {
-        return newFruitFlag;
+    public void setFruitFlag(boolean flag) {
+        this.fruitFlag = flag;
     }
 
-    public void setNewFruitFlag(boolean newFruitFlag) {
-        this.newFruitFlag = newFruitFlag;
+    public boolean getFruitInSnake() {
+        return fruitInSnake;
     }
 
     public int getX() {

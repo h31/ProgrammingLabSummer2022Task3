@@ -1,22 +1,24 @@
 package core;
 
-import ui.SnakeGame;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Field {
+    Food food = new Food();
 
-    private final int width = 800;
-    private final int height = 800;
     private final int rows = 20;
     private final int columns = rows;
-    private final int squareSize = width / rows;
     private boolean gameOver = false;
-    public int score = 0;
+    private int score = 0;
     private final List<Point> snakeBody = new ArrayList<>();
-    private Point snakeHead;
+    private final Point snakeHead;
+
+    public Field() {
+        createSnake();
+        snakeHead = snakeBody.get(0);
+        food.generateFood(snakeBody);
+    }
 
     public void createSnake() {
         for (int i = 0; i < 3; i++) {
@@ -25,38 +27,48 @@ public class Field {
     }
 
     //Логика движения по клеткам
-    public void snakeDoIteration() {
+    public void snakeDoIteration(Direction direction) {
         for (int i = snakeBody.size() - 1; i >= 1; i--) {
             snakeBody.get(i).x = snakeBody.get(i - 1).x;
             snakeBody.get(i).y = snakeBody.get(i - 1).y;
         }
-        switch (SnakeGame.direction) {
-            case right:
+        switch (direction) {
+            case RIGHT:
                 snakeHead.x++;
                 break;
-            case left:
+            case LEFT:
                 snakeHead.x--;
                 break;
-            case up:
+            case UP:
                 snakeHead.y--;
                 break;
-            case down:
+            case DOWN:
                 snakeHead.y++;
                 break;
+        }
+    }
+
+    //добавление нового элемента в змейку
+    public void eatFood() {
+        if (snakeHead.getX() == food.getX() && snakeHead.getY() == food.getY()) {
+            snakeBody.add(new Point(-1, -1));
+            food.generateFood(snakeBody);
+            score += 15;
         }
     }
 
     //выход за границы поля + соприкосновение с хвостом
     public void gameOver() {
         if (snakeHead.x < 0 || snakeHead.y < 0 ||
-                snakeHead.x * squareSize >= width || snakeHead.y * squareSize >= height) {
+                snakeHead.x >= rows || snakeHead.y >= columns) {
             gameOver = true;
+            return;
         }
         for (int i = 1; i < snakeBody.size(); i++) {
             if (snakeHead.x == snakeBody.get(i).getX() &&
                     snakeHead.y == snakeBody.get(i).getY()) {
                 gameOver = true;
-                break;
+                return;
             }
         }
     }
@@ -69,18 +81,6 @@ public class Field {
         return snakeHead;
     }
 
-    public void setSnakeHead(Point snakeHead) {
-        this.snakeHead = snakeHead;
-    }
-
-    public int getFieldWidth() {
-        return width;
-    }
-
-    public int getFieldHeight() {
-        return height;
-    }
-
     public int getRows() {
         return rows;
     }
@@ -89,15 +89,23 @@ public class Field {
         return columns;
     }
 
-    public int getSqSize() {
-        return squareSize;
-    }
-
-    public boolean getGameOver() {
+    public boolean GameIsOver() {
         return gameOver;
     }
 
     public int getScore() {
         return score;
+    }
+
+    public Food getFood() {
+        return food;
+    }
+
+    public boolean getFruitFlag() {
+        return food.getFruitFlag();
+    }
+
+    public void setFruitFlag(boolean flag) {
+        food.setFruitFlag(flag);
     }
 }

@@ -1,6 +1,5 @@
 package checkers.logic;
 
-
 import checkers.ui.ContentCreator;
 import checkers.ui.Piece;
 import checkers.ui.StepBackDrawer;
@@ -20,10 +19,7 @@ import static checkers.ui.Piece.deadPiece;
 import static checkers.ui.changeContent.changingTurn;
 import static checkers.ui.changeContent.eatAlarm;
 
-
 public class Listeners {
-
-
     public static EventHandler<MouseEvent> moveStart(Piece piece) {
         return e -> {
             piece.setMouseX(e.getSceneX());
@@ -53,17 +49,17 @@ public class Listeners {
             int y0 = toBoard(piece.getStartFromY());
             int x0 = toBoard(piece.getStartFromX());
 
-
             if (isKillNeed() && !piece.isKiller()) {
                 piece.abortMove(); //Если какая-то шашка должна съесть, а выбрана другая - сброс
 
             }
 
 
+            //Отмена неправильного хода
             if (result.getMoveType() == MoveType.NONE) {
                 piece.abortMove();
 
-            } else {
+            } else { //Один из правильных ходов
                 //Следим за превращением в дамку
                 if (piece.getPieceType() == Piece.PieceType.BLACK && newY == (HEIGHT - 1) && !piece.isCrown() ||
                         piece.getPieceType() == Piece.PieceType.WHITE && newY == 0 && !piece.isCrown()) {
@@ -72,7 +68,6 @@ public class Listeners {
                     piece.getCrownView().setVisible(true); //Стала дамкой = видно корону
                     result.setWasCrowned(true);
                 }
-
             }
             if (result.getMoveType() == MoveType.NORMAL && !isKillNeed() || result.getMoveType() == MoveType.KILL && isKillNeed()) { //Если шашка должна съедать дальше, эти движения не устраивают
 
@@ -100,10 +95,14 @@ public class Listeners {
                     changingTurn();
                     deadPiece(result.getPiece());
 
-                    if (getLeft().getChildren().size() == amountOfPieces || getRight().getChildren().size() == amountOfPieces) {
-                        String message = turn == Piece.PieceType.BLACK ? "\n          Победа белых" :
+                    if (getLeft().getChildren().size() == amountOfPieces ||
+                            getRight().getChildren().size() == amountOfPieces) {
+                        String message = turn == Piece.PieceType.BLACK ?
+                                "\n          Победа белых" :
                                 "\n          Победа чёрных";
-                        if (confirmation("End of the game", "Хотите начать игру заново?" + message)) {
+                        if (confirmation("End of the game",
+                                "Хотите начать игру заново?" +
+                                        message)) {
                             boardPainter();
                             changingTurn();
                         }
@@ -150,8 +149,6 @@ public class Listeners {
 
                         setKillNeed(true);
                         setKillCount(getKillCount() > 0 ? getKillCount() - 1 : 0);
-
-
                 }
 
                 //Если шашка стала дамкой в отмененном ходу, она перестает быть дамкой

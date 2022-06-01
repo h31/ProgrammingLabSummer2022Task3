@@ -154,7 +154,7 @@ public class ContentCreator {
 
                 if (y <= 2 && (x + y) % 2 != 0) {
                     piece = new Piece(Piece.PieceType.BLACK, x, y);
-                    amountOfPieces+=1;
+                    amountOfPieces++;
                 }
 
                 if (y >= 5 && (x + y) % 2 != 0) {

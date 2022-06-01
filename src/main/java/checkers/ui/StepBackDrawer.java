@@ -39,6 +39,5 @@ public class StepBackDrawer {
         if(step.getMoveResult().WasCrowned()) {
             killerPiece.getCrownView().setVisible(false);
         }
-
     }
 }

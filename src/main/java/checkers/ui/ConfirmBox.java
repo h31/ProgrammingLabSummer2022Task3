@@ -2,7 +2,6 @@ package checkers.ui;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-
 import java.util.Optional;
 
 
@@ -14,12 +13,11 @@ import static checkers.ui.changeContent.changingTurn;
 
 public class ConfirmBox {
 
-
-
     public static boolean confirmation(String headerText, String message) {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, headerText, getYesButton(), getNoButton());
         alert.setTitle("Confirmation Dialog");
+        alert.setHeaderText(headerText);
         alert.setContentText(message);
         alert.initOwner(getWindow());
 

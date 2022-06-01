@@ -36,7 +36,7 @@ public class SnakeGame extends Application {
     private GraphicsContext graphicsContext;
     Timeline timeLine = new Timeline(new KeyFrame(Duration.millis(250), e -> run(graphicsContext, field)));
 
-    public static Direction direction = Direction.RIGHT;
+    public Direction direction = Direction.RIGHT;
 
     @Override
     public void start(Stage primaryStage) {

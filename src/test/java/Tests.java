@@ -17,14 +17,13 @@ import java.io.FileNotFoundException;
 
 public class Tests {
 
-    private static final String TEST_LABYRINTHS_DIR = "src/test/resources/labyrinths/";
+    private static final String TEST_LABYRINTHS_DIR = "labyrinths/test/";
 
     private static void setupTest() {
         TestUtils.setIsTestScope(true);
     }
 
     private static void rethrowWithoutWrapping(Runnable runnable) throws Throwable {
-        Throwable res = null;
         try {
             runnable.run();
         } catch (RuntimeException e) {

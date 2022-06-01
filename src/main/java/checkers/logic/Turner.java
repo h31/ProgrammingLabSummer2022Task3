@@ -4,7 +4,7 @@ import checkers.ui.*;
 
 import static checkers.logic.GameStatistic.changeScore;
 import static checkers.ui.Constants.SIDES;
-import static checkers.ui.Constants.MOVERESULT;
+import static checkers.ui.Constants.MOVECHECKRESULT;
 import static checkers.logic.GameStatistic.activePlayerSide;
 
 public class Turner {
@@ -94,35 +94,36 @@ public class Turner {
     private void tryToMakeThisTurn() {
         if (selectedSide.equals(SIDES.no)) {
             verifierTurns.init(activeRow, activeCol);
-            MOVERESULT move;
+            MOVECHECKRESULT move;
             switch (verifierTurns.checkTurn(selectedRow, selectedCol)) {
-                case(1) -> move = MOVERESULT.move;
-                case(2) -> move = MOVERESULT.eat;
-                default -> move = MOVERESULT.notPossible;
+                case(1) -> move = MOVECHECKRESULT.itMove;
+                case(2) -> move = MOVECHECKRESULT.itEat;
+                default -> move = MOVECHECKRESULT.itNotPossible;
             }
-            if (!move.equals(MOVERESULT.notPossible)) {
-                if (move.equals(MOVERESULT.move) && !activeCanEat) { //если можно походить без взятия и взять шашка никого не может
+            if (!move.equals(MOVECHECKRESULT.itNotPossible)) {
+                //если можно походить без взятия и взять шашка никого не может
+                if (move.equals(MOVECHECKRESULT.itMove) && !activeCanEat) {
                     selectedChecker.side = activeSide; //переназначаем сторону у пустого поля
                     moveChecker();
                     Utils.deleteChecker(activeRow, activeCol);
                     Utils.changePlayerTurn(); //меняем ход
-                } else if (move.equals(MOVERESULT.eat)) { //все случаи, когда кого-то шашка берёт
+                } else if (move.equals(MOVECHECKRESULT.itEat)) { //все случаи, когда шашка кого-то берёт
                     lastActionIsEat = true; //для запрета переключения при поедании подряд
                     selectedChecker.side = activeSide; //переназначаем цвет у пустого поля
                     moveChecker();
                     changeScore(verifierTurns.getCapturedRow(), verifierTurns.getCapturedCol());
                     Utils.deleteChecker(verifierTurns.getCapturedRow(), verifierTurns.getCapturedCol());
+                    Utils.deleteChecker(activeRow, activeCol); //удаляем старую
                     verifierTurns.init(selectedRow, selectedCol);
                     //проверяем, продолжатся ли взятия на следующем ходу или не произошло ли смены на дамку
                     if (!verifierTurns.eatAvailable() || activeKing != selectedKing) {
                         Utils.changePlayerTurn();
                     } else {
                         selectedChecker.highlightGraphic();
+                        activeRow = selectedRow;
+                        activeCol = selectedCol;
+                        activeKing = selectedKing;
                     }
-                    Utils.deleteChecker(activeRow, activeCol); //удаляем старую
-                    activeRow = selectedRow;
-                    activeCol = selectedCol;
-                    activeKing = selectedKing;
                 }
             }
         }

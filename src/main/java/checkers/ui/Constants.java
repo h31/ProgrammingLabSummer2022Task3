@@ -20,10 +20,10 @@ public class Constants {
         no
     }
 
-    public enum MOVERESULT {
-        notPossible,
-        move,
-        eat
+    public enum MOVECHECKRESULT {
+        itNotPossible,
+        itMove,
+        itEat
     }
 
     public static final Background WHITE_CHECKER =

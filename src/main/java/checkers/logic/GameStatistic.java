@@ -41,7 +41,7 @@ public class GameStatistic {
     }
 
     public static void declareDraw(boolean itIsDraw) {
-        if (itIsDraw) {
+        if (itIsDraw && CheckersBoard.isGame) {
             CheckersBoard.isGame = false;
             if (!thatForTests)
                 Turner.infoCenter.updateMessage("Draw!!!");

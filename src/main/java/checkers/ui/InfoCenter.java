@@ -12,7 +12,6 @@ public class InfoCenter {
     private StackPane pane = null;
     private  Label message = null;
     private  Button startGameButton = null;
-    private GameStage gameStage;
 
     public InfoCenter(boolean thatForTests) {
         if (!thatForTests) {
@@ -62,7 +61,7 @@ public class InfoCenter {
             updateMessage("Start New Game");
             startGameButton.setText("Start New Game");
             setStartButtonOnAction(startNewGame());
-            gameStage = new GameStage(WelcomeStage.root, this);
+            new GameStage(WelcomeStage.root, this);
         };
     }
 

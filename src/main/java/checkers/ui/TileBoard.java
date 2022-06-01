@@ -10,8 +10,6 @@ import javafx.scene.text.Font;
 public class TileBoard {
 
     private final StackPane pane;
-    private final int size = Constants.SIZE;
-    private final Tile[][] tiles = new Tile[size][size];
 
     public TileBoard() {
         pane = new StackPane();
@@ -24,6 +22,7 @@ public class TileBoard {
 
     private void addAllTiles() {
 
+        int size = Constants.SIZE;
         for (int row = 0; row < size; row ++) {
             for(int col = 0; col < size; col++) {
                 Label label = new Label("");
@@ -33,7 +32,6 @@ public class TileBoard {
                 tile.getStackPane().setTranslateX((col * 60) - 210);
                 tile.getStackPane().setTranslateY((row * 60) - 210);
                 pane.getChildren().add(tile.getStackPane());
-                tiles[row][col] = tile;
             }
         }
     }

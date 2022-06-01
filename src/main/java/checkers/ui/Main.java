@@ -18,7 +18,7 @@ public class Main extends Application {
             Scene scene = new Scene(root, Constants.APP_WIDTH, Constants.APP_HEIGHT);
             stage.setResizable(false);
             stage.setTitle("English Checkers");
-            WelcomeStage start = new WelcomeStage(root);
+            new WelcomeStage(root);
             stage.setScene(scene);
             stage.show();
         } catch (Exception e) {

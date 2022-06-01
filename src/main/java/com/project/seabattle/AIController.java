@@ -7,6 +7,7 @@ import java.util.Random;
 public class AIController {
 
     private final Field field;
+    public boolean isTest = false;
 
     Coordinate lastSuccessAttack;
     private final List<Coordinate> nextAttackList = new ArrayList<>();
@@ -16,13 +17,14 @@ public class AIController {
     }
 
     public void startAttack() {
+        List<Coordinate> allowList = field.allowFireCells();
+        Coordinate randomCoordinate = allowList.get(new Random().nextInt(allowList.size()));
+
+        targetedAttack(randomCoordinate.getX(), randomCoordinate.getY());
+    }
+
+    void targetedAttack(int x, int y) {
         if (lastSuccessAttack == null) {
-            List<Coordinate> allowList = field.allowFireCells();
-
-            Coordinate randomCoordinate = allowList.get(new Random().nextInt(allowList.size()));
-            int x = randomCoordinate.getX();
-            int y = randomCoordinate.getY();
-
             if (field.attackCell(x, y)) {
                 if (!field.isKill(x, y)) {
                     lastSuccessAttack = new Coordinate(x, y);
@@ -30,14 +32,23 @@ public class AIController {
                     if (field.isAllowFire(x + 1, y)) nextAttackList.add(new Coordinate(x + 1, y));
                     if (field.isAllowFire(x - 1, y)) nextAttackList.add(new Coordinate(x - 1, y));
 
-                    if (continueAttack()) startAttack();
+                    if (isTest) {
+                        boolean isKill = false;
+                        while (!isKill)
+                            isKill = continueAttack();
+                        return;
+                    }
+                    if (continueAttack()) {
+                        startAttack();
+                    }
                 }
                 else startAttack();
             }
-
         }
         else {
-            if (continueAttack()) startAttack();
+            if (continueAttack()) {
+                startAttack();
+            }
         }
     }
 
@@ -69,7 +80,7 @@ public class AIController {
             }
 
             nextAttackList.remove(0);
-            continueAttack();
+            if (!isTest) continueAttack();
         }
         else nextAttackList.remove(0);
         return false;

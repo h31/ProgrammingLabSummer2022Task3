@@ -26,7 +26,7 @@ public class Field {
 
     public void clear() { field.clear(); }
 
-    public boolean isFreeCell(int x, int y) {
+    public boolean isOccupiedCell(int x, int y) {
         return (x < 0 || y < 0 || x >= Constants.fieldSize ||
                 y >= Constants.fieldSize) ||
                 field.containsKey(new Coordinate(x, y));
@@ -38,26 +38,27 @@ public class Field {
     }
 
     public void fillCell(int x, int y, Cell cell, boolean isVisible) {
-        if (isVisible && (x >= 0 && y >= 0 && x < Constants.fieldSize && y < Constants.fieldSize)) {
-            if (cell == Cell.SHIP) {
-                Rectangle rectangle = new Rectangle(20, 20);
-                rectangle.setFill(Paint.valueOf(Color.SHIP));
-                fieldView.add(rectangle, x, y);
+        if (x >= 0 && y >= 0 && x < Constants.fieldSize && y < Constants.fieldSize) {
+            if (isVisible) {
+                if (cell == Cell.SHIP) {
+                    Rectangle rectangle = new Rectangle(20, 20);
+                    rectangle.setFill(Paint.valueOf(Color.SHIP));
+                    fieldView.add(rectangle, x, y);
+                }
+                else if (cell == Cell.SHIPWRECK) {
+                    Rectangle rectangle = new Rectangle(20, 20);
+                    rectangle.setFill(Paint.valueOf(Color.SHIPWRECK));
+                    fieldView.add(rectangle, x, y);
+                }
+                else if (cell == Cell.MISS) {
+                    Circle circle = new Circle(5);
+                    circle.setFill(Paint.valueOf(Color.MISS));
+                    fieldView.add(circle, x, y);
+                    GridPane.setHalignment(circle, HPos.CENTER);
+                }
             }
-            else if (cell == Cell.SHIPWRECK) {
-                Rectangle rectangle = new Rectangle(20, 20);
-                rectangle.setFill(Paint.valueOf(Color.SHIPWRECK));
-                fieldView.add(rectangle, x, y);
-            }
-            else if (cell == Cell.MISS) {
-                Circle circle = new Circle(5);
-                circle.setFill(Paint.valueOf(Color.MISS));
-                fieldView.add(circle, x, y);
-                GridPane.setHalignment(circle, HPos.CENTER);
-            }
+            field.put(new Coordinate(x, y), cell);
         }
-
-        field.put(new Coordinate(x, y), cell);
     }
 
     public List<Coordinate> allowPlaceCells(int size, boolean isHorisontal) {
@@ -75,12 +76,12 @@ public class Field {
     public boolean isAllowPlaceShip(int size, boolean isHorisontal, int x, int y) {
         for (int i = 0; i < size; i++) {
             if (isHorisontal) {
-                if (isFreeCell(x + i, y)) {
+                if (isOccupiedCell(x + i, y)) {
                     return false;
                 }
             }
             else {
-                if (isFreeCell(x, y + i)) {
+                if (isOccupiedCell(x, y + i)) {
                     return false;
                 }
             }

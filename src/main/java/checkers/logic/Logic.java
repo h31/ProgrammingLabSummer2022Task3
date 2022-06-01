@@ -3,14 +3,10 @@ package checkers.logic;
 
 import checkers.ui.Piece;
 import checkers.ui.Tile;
-
-
 import java.util.Stack;
-
 import static checkers.ui.BoardPainter.boardPainter;
 import static checkers.ui.ConfirmBox.confirmation;
 import static checkers.ui.changeContent.changingTurn;
-
 
 public class Logic {
     public static final int TILE_SIZE = 75;
@@ -28,35 +24,20 @@ public class Logic {
      * Какая-то из шашек должна съесть ещё
      */
     private static boolean killNeed = false;
-
     private static int killCount;
-
-
     public static Tile[][] getBoard() {
         return board;
     }
-
     public static void setBoard(Tile[][] board) {
         Logic.board = board;
     }
-
-
     public static void setTurn(Piece.PieceType turn) {
         Logic.turn = turn;
     }
-
     public static Stack<Step> getStepsStack() {
         return stepsStack;
     }
 
-
-    public static void switchTurn() {
-        if (turn == Piece.PieceType.WHITE) {
-            setTurn(Piece.PieceType.BLACK);
-        } else {
-            setTurn(Piece.PieceType.WHITE);
-        }
-    }
 
     public static int getKillCount() {
         return killCount;
@@ -75,6 +56,13 @@ public class Logic {
         return killNeed;
     }
 
+    public static void switchTurn() {
+        if (turn == Piece.PieceType.WHITE) {
+            setTurn(Piece.PieceType.BLACK);
+        } else {
+            setTurn(Piece.PieceType.WHITE);
+        }
+    }
 
     public static void anyThreat() { //Проверяет может ли шашка съесть кого-то в этом ходу
         for (int x = 0; x < WIDTH; x++) {

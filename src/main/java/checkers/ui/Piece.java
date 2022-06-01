@@ -20,7 +20,6 @@ public class Piece extends StackPane {
     private final ImageView crownView =new ImageView(Media.getImgCrown());
 
 
-
     public enum PieceType { //Тип шашки
         BLACK(1), WHITE(-1);
 

@@ -98,4 +98,19 @@ class LogicTest {
         Piece crown = board[5][2].getPiece();
         assertTrue(canKill(crown,5,2));
     }
+
+    @Test
+    void possibilities(){
+        assertFalse(canMove(board[2][7].getPiece(),2,7));
+        assertFalse(canKill(board[2][7].getPiece(),2,7));
+        assertTrue(canMove(board[2][5].getPiece(),2,5));
+    }
+
+    @Test
+    void threatCheck(){
+        move(board[7][2].getPiece(), 6, 3, new MoveResult(MoveType.NORMAL));
+        move(board[4][5].getPiece(),5,4,new MoveResult(MoveType.NORMAL));
+        anyThreat();
+        assertTrue(isKillNeed());
+    }
 }

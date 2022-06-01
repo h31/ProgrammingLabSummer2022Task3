@@ -67,12 +67,6 @@ public class Controller implements Initializable {
 
     public boolean isTest;
 
-
-    public Controller() {
-
-    }
-
-
     public void setShipList() {
         shipList = Arrays.asList(
                 new ShipType(true, 4, 1),

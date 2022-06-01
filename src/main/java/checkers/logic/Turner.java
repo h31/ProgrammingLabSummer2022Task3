@@ -43,22 +43,30 @@ public class Turner {
             if (resultOfLastMove != 2) {
                 if (activeRow == selectedCellRow && activeCol == selectedCellCol) {
                     isItATryToMove = false;
-                    canselChoose();
+                    try {
+                        canselChoose();
+                    } catch (NullPointerException ignored) {}
                 } else if (activeColor.equals(selectedColor) && activeSomeToEat == selectedSomeToEat) {
                     isItATryToMove = false;
-                    chooseAnotherChecker();
+                    try {
+                        chooseAnotherChecker();
+                    } catch (NullPointerException ignored) {}
                 }
             }
             if (isItATryToMove) {
                 tryToMakeThisTurn();
-                checkAfterTurn();
+                try {
+                    checkAfterTurn();
+                } catch (NullPointerException ignored) {}
             }
         } else {
             if (SomeStaff.isWhiteTurn() && selectedColor.equals("White") && (selectedSomeToEat ||
                     !DuringGameChecks.someToEatAllWhite) || !SomeStaff.isWhiteTurn() &&
                     selectedColor.equals("Black") && (selectedSomeToEat ||
                     !DuringGameChecks.someToEatAllBlack)) {
-                chooseActiveChecker();
+                try {
+                    chooseActiveChecker();
+                } catch (NullPointerException ignored) {}
             }
         }
 
@@ -99,12 +107,22 @@ public class Turner {
             if (x != 0) {
                 if (x == 1 && !activeSomeToEat) { //если можно походить без взятия и взять шашка никого не может
                     selectedChecker.color = activeColor; //переназначаем цвет у пустого поля
-                    selectedChecker.paintInNormalColor(activeColor); //перекрашиваем (передвигаем шашку)
+                    try {
+                        selectedChecker.paintInNormalColor(activeColor); //перекрашиваем (передвигаем шашку)
+                    } catch (NullPointerException ignored) {
+                    }
+
                     if ((SomeStaff.isWhiteTurn() && selectedRow == 0 || !SomeStaff.isWhiteTurn() &&
                             selectedRow == 7) || activeKing) { //Ставим\переносим статус дамки
-                        SomeStaff.makeAKing(selectedRow, selectedCol);
+                        try {
+                            SomeStaff.makeAKing(selectedRow, selectedCol);
+                        } catch (NullPointerException ignored) {
+                        }
                     }
-                    SomeStaff.delete(activeRow, activeCol); //Удаляем старую шашку
+                    try {
+                        SomeStaff.delete(activeRow, activeCol); //Удаляем старую шашку
+                    } catch (NullPointerException ignored) {
+                    }
                     SomeStaff.changePlayerTurn(); //меняем ход
                 } else if (x == 2) { //все случаи, когда кого-то шашка берёт
                     resultOfLastMove = 2; //для запрета переключения при поедании подряд
@@ -113,7 +131,10 @@ public class Turner {
 
                     if (activeKing || (SomeStaff.isWhiteTurn() && selectedRow == 0 ||
                             !SomeStaff.isWhiteTurn() && selectedRow == 7)) { //ставим\переносим дамку
-                        SomeStaff.makeAKing(selectedRow, selectedCol);
+                        try {
+                            SomeStaff.makeAKing(selectedRow, selectedCol);
+                        } catch (NullPointerException ignored) {
+                        }
                         selectedKing = selectedChecker.isKing;
                     }
 
@@ -124,20 +145,33 @@ public class Turner {
                         DuringGameChecks.cntWhite--;
                     }
 
-                    //удаляем съеденную
-                    SomeStaff.delete(verifierTurns.getEatenRow(), verifierTurns.getEatenCol());
+                    try {
+                        //удаляем съеденную
+                        SomeStaff.delete(verifierTurns.getEatenRow(), verifierTurns.getEatenCol());
+                    } catch (NullPointerException ignored) {
+                    }
+
 
 
                     verifierTurns.init(selectedRow, selectedCol);
                     //проверяем, продолжатся ли взятия на следующем ходу или не произошло ли смены на дамку
                     if (!verifierTurns.checkForTakes() || activeKing != selectedChecker.isKing) {
-                        selectedChecker.paintInNormalColor(activeColor);
+                        try {
+                            selectedChecker.paintInNormalColor(activeColor);
+                        } catch (NullPointerException ignored) {
+                        }
                         SomeStaff.changePlayerTurn();
                     } else {
-                        selectedChecker.paintInGold();
+                        try {
+                            selectedChecker.paintInGold();
+                        } catch (NullPointerException ignored) {
+                        }
                     }
 
-                    SomeStaff.delete(activeRow, activeCol); //удаляем старую
+                    try {
+                        SomeStaff.delete(activeRow, activeCol); //удаляем старую
+                    } catch (NullPointerException ignored) {
+                    }
                     activeRow = selectedRow;
                     activeCol = selectedCol;
                     activeKing = selectedKing;

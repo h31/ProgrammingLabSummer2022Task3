@@ -14,7 +14,9 @@ public class SomeStaff {
         }
         Turner.isTurn = false;
         Turner.resultOfLastMove = 0;
-        infoCenter.updateMessage(playerTurn + "'s turn");
+        try {
+            infoCenter.updateMessage(playerTurn + "'s turn");
+        } catch(NullPointerException ignored) {}
     }
 
     public static boolean isWhiteTurn() {

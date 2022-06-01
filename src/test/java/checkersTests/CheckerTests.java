@@ -13,6 +13,9 @@ public class CheckerTests {
     CheckersBoard checkersBoard;
     public void initNewCheckers() {
         checkersBoard = new CheckersBoard();
+        DuringGameChecks.cntWhite = 12;
+        DuringGameChecks.cntBlack = 12;
+        SomeStaff.playerTurn = "Black";
     }
 
 
@@ -135,58 +138,57 @@ public class CheckerTests {
     void turnerTests() {
         initNewCheckers();
         Turner turner = new Turner();
-        try {
-            turner.makeATurn(0, 0); //попытка выбрать пустую клетку для хода
-        } catch (NullPointerException ignored) {
-        }
+        turner.makeATurn(0, 0); //пробуем выбрать пустое поле
         assertFalse(Turner.isTurn);
-        try {
-            turner.makeATurn(7, 0); //попытка выбрать белую когда ходят черные
-        } catch (NullPointerException ignored) {
-        }
+        turner.makeATurn(7, 0); //пробуем выбрать белую когда ходят черные
         assertFalse(Turner.isTurn);
-        try {
-            turner.makeATurn(0, 1); //попытка выбрать черную когда ходят черные
-        } catch (NullPointerException ignored) {
-        }
+        turner.makeATurn(1, 0); //пробуем выбрать черную когда ходят черные
         assertTrue(Turner.isTurn);
-        try {
-            turner.makeATurn(0, 3); //сменить активную шашку на соседнюю
-        } catch (NullPointerException ignored) {
-        }
+        assertEquals(turner.activeRow, 1);
+        assertEquals(turner.activeCol, 0);
+
+        turner.makeATurn(2, 1); //пробуем выбрать другую черную
         assertTrue(Turner.isTurn);
-        try {
-            turner.makeATurn(0, 3); //попытка убрать активацию хода(выбор той же шашки)
-        } catch (NullPointerException ignored) {
-        }
+        assertEquals(turner.activeRow, 2);
+        assertEquals(turner.activeCol, 1);
 
+        turner.makeATurn(2, 1); //пробуем отменить выбор
+        assertFalse(Turner.isTurn);
 
+        turner.makeATurn(2, 1);
+        turner.makeATurn(2, 2); //пробуем переместить на случайное место
+        assertTrue(Turner.isTurn);
+        assertEquals(turner.activeRow, 2);
+        assertEquals(turner.activeCol, 1);
 
-        try {
-            turner.makeATurn(2, 1);
-        } catch (NullPointerException ignored) {
-        }
-        assertTrue(Turner.isTurn); //Начался ли ход?
+        turner.makeATurn(3, 2); //пробуем переместить на 1 по диагонали
+        assertFalse(Turner.isTurn);
+        assertEquals(CheckersBoard.checkers[3][2].color, "Black");
+        assertEquals(CheckersBoard.checkers[2][1].color, "No");
 
-        try {
-            turner.makeATurn(3, 2); //Попытка переместиться в эту клетку
-        } catch (NullPointerException ignored) {
-        }
+        turner.makeATurn(0, 1); //пробуем выбрать черную, когда ходят белые
+        assertFalse(Turner.isTurn);
 
-        CheckersBoard.checkers[3][6].color = "White";
-        try {
-            turner.makeATurn(2, 5); //Выбираю новую шашку
-        } catch (NullPointerException ignored) {
-        }
+        CheckersBoard.checkers[5][0].isKing = true;
+        turner.makeATurn(5, 0); //выбрали белую для нового хода
+        turner.makeATurn(4, 1); //проверяем перенос King
+        assertTrue(CheckersBoard.checkers[4][1].isKing);
 
-        try {
-            turner.makeATurn(4, 7); //Пытаюсь съесть белую
-        } catch (NullPointerException ignored) {
-        }
-        assertEquals(2, Turner.resultOfLastMove);
 
         //NO MORE TESTS DUE TO REQUIRED GRAPHIC, ALL TESTED BY HANDS ANYWAY
 
+    }
+
+    @Test
+    void eatTests() {
+        initNewCheckers();
+        Turner turner = new Turner();
+        CheckersBoard.checkers[3][2].color = "White";
+        turner.makeATurn(2, 1);
+        turner.makeATurn(4, 3);
+        assertEquals(11, DuringGameChecks.cntWhite);
+        assertEquals("No", CheckersBoard.checkers[3][2].color);
+        assertEquals("Black", CheckersBoard.checkers[4][3].color);
     }
 
 

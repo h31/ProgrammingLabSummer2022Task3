@@ -17,19 +17,21 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import static core.Field.rows;
+
 
 public class SnakeGame extends Application {
 
     boolean pressFlag = false;
 
-    private Field field = new Field();
-    private final String[] fruitImages = new String[]{"Peach.png", "Apple.png",
-            "Lemon.png", "Berry.png"};
+    private Field field;
+    private final String[] fruitImages = new String[]{"FirstCoin.png", "SecondCoin.png",
+            "ThirdCoin.png"};
     private Image foodImage;
 
     private final int width = 800;
     private final int height = 800;
-    private final int squareSize = width / field.getRows();
+    private final int squareSize = width / rows;
 
     private GraphicsContext graphicsContext;
     Timeline timeLine = new Timeline(new KeyFrame(Duration.millis(250), e -> run(graphicsContext, field)));
@@ -62,7 +64,7 @@ public class SnakeGame extends Application {
     //отрисовка каждую итерацию
     public void run (GraphicsContext graphicsContext, Field field) {
         if (field.GameIsOver()) {
-            graphicsContext.setFill(Color.web("D10038"));
+            graphicsContext.setFill(Color.web("F54C00"));
             graphicsContext.setFont(new Font("ShowCard Gothic", 70));
             graphicsContext.fillText("Game Over", 200, 400);
             return;
@@ -76,7 +78,7 @@ public class SnakeGame extends Application {
 
         field.eatFood();
         if (field.getFruitFlag()) getImage();
-        field.setFruitFlag(false);
+        field.setFalseFruitFlag();
     }
 
     //Управление
@@ -109,6 +111,13 @@ public class SnakeGame extends Application {
         });
     }
 
+    public void drawGame() {
+        drawBackground(graphicsContext, field);
+        drawFood(graphicsContext, field);
+        drawSnake(graphicsContext, field);
+        drawScore(field);
+    }
+
     public void drawFood(GraphicsContext graphicsContext, Field field) {
         graphicsContext.drawImage(foodImage, field.getFood().getX() * squareSize,
                 field.getFood().getY()  * squareSize, squareSize, squareSize);
@@ -120,14 +129,14 @@ public class SnakeGame extends Application {
     }
 
     public void drawSnake(GraphicsContext graphicsContext, Field field) {
-        graphicsContext.setFill(Color.RED);
+        graphicsContext.setFill(Color.web("D783D3"));
         graphicsContext.fillRoundRect(field.getSnakeHead().getX() * squareSize,
                 field.getSnakeHead().getY() * squareSize, squareSize - 1, squareSize - 1, 40, 40);
 
         for (int i = 1; i < field.getSnakeBody().size(); i++) {
             if (i % 2 == 0) {
-                graphicsContext.setFill(Color.RED);
-            } else graphicsContext.setFill(Color.WHITE);
+                graphicsContext.setFill(Color.web("D783D3"));
+            } else graphicsContext.setFill(Color.web("96008F"));
             graphicsContext.fillRoundRect(field.getSnakeBody().get(i).getX() * squareSize,
                     field.getSnakeBody().get(i).getY() * squareSize,
                     squareSize - 1, squareSize - 1, 30, 30);
@@ -138,9 +147,9 @@ public class SnakeGame extends Application {
         for (int i = 0; i < field.getRows(); i++) {
             for (int j = 0; j < field.getColumns(); j++) {
                 if ((i + j) % 2 == 0) {
-                    graphicsContext.setFill(Color.web("79B350"));
+                    graphicsContext.setFill(Color.web("005c00"));
                 } else {
-                    graphicsContext.setFill(Color.web("67AC36"));
+                    graphicsContext.setFill(Color.web("006400"));
                 }
                 graphicsContext.fillRect(i * squareSize, j * squareSize, squareSize, squareSize);
             }
@@ -149,7 +158,7 @@ public class SnakeGame extends Application {
 
     //пояснения к управлению
     public void drawRules() {
-        graphicsContext.setFill(Color.WHITE);
+        graphicsContext.setFill(Color.web("EAFFBF"));
         graphicsContext.setFont(new Font("ShowCard Gothic", 35));
         graphicsContext.fillText("-Start & Move:\nW,A,S,D  or ←↑↓→\n" +
                 "-Restart: Esc", 470, 150);
@@ -157,16 +166,9 @@ public class SnakeGame extends Application {
 
     //счётчик баллов
     public void drawScore(Field field) {
-        graphicsContext.setFill(Color.WHITE);
+        graphicsContext.setFill(Color.web("EAFFBF"));
         graphicsContext.setFont(new Font("ShowCard Gothic", 40));
         graphicsContext.fillText("Score  " + field.getScore(), 300, 75);
-    }
-
-    public void drawGame() {
-        drawBackground(graphicsContext, field);
-        drawFood(graphicsContext, field);
-        drawSnake(graphicsContext, field);
-        drawScore(field);
     }
 
     public static void main(String[] args) {

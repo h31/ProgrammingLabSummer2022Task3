@@ -3,6 +3,9 @@ package core;
 import java.awt.*;
 import java.util.List;
 
+import static core.Field.columns;
+import static core.Field.rows;
+
 public class Food {
     private Point food;
     private boolean fruitFlag;
@@ -11,19 +14,16 @@ public class Food {
     public void generateFood(List<Point> snakeBody) {
 
         do {
-            food = new Point((int)(Math.random() * 20), (int)(Math.random() * 20));
+            food = new Point((int) (Math.random() * rows), (int) (Math.random() * columns));
             fruitInSnake = false;
-            for (Point snakeElement: snakeBody) {
+            for (Point snakeElement : snakeBody) {
                 if (snakeElement.getX() == food.x && snakeElement.getY() == food.y) {
                     fruitInSnake = true;
                     break;
                 }
             }
-            if (!fruitInSnake) {
-                fruitFlag = true;
-                return;
-            }
-        } while (true);
+        } while (fruitInSnake);
+        fruitFlag = true;
     }
 
     public boolean getFruitFlag() {
@@ -45,5 +45,4 @@ public class Food {
     public int getY() {
         return food.y;
     }
-
 }

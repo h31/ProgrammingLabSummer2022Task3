@@ -7,8 +7,8 @@ import java.util.List;
 public class Field {
     Food food = new Food();
 
-    private final int rows = 20;
-    private final int columns = rows;
+    public static int rows = 20;
+    public static int columns = rows;
     private boolean gameOver = false;
     private int score = 0;
     private final List<Point> snakeBody = new ArrayList<>();
@@ -105,7 +105,7 @@ public class Field {
         return food.getFruitFlag();
     }
 
-    public void setFruitFlag(boolean flag) {
-        food.setFruitFlag(flag);
+    public void setFalseFruitFlag() {
+        food.setFruitFlag(false);
     }
 }

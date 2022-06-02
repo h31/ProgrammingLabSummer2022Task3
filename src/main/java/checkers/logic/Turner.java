@@ -9,6 +9,7 @@ import static checkers.logic.GameStatistic.activePlayerSide;
 
 public class Turner {
 
+
     static boolean lastActionIsEat = false;
     static InfoCenter infoCenter;
     public static boolean activeCheckerChoosed = false;

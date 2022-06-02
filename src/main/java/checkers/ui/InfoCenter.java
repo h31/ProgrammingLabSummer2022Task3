@@ -13,8 +13,8 @@ public class InfoCenter {
     private  Label message = null;
     private  Button startGameButton = null;
 
-    public InfoCenter(boolean thatForTests) {
-        if (!thatForTests) {
+    public InfoCenter(boolean isTest) {
+        if (!isTest) {
             pane = new StackPane();
             pane.setMinSize(Constants.APP_WIDTH, Constants.INFO_CENTER_HEIGHT);
             pane.setTranslateX((double) Constants.APP_WIDTH / 2);

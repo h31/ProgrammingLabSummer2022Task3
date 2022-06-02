@@ -17,11 +17,11 @@ public class CheckersBoard {
     public static Checker[][] checkers = new Checker[size][size];
     public static boolean isGame = false;
     private final Turner turner;
-    boolean thatForTests;
+    boolean isTest;
 
-    public CheckersBoard(InfoCenter infoCenter, boolean thatForTests) {
-        this.thatForTests = thatForTests;
-        if (!thatForTests) {
+    public CheckersBoard(InfoCenter infoCenter, boolean isTest) {
+        this.isTest = isTest;
+        if (!isTest) {
             pane = new StackPane();
             pane.setMinSize(Constants.APP_WIDTH, Constants.TILE_BOARD_HEIGHT);
             pane.setTranslateX((double) Constants.APP_WIDTH / 2);
@@ -37,7 +37,7 @@ public class CheckersBoard {
         for (byte row = 0; row < size; row++) {
             for (byte col = 0; col < size; col++) {
                 Checker checker = new Checker(row, col);
-                if (!thatForTests) {
+                if (!isTest) {
                     checker.getStackPane().setTranslateX((col * 60) - 210);
                     checker.getStackPane().setTranslateY((row * 60) - 210);
                     pane.getChildren().add(checker.getStackPane());
@@ -69,11 +69,11 @@ public class CheckersBoard {
         public int row;
         public int col;
         public boolean king = false;
-        public boolean canEat = false;
+        public boolean mustEat = false;
         public SIDES side = Constants.SIDES.no;
 
         public Checker(int row, int col) {
-            if (!thatForTests){
+            if (!isTest){
                 this.row = row;
                 this.col = col;
 
@@ -94,7 +94,7 @@ public class CheckersBoard {
 
                 pane.setOnMouseClicked(event -> {
                     if (isGame) {
-                        turner.makeATurn(row, col);
+                        turner.reactOnUserClick(row, col);
                         event.consume();
                     }
                 });
@@ -128,19 +128,19 @@ public class CheckersBoard {
         private void initSideAndColor() {
             if ((row + col) % 2 == 1) {
                 if (row < 3) {
-                    if (!thatForTests) {
+                    if (!isTest) {
                         labelColor.setBackground(Constants.BLACK_CHECKER);
                         labelShadow.setBackground(Constants.BLACK_BACK);
                     }
                     side = SIDES.black;
                 } else if (row > 4) {
-                    if (!thatForTests) {
+                    if (!isTest) {
                         labelColor.setBackground(Constants.WHITE_CHECKER);
                         labelShadow.setBackground(Constants.BLACK_BACK);
                     }
                     side = SIDES.white;
                 } else {
-                    if (!thatForTests) {
+                    if (!isTest) {
                         labelColor.setBackground(Constants.NO_CHECKER);
                         labelShadow.setBackground(Constants.NO_CHECKER);
                     }
@@ -148,7 +148,7 @@ public class CheckersBoard {
                 }
             }
              else {
-                if (!thatForTests) {
+                if (!isTest) {
                     labelColor.setBackground(Constants.NO_CHECKER);
                     labelShadow.setBackground(Constants.NO_CHECKER);
                 }
@@ -158,19 +158,19 @@ public class CheckersBoard {
 
         private void restart() {
             initSideAndColor();
-            if (!thatForTests)
+            if (!isTest)
                 labelKing.setBackground(Constants.NO_CHECKER);
             king = false;
-            canEat = false;
+            mustEat = false;
         }
 
 
-        public void highlightGraphic() {
-            if (!thatForTests) labelColor.setBackground(Constants.CHOOSEN_CHECKER);
+        public void Highlight() {
+            if (!isTest) labelColor.setBackground(Constants.CHOOSEN_CHECKER);
         }
 
-        public void unHighlightGraphic() {
-            if (!thatForTests)
+        public void unHighlight() {
+            if (!isTest)
                 if (side.equals(SIDES.white)) {
                     labelColor.setBackground(Constants.WHITE_CHECKER);
                 } else {
@@ -180,19 +180,19 @@ public class CheckersBoard {
         }
 
         public void clearGraphic() {
-            if (!thatForTests) {
+            if (!isTest) {
                 labelKing.setBackground(Constants.NO_CHECKER);
                 labelColor.setBackground(Constants.NO_CHECKER);
                 labelShadow.setBackground(Constants.NO_CHECKER);
             }
         }
 
-        public void makeKingGraphic() {
-            if (!thatForTests) labelKing.setBackground(Constants.KING);
+        public void renderKing() {
+            if (!isTest) labelKing.setBackground(Constants.KING);
         }
 
-        public void setSideColorGraphic() {
-            if (!thatForTests) {
+        public void renderShadowAndColor() {
+            if (!isTest) {
                 labelShadow.setBackground(Constants.BLACK_BACK);
                 if (side.equals(SIDES.white)) {
                     labelColor.setBackground(Constants.WHITE_CHECKER);

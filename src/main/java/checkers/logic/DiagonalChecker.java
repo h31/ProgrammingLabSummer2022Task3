@@ -1,9 +1,10 @@
 package checkers.logic;
 
-import static java.lang.Math.max;
+
+import static checkers.ui.Constants.MOVERESULT;
 
 class DiagonalChecker {
-    private int result;
+    private MOVERESULT result;
     private int activeRow;
     private int activeCol;
     private int i;
@@ -16,18 +17,19 @@ class DiagonalChecker {
     public void init(int activeCheckerRow, int activeCheckerCol) {
         this.activeRow = activeCheckerRow;
         this.activeCol = activeCheckerCol;
-        result = 0;
+        result = MOVERESULT.itNotPossible;
     }
 
     public void checkRightDown(VerifierTurns verifierTurns) {
         cnt = 0;
         i = activeRow;
         j = activeCol;
-        while (result != 2 && i != 7 && j != 7 && cnt != 2) {
+        while (!result.equals(MOVERESULT.itEat) && i != 7 && j != 7 && cnt != 2) {
             cnt++;
             i++;
             j++;
-            result = max(result, verifierTurns.checkTurn(i, j));
+            MOVERESULT x = verifierTurns.checkTurn(i, j);
+            if (!x.equals(MOVERESULT.itNotPossible)) result = x;
         }
     }
 
@@ -35,11 +37,12 @@ class DiagonalChecker {
         cnt = 0;
         i = activeRow;
         j = activeCol;
-        while (result != 2 && i != 0 && j != 7 && cnt != 2) {
+        while (!result.equals(MOVERESULT.itEat) && i != 0 && j != 7 && cnt != 2) {
             cnt++;
             i--;
             j++;
-            result = max(result, verifierTurns.checkTurn(i, j));
+            MOVERESULT x = verifierTurns.checkTurn(i, j);
+            if (!x.equals(MOVERESULT.itNotPossible)) result = x;
         }
     }
 
@@ -47,11 +50,12 @@ class DiagonalChecker {
         cnt = 0;
         i = activeRow;
         j = activeCol;
-        while (result != 2 && i != 0 && j != 0 && cnt != 2) {
+        while (!result.equals(MOVERESULT.itEat) && i != 0 && j != 0 && cnt != 2) {
             cnt++;
             i--;
             j--;
-            result = max(result, verifierTurns.checkTurn(i, j));
+            MOVERESULT x = verifierTurns.checkTurn(i, j);
+            if (!x.equals(MOVERESULT.itNotPossible)) result = x;
         }
     }
 
@@ -59,15 +63,16 @@ class DiagonalChecker {
         cnt = 0;
         i = activeRow;
         j = activeCol;
-        while (result != 2 && i != 7 && j != 0 && cnt != 2) {
+        while (!result.equals(MOVERESULT.itEat) && i != 7 && j != 0 && cnt != 2) {
             cnt++;
             i++;
             j--;
-            result = max(result, verifierTurns.checkTurn(i, j));
+            MOVERESULT x = verifierTurns.checkTurn(i, j);
+            if (!x.equals(MOVERESULT.itNotPossible)) result = x;
         }
     }
 
-    public int getResult() {
+    public MOVERESULT getResult() {
         return result;
     }
 }

@@ -4,6 +4,8 @@ import checkers.ui.*;
 
 import static java.lang.Math.abs;
 import static checkers.ui.Constants.SIDES;
+import static checkers.ui.Constants.MOVERESULT;
+
 
 public class VerifierTurns {
     private final CheckersBoard.Checker[][] checkers = CheckersBoard.checkers;
@@ -34,7 +36,7 @@ public class VerifierTurns {
 
 
 
-    public int checkTurn(int selectedRow, int selectedCol) {
+    public MOVERESULT checkTurn(int selectedRow, int selectedCol) {
         int difRow = abs(selectedRow - activeRow);
         int difCol = abs(selectedCol - activeCol);
         SIDES selectedSide = checkers[selectedRow][selectedCol].side;
@@ -49,20 +51,20 @@ public class VerifierTurns {
             if (activeCheckerKing || directionRightForActiveColor(selectedRow)) {
                 switch (dif) {
                     case (1) -> {
-                        return 1; //просто ход
+                        return MOVERESULT.itMove; //просто ход
                     }
                     case (2) -> {
                         if (checkers[i][j].side.equals(enemySide)) {
                             capturedRow = i;
                             capturedCol = j;
-                            return 2; //в результате будет взятие
+                            return MOVERESULT.itEat; //в результате будет взятие
                         }
                     }
                 }
             }
         }
 
-        return 0; //This turn is impossible
+        return MOVERESULT.itNotPossible; //This turn is impossible
     }
 
     private boolean directionRightForActiveColor(int selectedCellRow) {
@@ -71,7 +73,7 @@ public class VerifierTurns {
     }
 
 
-    private int isAnyTurnAvailable() {
+    private MOVERESULT isAnyTurnAvailable() {
         diagonalChecker.init(activeRow, activeCol);
         diagonalChecker.checkRightUp(this);
         diagonalChecker.checkLeftUp(this);
@@ -81,11 +83,11 @@ public class VerifierTurns {
     }
 
     public boolean moveOrEatAvailable() {
-        return isAnyTurnAvailable() != 0;
+        return !isAnyTurnAvailable().equals(MOVERESULT.itNotPossible);
     }
 
     public boolean eatAvailable() {
-        return isAnyTurnAvailable() == 2;
+        return isAnyTurnAvailable().equals(MOVERESULT.itEat);
     }
 
     public int getCapturedRow() {

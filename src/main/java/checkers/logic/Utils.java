@@ -17,7 +17,7 @@ public class Utils {
             activePlayerSide = SIDES.black;
         }
         activeCheckerChoosed = false;
-        lastActionIsEat = false;
+        mustContinueEat = false;
 
         String out = activePlayerSide.toString().substring(0, 1).toUpperCase() +
                 activePlayerSide.toString().substring(1);
@@ -28,18 +28,18 @@ public class Utils {
 
     public static void highlight(int row, int col) {
         CheckersBoard.Checker checker = Turner.checkers[row][col];
-        checker.highlightGraphic();
+        checker.Highlight();
     }
 
-    public static void unHighlight(int row, int col) {
+    public static void removeHighlight(int row, int col) {
         CheckersBoard.Checker checker = Turner.checkers[row][col];
-        checker.unHighlightGraphic();
+        checker.unHighlight();
     }
 
     public static void deleteChecker(int row, int col) {
         CheckersBoard.Checker checker = Turner.checkers[row][col];
         checker.side = SIDES.no;
-        checker.canEat = false;
+        checker.mustEat = false;
         checker.king = false;
         checker.clearGraphic();
     }
@@ -47,6 +47,6 @@ public class Utils {
     public static void makeKing(int row, int col) {
         CheckersBoard.Checker checker = Turner.checkers[row][col];
         checker.king = true;
-        checker.makeKingGraphic();
+        checker.renderKing();
     }
 }

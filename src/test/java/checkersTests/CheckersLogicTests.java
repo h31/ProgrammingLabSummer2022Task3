@@ -29,16 +29,16 @@ public class CheckersLogicTests {
         assertEquals(SIDES.black, GameStatistic.activePlayerSide);
 
         assertEquals(SIDES.black, CheckersBoard.checkers[0][1].side);
-        CheckersBoard.checkers[0][1].canEat = true;
+        CheckersBoard.checkers[0][1].mustEat = true;
         Utils.deleteChecker(0, 1);
         assertEquals(SIDES.no, CheckersBoard.checkers[0][1].side);
-        assertFalse(CheckersBoard.checkers[0][1].canEat);
+        assertFalse(CheckersBoard.checkers[0][1].mustEat);
 
         Utils.makeKing(0, 1);
         assertTrue(CheckersBoard.checkers[0][1].king);
 
         Utils.highlight(0, 1);
-        Utils.unHighlight(0, 1);
+        Utils.removeHighlight(0, 1);
     }
 
 
@@ -67,15 +67,15 @@ public class CheckersLogicTests {
         initCheckerBoard();
         VerifierTurns verifierTurns = new VerifierTurns();
         verifierTurns.init(0, 1);
-        assertEquals(0, verifierTurns.checkTurn(1, 2));
+        assertEquals(MOVERESULT.itNotPossible, verifierTurns.checkTurn(1, 2));
 
         verifierTurns.init(2, 1);
-        assertEquals(1, verifierTurns.checkTurn(3, 2));
+        assertEquals(MOVERESULT.itMove, verifierTurns.checkTurn(3, 2));
 
         initCheckerBoard();
         verifierTurns.init(2, 1);
         CheckersBoard.checkers[3][2].side = SIDES.white;
-        assertEquals(2, verifierTurns.checkTurn(4, 3));
+        assertEquals(MOVERESULT.itEat, verifierTurns.checkTurn(4, 3));
         assertEquals(3, verifierTurns.getCapturedRow());
         assertEquals(2, verifierTurns.getCapturedCol());
         assertTrue(verifierTurns.moveOrEatAvailable());
@@ -87,39 +87,39 @@ public class CheckersLogicTests {
         initCheckerBoard();
         Turner turner = new Turner(new InfoCenter(true));
 
-        turner.makeATurn(0, 0);
+        turner.reactOnUserClick(0, 0);
         assertFalse(Turner.activeCheckerChoosed);
 
-        turner.makeATurn(7, 0);
+        turner.reactOnUserClick(7, 0);
         assertFalse(Turner.activeCheckerChoosed);
 
-        turner.makeATurn(0, 1);
+        turner.reactOnUserClick(0, 1);
         assertTrue(Turner.activeCheckerChoosed);
         assertEquals(0, Turner.activeChecker.row);
         assertEquals(1, Turner.activeChecker.col);
 
-        turner.makeATurn(0, 1);
+        turner.reactOnUserClick(0, 1);
         assertFalse(Turner.activeCheckerChoosed);
 
-        turner.makeATurn(0, 1);
+        turner.reactOnUserClick(0, 1);
 
-        turner.makeATurn(2, 1);
+        turner.reactOnUserClick(2, 1);
         assertTrue(Turner.activeCheckerChoosed);
         assertEquals(2, Turner.activeChecker.row);
         assertEquals(1, Turner.activeChecker.col);
 
-        turner.makeATurn(3, 1);
+        turner.reactOnUserClick(3, 1);
         assertTrue(Turner.activeCheckerChoosed);
         assertEquals(SIDES.no, CheckersBoard.checkers[3][1].side);
         assertEquals(SIDES.black, CheckersBoard.checkers[2][1].side);
 
-        turner.makeATurn(3, 2);
+        turner.reactOnUserClick(3, 2);
         assertFalse(Turner.activeCheckerChoosed);
         assertEquals(SIDES.no, CheckersBoard.checkers[2][1].side);
         assertEquals(SIDES.black, CheckersBoard.checkers[3][2].side);
 
-        turner.makeATurn(5, 0);
-        turner.makeATurn(4, 1);
+        turner.reactOnUserClick(5, 0);
+        turner.reactOnUserClick(4, 1);
         assertFalse(Turner.activeCheckerChoosed);
         assertEquals(SIDES.no, CheckersBoard.checkers[5][0].side);
         assertEquals(SIDES.white, CheckersBoard.checkers[4][1].side);
@@ -132,15 +132,15 @@ public class CheckersLogicTests {
 
         CheckersBoard.checkers[4][3].side = SIDES.black;
         CheckersBoard.checkers[6][1].side = SIDES.no;
-        turner.makeATurn(4, 3);
-        turner.makeATurn(6, 1);
+        turner.reactOnUserClick(4, 3);
+        turner.reactOnUserClick(6, 1);
         assertEquals(SIDES.no, CheckersBoard.checkers[4][3].side);
         assertEquals(SIDES.no, CheckersBoard.checkers[5][2].side);
         assertEquals(SIDES.black, CheckersBoard.checkers[6][1].side);
         assertEquals(11, GameStatistic.cntWhite);
 
-        turner.makeATurn(7, 0);
-        turner.makeATurn(5, 2);
+        turner.reactOnUserClick(7, 0);
+        turner.reactOnUserClick(5, 2);
         assertEquals(11, GameStatistic.cntBlack);
     }
 
@@ -153,10 +153,10 @@ public class CheckersLogicTests {
         CheckersBoard.checkers[4][3].side = SIDES.white;
         CheckersBoard.checkers[5][2].side = SIDES.no;
         CheckersBoard.checkers[7][4].side = SIDES.no;
-        turner.makeATurn(3, 4);
-        turner.makeATurn(5, 2);
-        turner.makeATurn(7, 0);
-        turner.makeATurn(7, 4);
+        turner.reactOnUserClick(3, 4);
+        turner.reactOnUserClick(5, 2);
+        turner.reactOnUserClick(7, 0);
+        turner.reactOnUserClick(7, 4);
         assertEquals(SIDES.no, CheckersBoard.checkers[3][4].side);
         assertEquals(SIDES.no, CheckersBoard.checkers[4][3].side);
         assertEquals(SIDES.no, CheckersBoard.checkers[6][3].side);

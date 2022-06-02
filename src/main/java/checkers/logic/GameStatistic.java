@@ -7,8 +7,8 @@ public class GameStatistic {
 
     public static SIDES activePlayerSide = SIDES.black;
 
-    static boolean whiteCanEat = false;
-    static boolean blackCanEat = false;
+    static boolean whiteMustEat = false;
+    static boolean blackMustEat = false;
     public static boolean isTest = false;
 
     public static int cntBlack = 12;
@@ -17,8 +17,8 @@ public class GameStatistic {
     public static void initRestart() {
         cntWhite = 12;
         cntBlack = 12;
-        blackCanEat = false;
-        whiteCanEat = false;
+        blackMustEat = false;
+        whiteMustEat = false;
         activePlayerSide = SIDES.black;
     }
 

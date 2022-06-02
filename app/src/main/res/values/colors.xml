@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="gray">#333333</color>
+    <color name="textColorHint">#CCCC</color>
+    <color name="background">#faf8ef</color>
+    <color name="board">#bbada0</color>
+    <color name="text">#776e65</color>
+    <color name="textMenu">#f9f6f1</color>
+    <color name="backgroundMenu">#3d3a33</color>
+    <color name="textButton">#F9FBE7</color>
+    <color name="backgroundButton">#f75e3e</color>
+    <color name="square_error">#3c3a32</color>
+    <color name="square_2">#EEE4DA</color>
+    <color name="square_4">#ede0c8</color>
+    <color name="square_8">#f2b179</color>
+    <color name="square_16">#f59563</color>
+    <color name="square_32">#f67c5f</color>
+    <color name="square_64">#f65e3b</color>
+    <color name="square_128">#edcf72</color>
+    <color name="square_256">#edcc61</color>
+    <color name="square_512">#edc850</color>
+    <color name="square_1024">#edc53f</color>
+    <color name="square_2048">#edc22e</color>
+    <color name="text_on_square_less_8">#776e65</color>
+    <color name="text_on_square_more_8">#f9f6f2</color>
+</resources>

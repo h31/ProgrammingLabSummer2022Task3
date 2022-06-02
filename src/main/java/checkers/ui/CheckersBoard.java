@@ -27,7 +27,7 @@ public class CheckersBoard {
             pane.setTranslateX((double) Constants.APP_WIDTH / 2);
             pane.setTranslateY((double) (Constants.TILE_BOARD_HEIGHT / 2) + Constants.INFO_CENTER_HEIGHT);
         } else {
-            GameStatistic.thatForTests = true;
+            GameStatistic.isTest = true;
         }
         turner = new Turner(infoCenter);
         addAllChecks();

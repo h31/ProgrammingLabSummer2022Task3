@@ -9,7 +9,7 @@ public class GameStatistic {
 
     static boolean whiteCanEat = false;
     static boolean blackCanEat = false;
-    public static boolean thatForTests = false;
+    public static boolean isTest = false;
 
     public static int cntBlack = 12;
     public static int cntWhite = 12;
@@ -25,31 +25,26 @@ public class GameStatistic {
     public static void declareWinner() {
         if (cntBlack == 0) {
             CheckersBoard.isGame = false;
-            if (!thatForTests)
-                Turner.infoCenter.updateMessage("White Won!!!");
+            if (!isTest) Turner.infoCenter.updateMessage("White Won!!!");
         }
         if (cntWhite == 0) {
             CheckersBoard.isGame = false;
-            if (!thatForTests)
-                Turner.infoCenter.updateMessage("Black Won!!!");
+            if (!isTest) Turner.infoCenter.updateMessage("Black Won!!!");
         }
 
         if (!CheckersBoard.isGame) {
-            if (!thatForTests)
-                Turner.infoCenter.showStartButton();
+            if (!isTest) Turner.infoCenter.showStartButton();
         }
     }
 
     public static void declareDraw(boolean itIsDraw) {
         if (itIsDraw && CheckersBoard.isGame) {
             CheckersBoard.isGame = false;
-            if (!thatForTests)
-                Turner.infoCenter.updateMessage("Draw!!!");
+            if (!isTest) Turner.infoCenter.updateMessage("Draw!!!");
         }
 
         if (!CheckersBoard.isGame) {
-            if (!thatForTests)
-                Turner.infoCenter.showStartButton();
+            if (!isTest) Turner.infoCenter.showStartButton();
         }
     }
 

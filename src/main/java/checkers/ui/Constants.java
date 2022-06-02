@@ -20,7 +20,7 @@ public class Constants {
         no
     }
 
-    public enum MOVECHECKRESULT {
+    public enum MOVERESULT {
         itNotPossible,
         itMove,
         itEat

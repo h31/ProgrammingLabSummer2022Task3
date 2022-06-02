@@ -95,8 +95,8 @@ public class CheckersLogicTests {
 
         turner.makeATurn(0, 1);
         assertTrue(Turner.activeCheckerChoosed);
-        assertEquals(0, turner.activeRow);
-        assertEquals(1, turner.activeCol);
+        assertEquals(0, Turner.activeChecker.row);
+        assertEquals(1, Turner.activeChecker.col);
 
         turner.makeATurn(0, 1);
         assertFalse(Turner.activeCheckerChoosed);
@@ -105,8 +105,8 @@ public class CheckersLogicTests {
 
         turner.makeATurn(2, 1);
         assertTrue(Turner.activeCheckerChoosed);
-        assertEquals(2, turner.activeRow);
-        assertEquals(1, turner.activeCol);
+        assertEquals(2, Turner.activeChecker.row);
+        assertEquals(1, Turner.activeChecker.col);
 
         turner.makeATurn(3, 1);
         assertTrue(Turner.activeCheckerChoosed);

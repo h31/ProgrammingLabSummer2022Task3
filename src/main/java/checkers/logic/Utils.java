@@ -19,9 +19,10 @@ public class Utils {
         activeCheckerChoosed = false;
         lastActionIsEat = false;
 
-        String out = activePlayerSide.toString().substring(0, 1).toUpperCase() + activePlayerSide.toString().substring(1);
+        String out = activePlayerSide.toString().substring(0, 1).toUpperCase() +
+                activePlayerSide.toString().substring(1);
 
-        if (!GameStatistic.thatForTests)
+        if (!GameStatistic.isTest)
             infoCenter.updateMessage(out + "'s turn");
     }
 

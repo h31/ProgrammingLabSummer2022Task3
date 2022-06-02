@@ -4,7 +4,7 @@ import checkers.ui.*;
 
 import static checkers.logic.GameStatistic.changeScore;
 import static checkers.ui.Constants.SIDES;
-import static checkers.ui.Constants.MOVECHECKRESULT;
+import static checkers.ui.Constants.MOVERESULT;
 import static checkers.logic.GameStatistic.activePlayerSide;
 
 public class Turner {
@@ -13,45 +13,29 @@ public class Turner {
     static InfoCenter infoCenter;
     public static boolean activeCheckerChoosed = false;
     static CheckersBoard.Checker[][] checkers = CheckersBoard.checkers;
-    private int selectedRow; //Ряд выбранной клетки
-    private int selectedCol; //Столбец выбранной клетки
-    private SIDES selectedSide; //Цвет фигуры в выбранной клетке
-    private boolean selectedCanEat; //Может ли выбранная фигура съесть
-    private boolean selectedKing; //Является ли выбранная фигура королём
     // всё ниже аналогично тому, что выше, только для выбранной для хода шашки
-    public int activeRow;
-    public int activeCol;
-    private SIDES activeSide;
-    private boolean activeCanEat;
-    private boolean activeKing;
     VerifierTurns verifierTurns = new VerifierTurns(); //Проверка хода
     private static CheckersBoard.Checker selectedChecker;
+    public static CheckersBoard.Checker activeChecker;
     public Turner(InfoCenter infoCenter) {
         Turner.infoCenter = infoCenter;
     }
 
     public void makeATurn(int selectedRow, int selectedCol){
         selectedChecker = checkers[selectedRow][selectedCol];
-        this.selectedRow = selectedRow;
-        this.selectedCol = selectedCol;
-        this.selectedSide = selectedChecker.side;
-        this.selectedCanEat = selectedChecker.canEat;
-        this.selectedKing = selectedChecker.king;
 
-        boolean activePlayerCanEat;
-        if (activePlayerSide.equals(SIDES.black)) {
-            activePlayerCanEat = GameStatistic.blackCanEat;
-        } else {
-            activePlayerCanEat = GameStatistic.whiteCanEat;
-        }
+        boolean activePlayerCanEat = activePlayerSide.equals(SIDES.black)
+                ? GameStatistic.blackCanEat
+                : GameStatistic.whiteCanEat;
 
         if (activeCheckerChoosed) {
             boolean itIsAttemptToMove = true;
             if (!lastActionIsEat) {
-                if (activeRow == selectedRow && activeCol == selectedCol) {
+                if (activeChecker.row == selectedChecker.row && activeChecker.col == selectedChecker.col) {
                     itIsAttemptToMove = false;
                     canselChoose();
-                } else if (activeSide.equals(selectedSide) && activeCanEat == selectedCanEat) {
+                } else if (activeChecker.side.equals(selectedChecker.side)
+                        && activeChecker.canEat == selectedChecker.canEat) {
                     itIsAttemptToMove = false;
                     chooseAnotherChecker();
                 }
@@ -61,7 +45,8 @@ public class Turner {
                 checkAfterTurn();
             }
         } else {
-            if (activePlayerSide.equals(selectedSide) && selectedCanEat == activePlayerCanEat) {
+            if (activePlayerSide.equals(selectedChecker.side) && selectedChecker.canEat
+                    == activePlayerCanEat) {
                 chooseActiveChecker();
             }
         }
@@ -70,59 +55,52 @@ public class Turner {
 
     private void chooseActiveChecker() {
         activeCheckerChoosed = true;
-        activeRow = selectedRow;
-        activeCol = selectedCol;
-        activeSide = selectedSide;
-        activeCanEat = selectedCanEat;
-        activeKing = selectedKing;
-        Utils.highlight(selectedRow, selectedCol);
+        activeChecker = selectedChecker;
+        Utils.highlight(selectedChecker.row, selectedChecker.col);
     }
 
     private void canselChoose() {
         activeCheckerChoosed = false;
-        Utils.unHighlight(activeRow, activeCol);
+        Utils.unHighlight(activeChecker.row, activeChecker.col);
     }
 
     private void chooseAnotherChecker() {
-        Utils.unHighlight(activeRow, activeCol);
-        activeRow = selectedRow;
-        activeCol = selectedCol;
-        activeKing = selectedKing;
-        Utils.highlight(selectedRow, selectedCol);
+        Utils.unHighlight(activeChecker.row, activeChecker.col);
+        activeChecker = selectedChecker;
+        Utils.highlight(selectedChecker.row, selectedChecker.col);
     }
 
     private void tryToMakeThisTurn() {
-        if (selectedSide.equals(SIDES.no)) {
-            verifierTurns.init(activeRow, activeCol);
-            MOVECHECKRESULT move;
-            switch (verifierTurns.checkTurn(selectedRow, selectedCol)) {
-                case(1) -> move = MOVECHECKRESULT.itMove;
-                case(2) -> move = MOVECHECKRESULT.itEat;
-                default -> move = MOVECHECKRESULT.itNotPossible;
+        if (selectedChecker.side.equals(SIDES.no)) {
+            verifierTurns.init(activeChecker.row, activeChecker.col);
+            MOVERESULT move;
+            switch (verifierTurns.checkTurn(selectedChecker.row, selectedChecker.col)) {
+                case(1) -> move = MOVERESULT.itMove;
+                case(2) -> move = MOVERESULT.itEat;
+                default -> move = MOVERESULT.itNotPossible;
             }
-            if (!move.equals(MOVECHECKRESULT.itNotPossible)) {
+            if (!move.equals(MOVERESULT.itNotPossible)) {
                 //если можно походить без взятия и взять шашка никого не может
-                if (move.equals(MOVECHECKRESULT.itMove) && !activeCanEat) {
-                    selectedChecker.side = activeSide; //переназначаем сторону у пустого поля
+                if (move.equals(MOVERESULT.itMove) && !activeChecker.canEat) {
+                    selectedChecker.side = activeChecker.side; //переназначаем сторону у пустого поля
                     moveChecker();
-                    Utils.deleteChecker(activeRow, activeCol);
+                    Utils.deleteChecker(activeChecker.row, activeChecker.col);
                     Utils.changePlayerTurn(); //меняем ход
-                } else if (move.equals(MOVECHECKRESULT.itEat)) { //все случаи, когда шашка кого-то берёт
+                } else if (move.equals(MOVERESULT.itEat)) { //все случаи, когда шашка кого-то берёт
                     lastActionIsEat = true; //для запрета переключения при поедании подряд
-                    selectedChecker.side = activeSide; //переназначаем цвет у пустого поля
+                    selectedChecker.side = activeChecker.side; //переназначаем цвет у пустого поля
                     moveChecker();
                     changeScore(verifierTurns.getCapturedRow(), verifierTurns.getCapturedCol());
                     Utils.deleteChecker(verifierTurns.getCapturedRow(), verifierTurns.getCapturedCol());
-                    Utils.deleteChecker(activeRow, activeCol); //удаляем старую
-                    verifierTurns.init(selectedRow, selectedCol);
+                    boolean activeKing = activeChecker.king;
+                    Utils.deleteChecker(activeChecker.row, activeChecker.col); //удаляем старую
+                    verifierTurns.init(selectedChecker.row, selectedChecker.col);
                     //проверяем, продолжатся ли взятия на следующем ходу или не произошло ли смены на дамку
-                    if (!verifierTurns.eatAvailable() || activeKing != selectedKing) {
+                    if (!verifierTurns.eatAvailable() || activeKing != selectedChecker.king) {
                         Utils.changePlayerTurn();
                     } else {
                         selectedChecker.highlightGraphic();
-                        activeRow = selectedRow;
-                        activeCol = selectedCol;
-                        activeKing = selectedKing;
+                        activeChecker = selectedChecker;
                     }
                 }
             }
@@ -168,10 +146,10 @@ public class Turner {
     private void moveChecker() {
         selectedChecker.setSideColorGraphic(); //перекрашиваем (передвигаем шашку)
 
-        if ((activePlayerSide.equals(SIDES.white) && selectedRow == 0 || activePlayerSide.equals(SIDES.black) &&
-                selectedRow == 7) || activeKing) { //Ставим\переносим статус дамки
-            Utils.makeKing(selectedRow, selectedCol);
-            selectedKing = selectedChecker.king;
+        if ((activePlayerSide.equals(SIDES.white) && selectedChecker.row == 0
+                || activePlayerSide.equals(SIDES.black) &&
+                selectedChecker.row == 7) || activeChecker.king) { //Ставим\переносим статус дамки
+            Utils.makeKing(selectedChecker.row, selectedChecker.col);
         }
     }
 }

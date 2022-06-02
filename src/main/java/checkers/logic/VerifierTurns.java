@@ -29,8 +29,7 @@ public class VerifierTurns {
         this.activeCheckerKing = checkers[activeCheckerRow][activeCheckerCol].king;
         this.activeSide = checkers[activeCheckerRow][activeCheckerCol].side;
 
-        if (activeSide.equals(SIDES.white)) enemySide = SIDES.black;
-        else enemySide = SIDES.white;
+        enemySide = activeSide.equals(SIDES.white) ? SIDES.black : SIDES.white;
     }
 
 

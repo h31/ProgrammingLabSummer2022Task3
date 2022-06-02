@@ -50,7 +50,7 @@ public class Field {
 
     //добавление нового элемента в змейку
     public void eatFood() {
-        if (snakeHead.getX() == food.getX() && snakeHead.getY() == food.getY()) {
+        if (snakeHead.getX() == food.getPoint().x && snakeHead.getY() == food.getPoint().y) {
             snakeBody.add(new Point(-1, -1));
             food.generateFood(snakeBody);
             score += 15;
@@ -81,14 +81,6 @@ public class Field {
         return snakeHead;
     }
 
-    public int getRows() {
-        return ROWS;
-    }
-
-    public int getColumns() {
-        return COLUMNS;
-    }
-
     public boolean GameIsOver() {
         return gameOver;
     }
@@ -101,11 +93,15 @@ public class Field {
         return food;
     }
 
+    public Point getFoodPoint() {
+        return food.getPoint();
+    }
+
     public boolean getNeedForImage() {
         return food.getNeedForImage();
     }
 
     public void setFalseNeedForImage() {
-        food.setNeedForImage(false);
+        food.setNeedForImage();
     }
 }

@@ -17,6 +17,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import static core.Field.COLUMNS;
 import static core.Field.ROWS;
 
 
@@ -119,8 +120,8 @@ public class SnakeGame extends Application {
     }
 
     public void drawFood(GraphicsContext graphicsContext, Field field) {
-        graphicsContext.drawImage(foodImage, field.getFood().getX() * squareSize,
-                field.getFood().getY()  * squareSize, squareSize, squareSize);
+        graphicsContext.drawImage(foodImage, field.getFoodPoint().x * squareSize,
+                field.getFoodPoint().y  * squareSize, squareSize, squareSize);
     }
 
     //подбор след. картинки после съедания
@@ -144,8 +145,8 @@ public class SnakeGame extends Application {
     }
 
     public void drawBackground(GraphicsContext graphicsContext, Field field) {
-        for (int i = 0; i < field.getRows(); i++) {
-            for (int j = 0; j < field.getColumns(); j++) {
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLUMNS; j++) {
                 if ((i + j) % 2 == 0) {
                     graphicsContext.setFill(Color.web("005c00"));
                 } else {

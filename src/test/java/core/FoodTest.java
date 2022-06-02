@@ -10,8 +10,8 @@ class FoodTest {
     Field field = new Field();
     @Test
     void generateFoodTest() {
-        int foodX = field.getFood().getX();
-        int foodY = field.getFood().getY();
+        int foodX = field.getFoodPoint().x;
+        int foodY = field.getFoodPoint().y;
         field.getSnakeBody().add(new Point(foodX, foodY));
         field.getFood().generateFood(field.getSnakeBody());
         assertTrue(field.getNeedForImage());

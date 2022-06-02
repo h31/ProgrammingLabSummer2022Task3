@@ -38,14 +38,14 @@ class FieldTest {
     @Test
     void eatFoodTest() {
         field.getFood().generateFood(field.getSnakeBody());
-        field.getSnakeHead().x = field.getFood().getX();
-        field.getSnakeHead().y = field.getFood().getY();
+        field.getSnakeHead().x = field.getFoodPoint().x;
+        field.getSnakeHead().y = field.getFoodPoint().y;
         field.eatFood();
 
         assertEquals(4, field.getSnakeBody().size());
         assertEquals(15, field.getScore());
-        assertNotEquals(field.getSnakeHead().x, field.getFood().getX());//координата меняется рандомно -> может упасть
-        assertNotEquals(field.getSnakeHead().y, field.getFood().getY());
+        assertNotEquals(field.getSnakeHead().x, field.getFoodPoint().x);//координата меняется рандомно -> может упасть
+        assertNotEquals(field.getSnakeHead().y, field.getFoodPoint().y);
     }
 
     @Test

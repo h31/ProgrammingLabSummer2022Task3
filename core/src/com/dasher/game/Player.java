@@ -1,6 +1,5 @@
 package com.dasher.game;
 
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -18,18 +17,18 @@ public class Player {
 
     protected Body body; // тело персонажа
 
-    public Player(String type) {
+    public Player(DasherMain.CHARACTER_CLASS type) {
         switch (type) {
-            case "Goblin":
+            case GOBLIN:
                 this.hp = 3;
                 this.dmg = 2;
                 this.moveSpeed = 25;
                 this.typeName = "Goblin.png";
                 break;
-            case "Hobgoblin":
+            case HOBGOBLIN:
                 this.hp = 5;
                 this.dmg = 2;
-                this.moveSpeed = 18;
+                this.moveSpeed = 16;
                 this.typeName = "Hobgoblin.png";
                 break;
         }
@@ -51,8 +50,8 @@ public class Player {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 1.0f;
-        fixtureDef.filter.categoryBits = DasherMain.PLAYER;
-        fixtureDef.filter.maskBits = DasherMain.BOX;
+        fixtureDef.filter.categoryBits = DasherMain.COLL_STATE.PLAYER.s;
+        fixtureDef.filter.maskBits = DasherMain.COLL_STATE.BOX.s;
 
         return DasherMain.world.createBody(definitions).createFixture(fixtureDef).getBody();
     }

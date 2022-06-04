@@ -16,10 +16,19 @@ import com.badlogic.gdx.utils.TimeUtils;
 
 public class DasherMain extends ApplicationAdapter {
     public static final float PPM = 64;
-    public static final short PLAYER = 1;
-    public static final short ENEMY = 2;
-    public static final short DEATHZONE = 4;
-    public static final short BOX = 8;
+
+    public enum COLL_STATE {
+        PLAYER((short) 1), ENEMY((short) 2), DEATHZONE((short) 4), BOX((short) 8);
+        public short s;
+
+        COLL_STATE(short s) {
+            this.s = s;
+        }
+    }
+
+    public enum CHARACTER_CLASS {
+        GOBLIN, HOBGOBLIN
+    }
 
     private SpriteBatch batch;
     private Texture earth;
@@ -31,7 +40,7 @@ public class DasherMain extends ApplicationAdapter {
 
     public static World world;
     private Box2DDebugRenderer b2dr;
-    private final Player player = new Player("Goblin");
+    private final Player player = new Player(CHARACTER_CLASS.HOBGOBLIN);
     private Body deathZoneLeft, deathZoneRight, deathZoneTop, deathZoneBottom;
 
     private final Vector3 touchPos = new Vector3();
@@ -73,7 +82,7 @@ public class DasherMain extends ApplicationAdapter {
         batch.draw(pTex, player.body.getPosition().x * PPM - (pTex.getWidth() / 2), player.body.getPosition().y * PPM - (pTex.getHeight() / 2));
         batch.end();
 
-        //b2dr.render(world, camera.combined.scl(PPM));
+        b2dr.render(world, camera.combined.scl(PPM));
     }
 
     /**
@@ -137,8 +146,8 @@ public class DasherMain extends ApplicationAdapter {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.density = 1.0f;
         fixtureDef.shape = shape;
-        fixtureDef.filter.categoryBits = DEATHZONE;
-        fixtureDef.filter.maskBits = ENEMY;
+        fixtureDef.filter.categoryBits = COLL_STATE.DEATHZONE.s;
+        fixtureDef.filter.maskBits = COLL_STATE.ENEMY.s;
 
         return world.createBody(definitions).createFixture(fixtureDef).getBody();
     }

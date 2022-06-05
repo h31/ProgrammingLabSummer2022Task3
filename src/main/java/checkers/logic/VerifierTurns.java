@@ -9,23 +9,18 @@ import static checkers.ui.Constants.MOVERESULT;
 
 public class VerifierTurns {
     private final CheckersBoard.Checker[][] checkers = CheckersBoard.checkers;
-    private int activeRow;
-    private int activeCol;
-    private boolean activeCheckerKing;
-    private SIDES enemySide;
+    private final int activeRow;
+    private final int activeCol;
+    private final boolean activeCheckerKing;
+    private final SIDES enemySide;
     private int capturedRow;
     private int capturedCol;
     private final DiagonalChecker diagonalChecker = new DiagonalChecker();
-    private SIDES activeSide;
+    private final SIDES activeSide;
 
 
 
-    public VerifierTurns() {
-    }
-
-
-
-    public void init(int activeCheckerRow, int activeCheckerCol) {
+    public VerifierTurns(int activeCheckerRow, int activeCheckerCol) {
         this.activeRow = activeCheckerRow;
         this.activeCol = activeCheckerCol;
         this.activeCheckerKing = checkers[activeCheckerRow][activeCheckerCol].king;
@@ -42,14 +37,14 @@ public class VerifierTurns {
         SIDES selectedSide = checkers[selectedRow][selectedCol].side;
 
         if (selectedSide.equals(SIDES.no) && difRow == difCol) {
-            int dif = difRow;
+            int indexDifBetweenCells = difRow;
             difRow = (selectedRow - activeRow) / difRow;
             difCol = (selectedCol - activeCol) / difCol;
             int i = activeRow + difRow;
             int j = activeCol + difCol;
 
             if (activeCheckerKing || directionRightForActiveColor(selectedRow)) {
-                switch (dif) {
+                switch (indexDifBetweenCells) {
                     case (1) -> {
                         return MOVERESULT.itMove; //просто ход
                     }
@@ -75,8 +70,8 @@ public class VerifierTurns {
 
     private MOVERESULT isAnyTurnAvailable() {
         diagonalChecker.init(activeRow, activeCol);
+        diagonalChecker.checkRightDown(this);
         diagonalChecker.checkRightUp(this);
-        diagonalChecker.checkLeftUp(this);
         diagonalChecker.checkLeftDown(this);
         diagonalChecker.checkRightDown(this);
         return diagonalChecker.getResult();

@@ -15,7 +15,7 @@ public class Turner {
     public static boolean activeCheckerChoosed = false;
     static CheckersBoard.Checker[][] checkers = CheckersBoard.checkers;
     // всё ниже аналогично тому, что выше, только для выбранной для хода шашки
-    VerifierTurns verifierTurns = new VerifierTurns(); //Проверка хода
+    VerifierTurns verifierTurns; //Проверка хода
     private static CheckersBoard.Checker selectedChecker;
     public static CheckersBoard.Checker activeChecker;
     public Turner(InfoCenter infoCenter) {
@@ -73,7 +73,7 @@ public class Turner {
 
     private void tryToMakeTurn() {
         if (selectedChecker.side.equals(SIDES.no)) {
-            verifierTurns.init(activeChecker.row, activeChecker.col);
+            verifierTurns = new VerifierTurns(activeChecker.row, activeChecker.col);
             MOVERESULT move = verifierTurns.checkTurn(selectedChecker.row, selectedChecker.col);
             if (!move.equals(MOVERESULT.itNotPossible)) {
                 //если можно походить без взятия и взять шашка никого не может
@@ -90,7 +90,7 @@ public class Turner {
                     Utils.deleteChecker(verifierTurns.getCapturedRow(), verifierTurns.getCapturedCol());
                     boolean activeKing = activeChecker.king;
                     Utils.deleteChecker(activeChecker.row, activeChecker.col); //удаляем старую
-                    verifierTurns.init(selectedChecker.row, selectedChecker.col);
+                    verifierTurns = new VerifierTurns(selectedChecker.row, selectedChecker.col);
                     //проверяем, продолжатся ли взятия на следующем ходу или не произошло ли смены на дамку
                     if (!verifierTurns.eatAvailable() || activeKing != selectedChecker.king) {
                         Utils.changePlayerTurn();
@@ -112,7 +112,7 @@ public class Turner {
         for (byte i = 0; i < Constants.SIZE; i ++) {
             for(byte j = 0; j < Constants.SIZE; j++) {
                 if (!checkers[i][j].side.equals(SIDES.no)) {
-                    verifierTurns.init(i, j);
+                    verifierTurns = new VerifierTurns(i, j);
                     if (verifierTurns.moveOrEatAvailable()) {
                         if (checkers[i][j].side.equals(SIDES.white)) {
                             whiteHaveMoves = true;

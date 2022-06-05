@@ -65,15 +65,15 @@ public class CheckersLogicTests {
     @Test
     public void verifierTurnsTests() {
         initCheckerBoard();
-        VerifierTurns verifierTurns = new VerifierTurns();
-        verifierTurns.init(0, 1);
+        VerifierTurns verifierTurns;
+        verifierTurns = new VerifierTurns(0, 1);
         assertEquals(MOVERESULT.itNotPossible, verifierTurns.checkTurn(1, 2));
 
-        verifierTurns.init(2, 1);
+        verifierTurns = new VerifierTurns(2, 1);
         assertEquals(MOVERESULT.itMove, verifierTurns.checkTurn(3, 2));
 
         initCheckerBoard();
-        verifierTurns.init(2, 1);
+        verifierTurns = new VerifierTurns(2, 1);
         CheckersBoard.checkers[3][2].side = SIDES.white;
         assertEquals(MOVERESULT.itEat, verifierTurns.checkTurn(4, 3));
         assertEquals(3, verifierTurns.getCapturedRow());
@@ -83,7 +83,7 @@ public class CheckersLogicTests {
     }
 
     @Test
-    public void turnerTests() {
+    public void turnerTestsChooseTests() {
         initCheckerBoard();
         Turner turner = new Turner(new InfoCenter(true));
 
@@ -100,6 +100,12 @@ public class CheckersLogicTests {
 
         turner.reactOnUserClick(0, 1);
         assertFalse(Turner.activeCheckerChoosed);
+    }
+
+    @Test
+    public void turnerRechooseAndWrongMoveTests() {
+        initCheckerBoard();
+        Turner turner = new Turner(new InfoCenter(true));
 
         turner.reactOnUserClick(0, 1);
 
@@ -112,7 +118,14 @@ public class CheckersLogicTests {
         assertTrue(Turner.activeCheckerChoosed);
         assertEquals(SIDES.no, CheckersBoard.checkers[3][1].side);
         assertEquals(SIDES.black, CheckersBoard.checkers[2][1].side);
+    }
 
+    @Test
+    public void turnerMoveTests() {
+        initCheckerBoard();
+        Turner turner = new Turner(new InfoCenter(true));
+
+        turner.reactOnUserClick(2, 1);
         turner.reactOnUserClick(3, 2);
         assertFalse(Turner.activeCheckerChoosed);
         assertEquals(SIDES.no, CheckersBoard.checkers[2][1].side);

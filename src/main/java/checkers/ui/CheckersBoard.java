@@ -13,8 +13,7 @@ import static checkers.ui.Constants.SIDES;
 public class CheckersBoard {
 
     private StackPane pane = null;
-    private static final byte size = Constants.SIZE;
-    public static Checker[][] checkers = new Checker[size][size];
+    public static Checker[][] checkers = new Checker[Constants.SIZE][Constants.SIZE];
     public static boolean isGame = false;
     private final Turner turner;
     boolean isTest;
@@ -34,8 +33,8 @@ public class CheckersBoard {
     }
 
     private void addAllChecks() {
-        for (byte row = 0; row < size; row++) {
-            for (byte col = 0; col < size; col++) {
+        for (byte row = 0; row < Constants.SIZE; row++) {
+            for (byte col = 0; col < Constants.SIZE; col++) {
                 Checker checker = new Checker(row, col);
                 if (!isTest) {
                     checker.getStackPane().setTranslateX((col * 60) - 210);
@@ -49,8 +48,8 @@ public class CheckersBoard {
 
     public static void restart() {
         GameStatistic.initRestart();
-        for (byte row = 0; row < size; row++) {
-            for (byte col = 0; col < size; col++) {
+        for (byte row = 0; row < Constants.SIZE; row++) {
+            for (byte col = 0; col < Constants.SIZE; col++) {
                 checkers[row][col].restart();
             }
         }

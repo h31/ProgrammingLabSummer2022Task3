@@ -79,13 +79,13 @@ public class Turner {
                 //если можно походить без взятия и взять шашка никого не может
                 if (move.equals(MOVERESULT.itMove) && !activeChecker.mustEat) {
                     selectedChecker.side = activeChecker.side; //переназначаем сторону у пустого поля
-                    moveChecker();
+                    createCheckerAtNewPosition();
                     Utils.deleteChecker(activeChecker.row, activeChecker.col);
                     Utils.changePlayerTurn(); //меняем ход
                 } else if (move.equals(MOVERESULT.itEat)) { //все случаи, когда шашка кого-то берёт
                     mustContinueEat = true; //для запрета переключения при поедании подряд
                     selectedChecker.side = activeChecker.side; //переназначаем цвет у пустого поля
-                    moveChecker();
+                    createCheckerAtNewPosition();
                     changeScore(verifierTurns.getCapturedRow(), verifierTurns.getCapturedCol());
                     Utils.deleteChecker(verifierTurns.getCapturedRow(), verifierTurns.getCapturedCol());
                     boolean activeKing = activeChecker.king;
@@ -139,7 +139,7 @@ public class Turner {
         GameStatistic.declareDraw(isDraw);
     }
 
-    private void moveChecker() {
+    private void createCheckerAtNewPosition() {
         selectedChecker.renderShadowAndColor(); //перекрашиваем (передвигаем шашку)
 
         if ((activePlayerSide.equals(SIDES.white) && selectedChecker.row == 0

@@ -9,7 +9,7 @@ public class DesktopLauncher {
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("DasherSlasher");
-        config.setWindowIcon("GOBA.png");
+        config.setWindowIcon("Goblin.png");
         config.setWindowedMode(1280, 720);
         config.setForegroundFPS(120);
         config.useVsync(true);

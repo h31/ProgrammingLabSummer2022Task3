@@ -4,7 +4,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.dasher.game.DasherMain;
-import com.dasher.game.GameScreenManager;
 
 public abstract class AbstractScreen implements Screen {
     protected final DasherMain app;

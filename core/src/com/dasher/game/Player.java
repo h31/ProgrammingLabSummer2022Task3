@@ -5,12 +5,11 @@ import screens.GameScreen;
 
 
 public class Player {
-    private byte hp; // характеристики персонажа
+    public byte hp; // характеристики персонажа
     private byte dmg;
     private byte moveSpeed;
     public boolean isAlive = true;
     public boolean isDash = false;
-
     public Body body; // тело персонажа
 
     public Player(GameScreen.CHARACTER_CLASS type, Body body) {
@@ -29,10 +28,6 @@ public class Player {
         }
     }
 
-    public byte getHp() {
-        return hp;
-    }
-
     public byte getDmg() {
         return dmg;
     }
@@ -40,5 +35,4 @@ public class Player {
     public byte getMoveSpeed() {
         return moveSpeed;
     }
-
 }

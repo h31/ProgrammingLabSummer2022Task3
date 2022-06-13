@@ -1,6 +1,7 @@
 package screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -13,7 +14,8 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
 
 
 public class SplashScreen extends AbstractScreen {
-    private Image image;
+    private final Sound startSound = Gdx.audio.newSound(Gdx.files.internal("startSound.mp3"));
+    private final Image image;
     int i = 1;
 
     public SplashScreen(DasherMain app) {
@@ -27,12 +29,14 @@ public class SplashScreen extends AbstractScreen {
         image.setPosition(stage.getWidth() / 2 - 26, stage.getHeight() / 2 - 32);
         image.addAction(sequence(alpha(0f), fadeIn(1.5f), fadeOut(1f)));
         stage.addActor(image);
+        startSound.play(0.4f);
     }
 
     @Override
     public void update(float delta) {
         stage.act(delta);
         if (i++ > 300) app.gsm.setScreen(GameScreenManager.STATES.MAIN_MENU);
+        if (Gdx.input.isTouched()) app.gsm.setScreen(GameScreenManager.STATES.MAIN_MENU);
     }
 
     @Override

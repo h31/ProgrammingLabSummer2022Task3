@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
@@ -16,15 +15,19 @@ import com.dasher.game.DasherMain;
 import com.dasher.game.Enemy;
 import com.dasher.game.Player;
 import com.dasher.game.managers.CollListener;
+import com.dasher.game.managers.GameScreenManager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import static com.dasher.game.DasherMain.PPM;
 
 public class GameScreen extends AbstractScreen {
+    // Statics for ease of use
     public static CHARACTER_CLASS type;
+    public static Player player;
+    public static ArrayList<Enemy> enemyList;
+    public static World world;
 
     public enum COLLISIONS {
         PLAYER((byte) 1), KNIGHT((byte) 2), WARRIOR((byte) 4), DEATHZONE((byte) 8);
@@ -38,56 +41,57 @@ public class GameScreen extends AbstractScreen {
     public enum CHARACTER_CLASS {
         GOBLIN, HOBGOBLIN
     }
-
-    OrthographicCamera camera;
-    public World world;
-    //Box2DDebugRenderer b2rd;
-    private Body deathZoneLeft, deathZoneRight, deathZoneTop, deathZoneBottom, box;
-    public static Player player;
-    public static List<Enemy> enemyList;
-    private Texture pTex;
-    private Texture kTex;
-    private Texture wTex;
-    private Texture earth;
-    private Sound dashSound;
-    private long lastDashTime;
-    private long lastEnemySpawn;
+    // Basic counters
+    private long lastDashTime, lastEnemySpawn;
     private byte enemyCounter;
-    float i = 0;
-
-
-    private final Vector3 touchPos = new Vector3();
-    private final Vector2 target = new Vector2();
-    private final Vector2 t = new Vector2();
+    // libGDX objects
+    private OrthographicCamera camera;
+    private Body deathZoneLeft, deathZoneRight, deathZoneTop, deathZoneBottom;
+    private Texture pTex, kTex, wTex, earth;
+    private Sound dashSound;
+    Box2DDebugRenderer b2rd;
+    // All vectors
+    private final Vector3 touchPos;
+    private final Vector2 target;
+    private final Vector2 enemyTarget;
+    private final Vector2 enemyDistance;
 
     public GameScreen(DasherMain app) {
         super(app);
+        // Camera, to see something
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 1280, 720);
         camera.position.set(0, 0, 0);
         camera.update();
-
-        enemyList = new ArrayList<Enemy>();
-        world = new World(new Vector2(0f, 0f), false);
-        //b2rd = new Box2DDebugRenderer();
+        // Assets setting
         earth = new Texture("earthBack.png");
+        kTex = new Texture("Knight.png");
+        wTex = new Texture("Warrior.png");
         dashSound = Gdx.audio.newSound(Gdx.files.internal("dash.mp3"));
-        lastDashTime = 0;
-        enemyCounter = 0;
+        b2rd = new Box2DDebugRenderer();
+        // Movement vectors
+        touchPos = new Vector3();
+        target = new Vector2();
+        enemyTarget = new Vector2();
+        enemyDistance = new Vector2();
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
         stage.clear();
+        lastDashTime = 0;
+        enemyCounter = 0;
+        // Setting world and some modifications
+        world = new World(new Vector2(0f, 0f), false);
         world.setContactListener(new CollListener());
         app.batch.setProjectionMatrix(camera.combined);
-        pTex = type.equals(CHARACTER_CLASS.GOBLIN) ? new Texture("Goblin.png") :
-                new Texture("Hobgoblin.png");
-        kTex = new Texture("Knight.png");
-        wTex = new Texture("Warrior.png");
+        // Enemies and player creation
+        enemyList = new ArrayList<>();
         player = new Player(type, createBox
-                (0.4f, 0.5f, 26, 32, COLLISIONS.PLAYER, BodyDef.BodyType.DynamicBody, 10f, false));
+                (0.4f, 0.5f, 22, 28, COLLISIONS.PLAYER, BodyDef.BodyType.DynamicBody, 10f, false));
+        pTex = type.equals(CHARACTER_CLASS.GOBLIN) ? new Texture("Goblin.png") : new Texture("Hobgoblin.png");
+        // Map edges
         deathZoneTop = createBox
                 (0.295f, 4.8f, 547, 16, COLLISIONS.DEATHZONE, BodyDef.BodyType.StaticBody, 0f, true);
         deathZoneBottom = createBox
@@ -98,54 +102,73 @@ public class GameScreen extends AbstractScreen {
                 (8.6f, -0.43f, 16, 350, COLLISIONS.DEATHZONE, BodyDef.BodyType.StaticBody, 0f, true);
     }
 
+    /**
+     * Game logic
+     */
     @Override
     public void update(float delta) {
         stage.act(delta);
         world.step(1 / 120f, 12, 4);
+        System.out.println(player.hp);
+        // Is player alive? check
+        if (player.hp <= 0) player.isAlive = false;
         if (player.isAlive) inputUpdate();
+        else {
+            app.gsm.setScreen(GameScreenManager.STATES.DEAD_STAGE);
+        }
+        // Enemy movement and hit points check
         for (Iterator<Enemy> i = enemyList.iterator(); i.hasNext(); ) {
             Enemy enemy = i.next();
-            t.set(player.body.getPosition().sub(enemy.body.getPosition()));
-            t.nor();
-            enemy.body.setLinearVelocity(t);
-            if(enemy.hp <= 0) {
+            enemyTarget.set(player.body.getPosition().sub(enemy.body.getPosition()));
+            enemyTarget.nor();
+            enemyTarget.set(enemyTarget.x * enemy.moveSpeed, enemyTarget.y * enemy.moveSpeed);
+            enemy.body.setLinearVelocity(enemyTarget);
+            if (!enemy.isAlive) {
                 i.remove();
                 world.destroyBody(enemy.body);
                 enemyCounter--;
             }
         }
-        if(TimeUtils.nanoTime() - lastEnemySpawn > 1000000000 && enemyCounter <= 15) {
+        // Enemy spawner
+        if (TimeUtils.nanoTime() - lastEnemySpawn > 800000000 && enemyCounter <= 20) {
             enemySpawner();
             enemyCounter++;
         }
-        if (player.hp <= 0) player.isAlive = false;
     }
 
+    /**
+     * Rendering... Draw textures and background
+     */
     @Override
     public void render(float delta) {
         super.render(delta);
         ScreenUtils.clear(Color.valueOf("709f6e"));
+
         stage.draw();
         app.batch.begin();
         app.batch.draw(earth, -earth.getWidth() / 2, -earth.getHeight() / 2);
         app.batch.draw(pTex, player.body.getPosition().x * PPM - (pTex.getWidth() / 2),
                 player.body.getPosition().y * PPM - (pTex.getHeight() / 2));
+
         for (Enemy enemy : enemyList) {
-            switch (enemy.getType()) {
-                case "KNIGHT":
+            switch (enemy.type) {
+                case KNIGHT:
                     app.batch.draw(kTex, enemy.body.getPosition().x * PPM - 26,
                             enemy.body.getPosition().y * PPM - 32);
                     break;
-                case "WARRIOR":
+                case WARRIOR:
                     app.batch.draw(wTex, enemy.body.getPosition().x * PPM - 26,
                             enemy.body.getPosition().y * PPM - 32);
                     break;
             }
         }
         app.batch.end();
-        //b2rd.render(world, camera.combined.cpy().scl(PPM));
+        b2rd.render(world, camera.combined.cpy().scl(PPM));
     }
 
+    /**
+     * Memory optimization
+     */
     @Override
     public void dispose() {
         super.dispose();
@@ -154,13 +177,16 @@ public class GameScreen extends AbstractScreen {
         kTex.dispose();
         wTex.dispose();
         dashSound.dispose();
+        b2rd.dispose();
         world.dispose();
-        //b2rd.dispose();
     }
 
+    /**
+     * Player movement
+     */
     private void inputUpdate() {
-        long DASH_DELAY = 800000000; // откат рывка 0.8
-        player.isDash = !(TimeUtils.nanoTime() - lastDashTime >= 250000000);
+        long DASH_DELAY = 800000000; // dash delay 0.8 sec
+        player.isDash = !(TimeUtils.nanoTime() - lastDashTime >= 250000000); // 0.25 sec
         if (TimeUtils.nanoTime() - lastDashTime > DASH_DELAY) {
             if (Gdx.input.isTouched()) {
                 lastDashTime = TimeUtils.nanoTime();
@@ -170,13 +196,16 @@ public class GameScreen extends AbstractScreen {
                 camera.unproject(touchPos);
                 target.set(touchPos.x / PPM - player.body.getPosition().x, touchPos.y / PPM - player.body.getPosition().y);
                 target.nor();
-                target.set(target.x * player.getMoveSpeed(), target.y * player.getMoveSpeed());
+                target.set(target.x * player.moveSpeed, target.y * player.moveSpeed);
                 player.body.setLinearVelocity(target);
                 lastDashTime = TimeUtils.nanoTime();
             }
         }
     }
 
+    /**
+     * Universal body (box) creator with definitions and fixtures
+     */
     private Body createBox(float x, float y, float width, float height,
                            COLLISIONS ctg, BodyDef.BodyType type, float damping, boolean isSensor) {
         Body body;
@@ -200,12 +229,21 @@ public class GameScreen extends AbstractScreen {
         return body;
     }
 
+    /**
+     * Creates enemies around player
+     */
     private void enemySpawner() {
+        // Calculating distance
         int type = MathUtils.random(1, 2);
+        enemyDistance.set(MathUtils.random(-7f, 8f), MathUtils.random(-4.5f, 3.5f));
+        while (player.body.getPosition().dst(enemyDistance) < 3.5f) {
+            enemyDistance.set(MathUtils.random(-7f, 8f), MathUtils.random(-4.5f, 3.5f));
+        }
+        // Creating enemy
         Enemy enemy = new Enemy(type == 2 ? Enemy.ENEMY_TYPE.WARRIOR : Enemy.ENEMY_TYPE.KNIGHT,
-                createBox(MathUtils.random(-7f, 8f), MathUtils.random(-4.5f, 3.5f),
-                        26, 32, type == 2 ? COLLISIONS.WARRIOR : COLLISIONS.KNIGHT,
+                createBox(enemyDistance.x, enemyDistance.y, 22, 28, type == 2 ? COLLISIONS.WARRIOR : COLLISIONS.KNIGHT,
                         BodyDef.BodyType.DynamicBody, 10f, true));
+
         enemyList.add(enemy);
         lastEnemySpawn = TimeUtils.nanoTime();
     }

@@ -1,11 +1,14 @@
 package screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -17,21 +20,25 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
 
 public class MenuScreen extends AbstractScreen {
     private ImageButton buttonG, buttonH;
-    private Texture texGoblin, texHobgoblin;
-    private TextureRegionDrawable drawableGob, drawableHob;
+    private final TextureRegionDrawable drawableGob, drawableHob;
+    private final Image text;
+    private final Sound hitSound;
 
     public MenuScreen(DasherMain app) {
         super(app);
-        texGoblin = new Texture("Goblin.png");
-        drawableGob = new TextureRegionDrawable(new TextureRegion(texGoblin));
-        texHobgoblin = new Texture("Hobgoblin.png");
-        drawableHob = new TextureRegionDrawable(new TextureRegion(texHobgoblin));
+        drawableGob = new TextureRegionDrawable(new TextureRegion(new Texture("Goblin.png")));
+        drawableHob = new TextureRegionDrawable(new TextureRegion(new Texture("Hobgoblin.png")));
+        text = new Image(new Texture("CharacterText.png"));
+        hitSound = Gdx.audio.newSound(Gdx.files.internal("hit.mp3"));
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
         stage.clear();
+        text.setPosition(stage.getWidth() / 2 - 92.5f, stage.getHeight() / 2 + 100);
+        text.addAction(sequence(alpha(0), fadeIn(.5f)));
+        stage.addActor(text);
         initBtn();
     }
 
@@ -45,18 +52,16 @@ public class MenuScreen extends AbstractScreen {
         super.render(delta);
         ScreenUtils.clear(Color.valueOf("709f6e"));
         stage.draw();
-        app.batch.begin();
-        app.font.draw(app.batch, "Choose your character", 570, 500);
-        app.batch.end();
     }
 
     @Override
     public void dispose() {
         super.dispose();
-        texGoblin.dispose();
-        texHobgoblin.dispose();
     }
 
+    /**
+     * Character selection buttons
+     */
     private void initBtn() {
         buttonH = new ImageButton(drawableHob);
         buttonH.setPosition(stage.getWidth() / 2 - 200 - 52, stage.getHeight() / 2 - 32);
@@ -64,6 +69,7 @@ public class MenuScreen extends AbstractScreen {
         buttonH.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                hitSound.play(0.4f);
                 GameScreen.type = GameScreen.CHARACTER_CLASS.HOBGOBLIN;
                 app.gsm.setScreen(GameScreenManager.STATES.PLAY_STAGE);
             }
@@ -75,6 +81,7 @@ public class MenuScreen extends AbstractScreen {
         buttonG.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                hitSound.play(0.4f);
                 GameScreen.type = GameScreen.CHARACTER_CLASS.GOBLIN;
                 app.gsm.setScreen(GameScreenManager.STATES.PLAY_STAGE);
             }

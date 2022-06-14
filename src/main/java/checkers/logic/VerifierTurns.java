@@ -73,7 +73,7 @@ public class VerifierTurns {
         diagonalChecker.checkRightDown(this);
         diagonalChecker.checkRightUp(this);
         diagonalChecker.checkLeftDown(this);
-        diagonalChecker.checkRightDown(this);
+        diagonalChecker.checkLeftUp(this);
         return diagonalChecker.getResult();
     }
 

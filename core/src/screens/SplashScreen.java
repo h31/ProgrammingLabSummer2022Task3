@@ -11,6 +11,7 @@ import com.dasher.game.managers.GameScreenManager;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
+import static com.dasher.game.DasherMain.gsm;
 
 
 public class SplashScreen extends AbstractScreen {
@@ -18,7 +19,7 @@ public class SplashScreen extends AbstractScreen {
     private final Image image;
     int i = 1;
 
-    public SplashScreen(DasherMain app) {
+    public SplashScreen(final DasherMain app) {
         super(app);
         image = new Image(new Texture("Goblin.png"));
     }
@@ -35,8 +36,8 @@ public class SplashScreen extends AbstractScreen {
     @Override
     public void update(float delta) {
         stage.act(delta);
-        if (i++ > 300) app.gsm.setScreen(GameScreenManager.STATES.MAIN_MENU);
-        if (Gdx.input.isTouched()) app.gsm.setScreen(GameScreenManager.STATES.MAIN_MENU);
+        if (i++ > 300) gsm.setScreen(GameScreenManager.STATES.MAIN_MENU);
+        if (Gdx.input.isTouched()) gsm.setScreen(GameScreenManager.STATES.MAIN_MENU);
     }
 
     @Override

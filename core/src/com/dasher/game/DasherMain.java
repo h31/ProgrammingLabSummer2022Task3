@@ -6,13 +6,21 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dasher.game.managers.GameScreenManager;
+import screens.GameScreen;
+
+import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class DasherMain extends Game {
     public static final float PPM = 64; // Pixel Per Meter need to convert big bodies to small
 
     public SpriteBatch batch; // Main texture rendering tool
     public BitmapFont font; // Basic text font
-    public GameScreenManager gsm;
+    public Player player;
+    public GameScreen.CHARACTER_CLASS type;
+    public ArrayList<Enemy> enemyList;
+    public static GameScreenManager gsm;
+
 
     @Override
     public void create() {

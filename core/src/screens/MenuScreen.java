@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -17,6 +16,8 @@ import com.dasher.game.managers.GameScreenManager;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
+import static com.dasher.game.DasherMain.gsm;
+
 
 public class MenuScreen extends AbstractScreen {
     private ImageButton buttonG, buttonH;
@@ -24,7 +25,7 @@ public class MenuScreen extends AbstractScreen {
     private final Image text;
     private final Sound hitSound;
 
-    public MenuScreen(DasherMain app) {
+    public MenuScreen(final DasherMain app) {
         super(app);
         drawableGob = new TextureRegionDrawable(new TextureRegion(new Texture("Goblin.png")));
         drawableHob = new TextureRegionDrawable(new TextureRegion(new Texture("Hobgoblin.png")));
@@ -70,8 +71,8 @@ public class MenuScreen extends AbstractScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 hitSound.play(0.4f);
-                GameScreen.type = GameScreen.CHARACTER_CLASS.HOBGOBLIN;
-                app.gsm.setScreen(GameScreenManager.STATES.PLAY_STAGE);
+                app.type = GameScreen.CHARACTER_CLASS.HOBGOBLIN;
+                gsm.setScreen(GameScreenManager.STATES.PLAY_STAGE);
             }
         });
 
@@ -82,8 +83,8 @@ public class MenuScreen extends AbstractScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 hitSound.play(0.4f);
-                GameScreen.type = GameScreen.CHARACTER_CLASS.GOBLIN;
-                app.gsm.setScreen(GameScreenManager.STATES.PLAY_STAGE);
+                app.type = GameScreen.CHARACTER_CLASS.GOBLIN;
+                gsm.setScreen(GameScreenManager.STATES.PLAY_STAGE);
             }
         });
 

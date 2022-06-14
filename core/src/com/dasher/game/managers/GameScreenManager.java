@@ -6,8 +6,9 @@ import screens.*;
 import java.util.EnumMap;
 
 public class GameScreenManager {
-    private final DasherMain app;
-    private EnumMap<STATES, AbstractScreen> gameScreens;
+    public final DasherMain app;
+    private final EnumMap<STATES, AbstractScreen> gameScreens = new EnumMap<>(STATES.class);;
+
     /**
      * Keys of screens in EnumMap
      */
@@ -28,7 +29,6 @@ public class GameScreenManager {
      * Screens initialization
      */
     private void initScreens() {
-        gameScreens = new EnumMap<>(STATES.class);
         gameScreens.put(STATES.SPLASH, new SplashScreen(app));
         gameScreens.put(STATES.MAIN_MENU, new MenuScreen(app));
         gameScreens.put(STATES.PLAY_STAGE, new GameScreen(app));

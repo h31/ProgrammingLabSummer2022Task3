@@ -3,14 +3,15 @@ package com.dasher.game.managers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.physics.box2d.*;
-
 import com.dasher.game.Enemy;
+import screens.GameScreen;
 
-import static screens.GameScreen.enemyList;
-import static screens.GameScreen.player;
+import static com.dasher.game.DasherMain.gsm;
+
 
 public class CollListener implements ContactListener {
     private final Sound damageSound = Gdx.audio.newSound(Gdx.files.internal("damage.mp3"));
+
     /**
      * This method activates when some fixtures collide
      */
@@ -21,22 +22,22 @@ public class CollListener implements ContactListener {
 
         if (isEdge(fA, fB)) {
             damageSound.play(0.4f);
-            player.isAlive = false;
+            gsm.app.player.takeDmg((byte) 5);
         }
         // Damage system
         if (isAttack(fA, fB)) {
-            if (!player.isDash) {
+            if (!gsm.app.player.isDash) {
                 damageSound.play(0.4f);
-                switch (fB.getBody().getUserData().toString()) {
-                    case "KNIGHT":
-                        player.hp -= 1;
+                switch ((GameScreen.COLLISIONS) fB.getBody().getUserData()) {
+                    case KNIGHT:
+                        gsm.app.player.takeDmg(GameScreen.COLLISIONS.KNIGHT.dmg);
                         break;
-                    case "WARRIOR":
-                        player.hp -= 2;
+                    case WARRIOR:
+                        gsm.app.player.takeDmg(GameScreen.COLLISIONS.WARRIOR.dmg);
                         break;
                 }
             } else {
-                for (Enemy enemy : enemyList) {
+                for (Enemy enemy : gsm.app.enemyList) {
                     if (enemy.body.equals(fB.getBody())) enemy.isAlive = false;
                 }
             }
@@ -59,11 +60,13 @@ public class CollListener implements ContactListener {
     }
 
     private boolean isEdge(Fixture fA, Fixture fB) {
-        return fA.getBody().getUserData() == "PLAYER" && fB.getBody().getUserData() == "DEATHZONE";
+        return fA.getBody().getUserData() == GameScreen.COLLISIONS.PLAYER
+                && fB.getBody().getUserData() == GameScreen.COLLISIONS.DEATHZONE;
     }
 
     private boolean isAttack(Fixture fA, Fixture fB) {
-        return fA.getBody().getUserData() == "PLAYER" &&
-                (fB.getBody().getUserData() == "KNIGHT" || fB.getBody().getUserData() == "WARRIOR");
+        return fA.getBody().getUserData() == GameScreen.COLLISIONS.PLAYER
+                && (fB.getBody().getUserData() == GameScreen.COLLISIONS.KNIGHT
+                || fB.getBody().getUserData() == GameScreen.COLLISIONS.WARRIOR);
     }
 }

@@ -7,14 +7,15 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.dasher.game.DasherMain;
 import com.dasher.game.managers.GameScreenManager;
 
-import static screens.GameScreen.*;
+import static com.dasher.game.DasherMain.gsm;
+
 
 public class DeadScreen extends AbstractScreen {
-    private Texture tex;
-    private Texture earth;
+    private final Texture tex;
+    private final Texture earth;
     private int i; // Simple counter create delay to give player some time to realize that game is over
 
-    public DeadScreen(DasherMain app) {
+    public DeadScreen(final DasherMain app) {
         super(app);
         tex = new Texture("game_over.png");
         earth = new Texture("earthBack.png");
@@ -34,12 +35,7 @@ public class DeadScreen extends AbstractScreen {
     public void update(float delta) {
         stage.act(delta);
         if (i++ > 500) {
-            world.destroyBody(player.body);
-            enemyList.clear();
-            // Using nulls to avoid bugs when recreate objects
-            player = null;
-            enemyList = null;
-            app.gsm.setScreen(GameScreenManager.STATES.MAIN_MENU);
+            gsm.setScreen(GameScreenManager.STATES.MAIN_MENU);
         }
     }
 
@@ -49,7 +45,7 @@ public class DeadScreen extends AbstractScreen {
         ScreenUtils.clear(Color.valueOf("709f6e"));
         stage.draw();
         app.batch.begin();
-        app.batch.draw(earth, -earth.getWidth() / 2, -earth.getHeight() / 2);
+        app.batch.draw(earth, -earth.getWidth() / 2f, -earth.getHeight() / 2f);
         app.batch.draw(tex, -135, -135, 270, 270);
         app.batch.end();
     }

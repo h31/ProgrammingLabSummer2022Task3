@@ -9,7 +9,7 @@ public abstract class AbstractScreen implements Screen {
     protected final DasherMain app;
     Stage stage;
 
-    protected AbstractScreen(DasherMain app) {
+    protected AbstractScreen(final DasherMain app) {
         this.app = app;
         this.stage = new Stage(new ScreenViewport());
     }

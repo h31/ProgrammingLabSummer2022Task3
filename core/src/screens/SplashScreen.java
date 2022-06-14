@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.dasher.game.DasherMain;
@@ -17,6 +18,7 @@ import static com.dasher.game.DasherMain.gsm;
 public class SplashScreen extends AbstractScreen {
     private final Sound startSound = Gdx.audio.newSound(Gdx.files.internal("startSound.mp3"));
     private final Image image;
+    public BitmapFont text; // Basic text font
     int i = 1;
 
     public SplashScreen(final DasherMain app) {
@@ -27,6 +29,7 @@ public class SplashScreen extends AbstractScreen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+        text = new BitmapFont();
         image.setPosition(stage.getWidth() / 2 - 26, stage.getHeight() / 2 - 32);
         image.addAction(sequence(alpha(0f), fadeIn(1.5f), fadeOut(1f)));
         stage.addActor(image);
@@ -46,12 +49,13 @@ public class SplashScreen extends AbstractScreen {
         ScreenUtils.clear(Color.valueOf("709f6e"));
         stage.draw();
         app.batch.begin();
-        app.font.draw(app.batch, "Task 3", 622, 325);
+        text.draw(app.batch, "Task 3", 622, 325);
         app.batch.end();
     }
 
     @Override
     public void dispose() {
         super.dispose();
+        text.dispose();
     }
 }

@@ -3,7 +3,6 @@ package com.dasher.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dasher.game.managers.GameScreenManager;
 import screens.GameScreen;
@@ -15,16 +14,17 @@ public class DasherMain extends Game {
     public static final float PPM = 64; // Pixel Per Meter need to convert big bodies to small
 
     public SpriteBatch batch; // Main texture rendering tool
-    public BitmapFont font; // Basic text font
+
     public Player player;
     public GameScreen.CHARACTER_CLASS type;
     public ArrayList<Enemy> enemyList;
+    public int score;
+
     public static GameScreenManager gsm;
 
 
     @Override
     public void create() {
-        font = new BitmapFont();
         batch = new SpriteBatch();
         gsm = new GameScreenManager(this);
     }
@@ -38,7 +38,6 @@ public class DasherMain extends Game {
     @Override
     public void dispose() {
         super.dispose();
-        font.dispose();
         batch.dispose();
         gsm.dispose();
     }

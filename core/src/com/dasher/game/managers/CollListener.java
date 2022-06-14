@@ -38,7 +38,10 @@ public class CollListener implements ContactListener {
                 }
             } else {
                 for (Enemy enemy : gsm.app.enemyList) {
-                    if (enemy.body.equals(fB.getBody())) enemy.isAlive = false;
+                    if (enemy.body.equals(fB.getBody())) {
+                        enemy.isAlive = false;
+                        gsm.app.score += enemy.type.dmg;
+                    }
                 }
             }
         }

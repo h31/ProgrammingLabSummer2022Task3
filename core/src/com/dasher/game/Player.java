@@ -5,7 +5,7 @@ import screens.GameScreen;
 
 public class Player {
     private byte hp;
-    private final Body body;
+    public final Body body;
     public final byte moveSpeed;
     public boolean isDash = false;
 
@@ -31,9 +31,5 @@ public class Player {
 
     public void takeDmg(int dmg) {
         hp -= dmg;
-    }
-
-    public Body getBody() {
-        return body;
     }
 }

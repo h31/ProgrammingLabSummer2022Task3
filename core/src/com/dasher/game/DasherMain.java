@@ -3,6 +3,7 @@ package com.dasher.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dasher.game.managers.GameScreenManager;
 import screens.GameScreen;
@@ -18,13 +19,14 @@ public class DasherMain extends Game {
     public Player player;
     public GameScreen.CHARACTER_CLASS type;
     public ArrayList<Enemy> enemyList;
+    public Preferences prefs;
     public int score;
-
+    public int highScore;
     public static GameScreenManager gsm;
-
 
     @Override
     public void create() {
+        prefs = Gdx.app.getPreferences("GamePreferences");
         batch = new SpriteBatch();
         gsm = new GameScreenManager(this);
     }

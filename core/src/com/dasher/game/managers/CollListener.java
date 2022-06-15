@@ -2,6 +2,7 @@ package com.dasher.game.managers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.dasher.game.Enemy;
 import screens.GameScreen;
@@ -39,7 +40,7 @@ public class CollListener implements ContactListener {
             } else {
                 for (Enemy enemy : gsm.app.enemyList) {
                     if (enemy.body.equals(fB.getBody())) {
-                        enemy.isAlive = false;
+                        enemy.takeDmg(1);
                         gsm.app.score += enemy.type.dmg;
                     }
                 }

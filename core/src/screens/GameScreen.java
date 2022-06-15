@@ -27,12 +27,9 @@ import static com.dasher.game.DasherMain.gsm;
 public class GameScreen extends AbstractScreen {
     public enum COLLISIONS {
         PLAYER, KNIGHT((byte) 1), WARRIOR((byte) 2), DEATHZONE;
-
         public byte dmg;
 
-        COLLISIONS() {
-
-        }
+        COLLISIONS() {}
 
         COLLISIONS(byte dmg) {
             this.dmg = dmg;
@@ -42,16 +39,17 @@ public class GameScreen extends AbstractScreen {
     public enum CHARACTER_CLASS {
         GOBLIN, HOBGOBLIN
     }
-    public World world;
+
     // Basic counters
     private long lastDashTime, lastEnemySpawn;
     private byte enemyCounter;
     // libGDX objects
+    public World world;
     private final OrthographicCamera camera;
+    private final Sound dashSound;
     private Body deathZoneLeft, deathZoneRight, deathZoneTop, deathZoneBottom;
     private Texture pTex, kTex, wTex, earth;
     private BitmapFont text;
-    private final Sound dashSound;
     // All vectors
     private final Vector3 touchPos;
     private final Vector2 target;
@@ -83,6 +81,8 @@ public class GameScreen extends AbstractScreen {
         stage.clear();
         lastDashTime = 0;
         enemyCounter = 0;
+
+        app.highScore = app.prefs.getInteger("highScore");
         gsm.app.score = 0;
 
         // Setting world and some modifications
@@ -122,7 +122,7 @@ public class GameScreen extends AbstractScreen {
         enemyMove();
 
         // Enemy spawner
-        if (TimeUtils.nanoTime() - lastEnemySpawn > 800000000 && enemyCounter <= 14) {
+        if (TimeUtils.nanoTime() - lastEnemySpawn > 800000000 && enemyCounter <= 12) {
             enemySpawner();
             enemyCounter++;
         }
@@ -155,6 +155,7 @@ public class GameScreen extends AbstractScreen {
             }
         }
         text.draw(app.batch, "Score : " + gsm.app.score, -640f, 360f);
+        text.draw(app.batch, "HighScore : " + gsm.app.highScore, -640f, 340f);
         app.batch.end();
     }
 
@@ -178,6 +179,10 @@ public class GameScreen extends AbstractScreen {
     private void playerAlive() {
         if (app.player.isAlive()) inputUpdate();
         else {
+            if (app.score > app.highScore) {
+                app.prefs.putInteger("highScore", app.score);
+                app.prefs.flush();
+            }
             app.enemyList.clear();
             world.destroyBody(app.player.body);
             gsm.setScreen(GameScreenManager.STATES.DEAD_STAGE);
@@ -237,14 +242,14 @@ public class GameScreen extends AbstractScreen {
      */
     private void enemySpawner() {
         // Calculating distance
-        int type = MathUtils.random(1, 2);
+        int type = MathUtils.random(1, 4);
         enemyDistance.set(MathUtils.random(-7f, 8f), MathUtils.random(-4.5f, 3.5f));
         while (app.player.body.getPosition().dst(enemyDistance) < 3.5f) {
             enemyDistance.set(MathUtils.random(-7f, 8f), MathUtils.random(-4.5f, 3.5f));
         }
         // Creating enemy
-        Enemy enemy = new Enemy(type == 2 ? COLLISIONS.WARRIOR : COLLISIONS.KNIGHT,
-                createBox(enemyDistance.x, enemyDistance.y, 22, 28, type == 2 ? COLLISIONS.WARRIOR : COLLISIONS.KNIGHT,
+        Enemy enemy = new Enemy(type == 1 ? COLLISIONS.WARRIOR : COLLISIONS.KNIGHT,
+                createBox(enemyDistance.x, enemyDistance.y, 22, 28, type == 1 ? COLLISIONS.WARRIOR : COLLISIONS.KNIGHT,
                         BodyDef.BodyType.DynamicBody, 10f, true));
 
         app.enemyList.add(enemy);
@@ -261,7 +266,7 @@ public class GameScreen extends AbstractScreen {
             enemyTarget.nor();
             enemyTarget.set(enemyTarget.x * enemy.moveSpeed, enemyTarget.y * enemy.moveSpeed);
             enemy.body.setLinearVelocity(enemyTarget);
-            if (!enemy.isAlive) {
+            if (!enemy.isAlive()) {
                 i.remove();
                 world.destroyBody(enemy.body);
                 enemyCounter--;

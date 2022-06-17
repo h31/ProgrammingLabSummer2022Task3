@@ -22,7 +22,7 @@ public class Ship extends Rectangle {
         this.aroundShipX = aroundShipX;
     }
 
-    public Rectangle getRect(){
+    public Rectangle getRect() {
         return rect;
     }
 
@@ -50,18 +50,7 @@ public class Ship extends Rectangle {
         if (ship.rect.getTranslateX() != 0 || ship.rect.getTranslateY() != 0) {
             ship.rect.setTranslateX(0);
             ship.rect.setTranslateY(0);
-            for (int i = 0; i <= ship.listX.size() - 1; i++) {
-                for (int j = 0; j <= ship.listY.size() - 1; j++) {
-                    table[ship.listX.get(i)][ship.listY.get(j)] = 0;
-                    if (tableAroundShip[ship.aroundShipX.get(i)][ship.listY.get(j)] > 0) {
-                        tableAroundShip[ship.aroundShipY.get(i)][ship.listY.get(j)] -= 1;
-                    }
-                }
-            }
-            ship.listX.clear();
-            ship.listY.clear();
-            ship.aroundShipX.clear();
-            ship.aroundShipY.clear();
+            mouseDragged(ship, table, tableAroundShip);
         } else {
             ship.position = !ship.position;
             Rotate rotate = new Rotate();
@@ -94,8 +83,6 @@ public class Ship extends Rectangle {
         ship.aroundShipX.clear();
         ship.aroundShipY.clear();
     }
-
-
 
     public static void mouseReleased(Ship ship, int[][] table, int[][] tableAroundShip) {
         if (ship.position &&
@@ -138,34 +125,8 @@ public class Ship extends Rectangle {
                 int secondY30;
                 if (secondY10 <= 9) secondY30 = secondY10;
                 else secondY30 = secondY20;
-                cycle:
-                for (int i = firstX30; i <= secondX30; i++) {
-                    for (int j = firstY30; j <= secondY30; j++) {
-
-                        if (i == firstX10 || i == secondX10 || j == firstY10 || j == secondY10) {
-                            if (table[i][j] >= 1) {
-                                ship.rect.setTranslateX(0);
-                                ship.rect.setTranslateY(0);
-                                break cycle;
-                            } else {
-                                ship.aroundShipX.add(i);
-                                ship.aroundShipY.add(j);
-                                tableAroundShip[i][j] += 1;
-                            }
-                        }
-                        else {
-                            if (table[i][j] == 1) {
-                                ship.rect.setTranslateX(0);
-                                ship.rect.setTranslateY(0);
-                                break cycle;
-                            } else {
-                                ship.listX.add(i);
-                                ship.listY.add(j);
-                                table[i][j] = 1;
-                            }
-                        }
-                    }
-                }
+                cycleForMouseReleased(ship, table, tableAroundShip, firstX10, secondX10, firstY10, secondY10,
+                firstX30, secondX30, firstY30, secondY30);
             }
 
 
@@ -193,31 +154,39 @@ public class Ship extends Rectangle {
                 int secondY30;
                 if (secondY10 <= 9) secondY30 = secondY10;
                 else secondY30 = secondY20;
-                cycle:
-                for (int i = firstX30; i <= secondX30; i++) {
-                    for (int j = firstY30; j <= secondY30; j++) {
-                        if (i == firstX10 || i == secondX10 || j == firstY10 || j == secondY10) {
-                            if (table[i][j] >= 1) {
-                                ship.rect.setTranslateX(0);
-                                ship.rect.setTranslateY(0);
-                                break cycle;
-                            } else {
-                                ship.aroundShipX.add(i);
-                                ship.aroundShipY.add(j);
-                                tableAroundShip[i][j] += 1;
-                            }
-                        }
-                        else {
-                            if (table[i][j] == 1) {
-                                ship.rect.setTranslateX(0);
-                                ship.rect.setTranslateY(0);
-                                break cycle;
-                            } else {
-                                ship.listX.add(i);
-                                ship.listY.add(j);
-                                table[i][j] = 1;
-                            }
-                        }
+                cycleForMouseReleased(ship, table, tableAroundShip, firstX10, secondX10, firstY10, secondY10,
+                        firstX30, secondX30, firstY30, secondY30);
+            }
+        }
+    }
+
+    private static void cycleForMouseReleased(Ship ship, int[][] table, int[][] tableAroundShip, int firstX10,
+                                              int secondX10, int firstY10, int secondY10, int firstX30, int secondX30,
+                                              int firstY30, int secondY30) {
+        cycle:
+        for (int i = firstX30; i <= secondX30; i++) {
+            for (int j = firstY30; j <= secondY30; j++) {
+
+                if (i == firstX10 || i == secondX10 || j == firstY10 || j == secondY10) {
+                    if (table[i][j] >= 1) {
+                        ship.rect.setTranslateX(0);
+                        ship.rect.setTranslateY(0);
+                        break cycle;
+                    } else {
+                        ship.aroundShipX.add(i);
+                        ship.aroundShipY.add(j);
+                        tableAroundShip[i][j] += 1;
+                    }
+                }
+                else {
+                    if (table[i][j] == 1) {
+                        ship.rect.setTranslateX(0);
+                        ship.rect.setTranslateY(0);
+                        break cycle;
+                    } else {
+                        ship.listX.add(i);
+                        ship.listY.add(j);
+                        table[i][j] = 1;
                     }
                 }
             }

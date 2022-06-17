@@ -12,7 +12,6 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -31,6 +30,7 @@ public class SeaBattle extends Application {
     private final int[][] aroundShip1 = new int[10][10];
     private final int[][] aroundShip2= new int[10][10];
     private Double oldX, oldY;
+    private final Text error = new Text("ВЫ НЕ РАССТАВИЛИ ВСЕ КОРАБЛИ!");
     private int score = 0;
     private int score1 = 0;
     @Override
@@ -44,7 +44,6 @@ public class SeaBattle extends Application {
         beginButton.setStyle("-fx-background-color: #3cbd1a; ");
         forBeginButton(beginButton);
 
-
         primaryStage.setTitle("МОРСКОЙ БОЙ");
         group.getChildren().add(beginButton);
         primaryStage.setScene(scene);
@@ -52,62 +51,73 @@ public class SeaBattle extends Application {
         primaryStage.show();
     }
 
+    void shipPosition(int[][] table, int[][] aroundShip) {
+        error.setX(450);
+        error.setY(300);
+        error.setStroke(Color.RED);
+        error.setStyle("-fx-font: 13 arial;");
+
+        Water water1 = new Water(25, 25);
+        group.getChildren().add(water1);
+
+        Ship shipFourDecks1 = new Ship(550,25, 4);
+        installation(shipFourDecks1, table, aroundShip);
+        shipFlip(shipFourDecks1, table, aroundShip);
+
+        Ship shipThreeDecks11 = new Ship(450,25, 3);
+        installation(shipThreeDecks11, table, aroundShip);
+        shipFlip(shipThreeDecks11, table, aroundShip);
+
+        Ship shipThreeDecks21 = new Ship(450,125, 3);
+        installation(shipThreeDecks21, table, aroundShip);
+        shipFlip(shipThreeDecks21, table, aroundShip);
+
+        Ship shipTwoDecks11 = new Ship(375,25,2);
+        installation(shipTwoDecks11, table, aroundShip);
+        shipFlip(shipTwoDecks11, table, aroundShip);
+
+        Ship shipTwoDecks21 = new Ship(375,100,2);
+        installation(shipTwoDecks21, table, aroundShip);
+        shipFlip(shipTwoDecks21, table, aroundShip);
+
+        Ship shipTwoDecks31 = new Ship(375,175,2);
+        installation(shipTwoDecks31, table, aroundShip);
+        shipFlip(shipTwoDecks31, table, aroundShip);
+
+        Ship simpleShip11 = new Ship(300,25, 1);
+        installation(simpleShip11, table, aroundShip);
+
+        Ship simpleShip21 = new Ship(300,75, 1);
+        installation(simpleShip21, table, aroundShip);
+
+        Ship simpleShip31 = new Ship(300,125, 1);
+        installation(simpleShip31, table, aroundShip);
+
+        Ship simpleShip41 = new Ship(300,175, 1);
+        installation(simpleShip41, table, aroundShip);
+
+        Text participant2 = new Text("Участник2 установите корабли");
+        participant2.setX(25);
+        participant2.setY(350);
+        participant2.setStroke(Color.ROYALBLUE);
+        participant2.setStyle("-fx-font: 24 arial;");
+        group.getChildren().addAll(participant2, shipFourDecks1.getRect(), shipThreeDecks21.getRect(),
+                shipThreeDecks11.getRect(), shipTwoDecks31.getRect(), shipTwoDecks21.getRect(),
+                shipTwoDecks11.getRect(), simpleShip41.getRect(), simpleShip31.getRect(),
+                simpleShip21.getRect(), simpleShip11.getRect());
+
+    }
+
     private void forBeginButton(Button beginButton) {
         beginButton.setOnAction(event -> {
 
-            Text error = new Text("ВЫ НЕ РАССТАВИЛИ ВСЕ КОРАБЛИ!");
-            error.setX(450);
-            error.setY(300);
-            error.setStroke(Color.RED);
-            error.setStyle("-fx-font: 13 arial;");
-
-            Ship shipFourDecks = new Ship(550,25, 4);
-            installation(shipFourDecks, table1, aroundShip1);
-            shipFlip(shipFourDecks, table1, aroundShip1);
-
-            Ship shipThreeDecks1 = new Ship(450,25, 3);
-            installation(shipThreeDecks1, table1, aroundShip1);
-            shipFlip(shipThreeDecks1, table1, aroundShip1);
-
-            Ship shipThreeDecks2 = new Ship(450,125, 3);
-            installation(shipThreeDecks2, table1, aroundShip1);
-            shipFlip(shipThreeDecks2, table1, aroundShip1);
-
-            Ship shipTwoDecks1 = new Ship(375,25,2);
-            installation(shipTwoDecks1, table1, aroundShip1);
-            shipFlip(shipTwoDecks1, table1, aroundShip1);
-
-            Ship shipTwoDecks2 = new Ship(375,100,2);
-            installation(shipTwoDecks2, table1, aroundShip1);
-            shipFlip(shipTwoDecks2, table1, aroundShip1);
-
-            Ship shipTwoDecks3 = new Ship(375,175,2);
-            installation(shipTwoDecks3, table1, aroundShip1);
-            shipFlip(shipTwoDecks3, table1, aroundShip1);
-
-            Ship simpleShip1 = new Ship(300,25, 1);
-            installation(simpleShip1, table1, aroundShip1);
-
-            Ship simpleShip2 = new Ship(300,75, 1);
-            installation(simpleShip2, table1, aroundShip1);
-
-            Ship simpleShip3 = new Ship(300,125, 1);
-            installation(simpleShip3, table1, aroundShip1);
-
-            Ship simpleShip4 = new Ship(300,175, 1);
-            installation(simpleShip4, table1, aroundShip1);
-
-            Water water1 = new Water(25, 25);
-            group.getChildren().add(water1);
+            shipPosition(table1, aroundShip1);
 
             Text participant1 = new Text("Участник1 установите корабли");
             participant1.setX(25);
             participant1.setY(350);
             participant1.setStroke(Color.ROYALBLUE);
             participant1.setStyle("-fx-font: 24 arial;");
-            group.getChildren().addAll(participant1, shipFourDecks.getRect(), shipThreeDecks2.getRect(),
-                    shipThreeDecks1.getRect(), shipTwoDecks3.getRect(), shipTwoDecks2.getRect(), shipTwoDecks1.getRect(),
-                    simpleShip4.getRect(), simpleShip3.getRect(), simpleShip2.getRect(), simpleShip1.getRect());
             beginButton.setDisable(false);
             beginButton.setVisible(false);
             Button button1 = new Button();
@@ -115,7 +125,7 @@ public class SeaBattle extends Application {
             button1.setLayoutY(325);
             button1.setText("ГОТОВО");
             button1.setStyle("-fx-background-color: #3cbd1a; ");
-            group.getChildren().addAll(button1);
+            group.getChildren().add(button1);
             button1.setOnAction(event1 -> {
                 int score = 0;
                 for (int i = 0; i <= 9; i++) {
@@ -127,100 +137,49 @@ public class SeaBattle extends Application {
                     group.getChildren().addAll(error);
                 } else {
                     {
-                        group.getChildren().removeAll(participant1, shipFourDecks.getRect(), shipThreeDecks2.getRect(),
-                                shipThreeDecks1.getRect(), shipTwoDecks3.getRect(), shipTwoDecks2.getRect(),
-                                shipTwoDecks1.getRect(), simpleShip4.getRect(), simpleShip3.getRect(), simpleShip2.getRect(),
-                                simpleShip1.getRect());
+                        group.getChildren().clear();
                         group.getChildren().remove(error);
-
-                        Ship shipFourDecks1 = new Ship(550,25, 4);
-                        installation(shipFourDecks1, table2, aroundShip2);
-                        shipFlip(shipFourDecks1, table2, aroundShip2);
-
-                        Ship shipThreeDecks11 = new Ship(450,25, 3);
-                        installation(shipThreeDecks11, table2, aroundShip2);
-                        shipFlip(shipThreeDecks11, table2, aroundShip2);
-
-                        Ship shipThreeDecks21 = new Ship(450,125, 3);
-                        installation(shipThreeDecks21, table2, aroundShip2);
-                        shipFlip(shipThreeDecks21, table2, aroundShip2);
-
-                        Ship shipTwoDecks11 = new Ship(375,25,2);
-                        installation(shipTwoDecks11, table2, aroundShip2);
-                        shipFlip(shipTwoDecks11, table2, aroundShip2);
-
-                        Ship shipTwoDecks21 = new Ship(375,100,2);
-                        installation(shipTwoDecks21, table2, aroundShip2);
-                        shipFlip(shipTwoDecks21, table2, aroundShip2);
-
-                        Ship shipTwoDecks31 = new Ship(375,175,2);
-                        installation(shipTwoDecks31, table2, aroundShip2);
-                        shipFlip(shipTwoDecks31, table2, aroundShip2);
-
-                        Ship simpleShip11 = new Ship(300,25, 1);
-                        installation(simpleShip11, table2, aroundShip2);
-
-                        Ship simpleShip21 = new Ship(300,75, 1);
-                        installation(simpleShip21, table2, aroundShip2);
-
-                        Ship simpleShip31 = new Ship(300,125, 1);
-                        installation(simpleShip31, table2, aroundShip2);
-
-                        Ship simpleShip41 = new Ship(300,175, 1);
-                        installation(simpleShip41, table2, aroundShip2);
-
-                        Text participant2 = new Text("Участник2 установите корабли");
-                        participant2.setX(25);
-                        participant2.setY(350);
-                        participant2.setStroke(Color.ROYALBLUE);
-                        participant2.setStyle("-fx-font: 24 arial;");
-                        group.getChildren().addAll(participant2, shipFourDecks1.getRect(), shipThreeDecks21.getRect(),
-                                shipThreeDecks11.getRect(), shipTwoDecks31.getRect(), shipTwoDecks21.getRect(),
-                                shipTwoDecks11.getRect(), simpleShip41.getRect(), simpleShip31.getRect(),
-                                simpleShip21.getRect(), simpleShip11.getRect());
-
                         button1.setDisable(false);
                         button1.setVisible(false);
-
-                        Button button2 = new Button();
-                        button2.setLayoutX(500);
-                        button2.setLayoutY(325);
-                        button2.setText("ГОТОВО");
-                        button2.setStyle("-fx-background-color: #3cbd1a; ");
-                        group.getChildren().addAll(button2);
-                        button2.setOnAction(event2 -> {
-                            int score1 = 0;
-                            for (int i = 0; i <= 9; i++) {
-                                for (int j = 0; j <= 9; j++) {
-                                    score1 += table2[i][j];
-                                }
-                            }
-                            if (score1 != 20) {
-                                group.getChildren().addAll(error);
-                            } else {
-                                {
-                                    group.getChildren().removeAll(participant2, shipFourDecks1.getRect(),
-                                            shipThreeDecks21.getRect(), shipThreeDecks11.getRect(), shipTwoDecks31.getRect(),
-                                            shipTwoDecks21.getRect(), shipTwoDecks11.getRect(), simpleShip41.getRect(),
-                                            simpleShip31.getRect(), simpleShip21.getRect(), simpleShip11.getRect());
-
-                                    button2.setDisable(false);
-                                    button2.setVisible(false);
-                                    Water water2 = new Water(325, 25);
-                                    group.getChildren().add(water2);
-                                    group.getChildren().remove(error);
-                                    addImage("/ArrowLeft.jpg", 280, 150, 40, 40);
-                                    mouseClicked();
-
-
-                                }
-                            }
-                        });
+                        forButton1();
                     }
                 }
             });
 
 
+        });
+    }
+
+    void forButton1() {
+        shipPosition(table2, aroundShip2);
+        Button button2 = new Button();
+        button2.setLayoutX(500);
+        button2.setLayoutY(325);
+        button2.setText("ГОТОВО");
+        button2.setStyle("-fx-background-color: #3cbd1a; ");
+        group.getChildren().addAll(button2);
+        button2.setOnAction(event2 -> {
+            int score1 = 0;
+            for (int i = 0; i <= 9; i++) {
+                for (int j = 0; j <= 9; j++) {
+                    score1 += table2[i][j];
+                }
+            }
+            if (score1 != 20) {
+                group.getChildren().addAll(error);
+            } else {
+                {
+                    button2.setDisable(false);
+                    button2.setVisible(false);
+                    group.getChildren().clear();
+                    Water water1 = new Water(25, 25);
+                    Water water2 = new Water(325, 25);
+                    group.getChildren().addAll(water1, water2);
+                    group.getChildren().remove(error);
+                    addImage("/ArrowLeft.jpg", 280, 150, 40, 40);
+                    mouseClicked();
+                }
+            }
         });
     }
 
@@ -355,6 +314,7 @@ public class SeaBattle extends Application {
                 f = true;
                 break;
             }
+
             y--;
         }
         if (!f) {

@@ -4,10 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -22,14 +23,14 @@ import static com.dasher.game.DasherMain.gsm;
 public class MenuScreen extends AbstractScreen {
     private ImageButton buttonG, buttonH;
     private final TextureRegionDrawable drawableGob, drawableHob;
-    private final Image text;
     private final Sound hitSound;
+    private Label text;
 
     public MenuScreen(final DasherMain app) {
         super(app);
         drawableGob = new TextureRegionDrawable(new TextureRegion(new Texture("Goblin.png")));
         drawableHob = new TextureRegionDrawable(new TextureRegion(new Texture("Hobgoblin.png")));
-        text = new Image(new Texture("CharacterText.png"));
+        text = new Label("Choose your character:", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         hitSound = Gdx.audio.newSound(Gdx.files.internal("hit.mp3"));
     }
 
@@ -37,7 +38,7 @@ public class MenuScreen extends AbstractScreen {
     public void show() {
         Gdx.input.setInputProcessor(stage);
         stage.clear();
-        text.setPosition(stage.getWidth() / 2 - 92.5f, stage.getHeight() / 2 + 100);
+        text.setPosition(stage.getWidth() / 2 - text.getWidth() / 2, stage.getHeight() / 2 + 100);
         text.addAction(sequence(alpha(0), fadeIn(.5f)));
         stage.addActor(text);
         initBtn();

@@ -24,7 +24,7 @@ public class MenuScreen extends AbstractScreen {
     private ImageButton buttonG, buttonH;
     private final TextureRegionDrawable drawableGob, drawableHob;
     private final Sound hitSound;
-    private Label text;
+    private final Label text;
 
     public MenuScreen(final DasherMain app) {
         super(app);
@@ -38,6 +38,7 @@ public class MenuScreen extends AbstractScreen {
     public void show() {
         Gdx.input.setInputProcessor(stage);
         stage.clear();
+
         text.setPosition(stage.getWidth() / 2 - text.getWidth() / 2, stage.getHeight() / 2 + 100);
         text.addAction(sequence(alpha(0), fadeIn(.5f)));
         stage.addActor(text);
@@ -71,7 +72,7 @@ public class MenuScreen extends AbstractScreen {
         buttonH.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                hitSound.play(0.4f);
+                hitSound.play(0.2f);
                 app.type = GameScreen.CHARACTER_CLASS.HOBGOBLIN;
                 gsm.setScreen(GameScreenManager.STATES.PLAY_STAGE);
             }
@@ -83,7 +84,7 @@ public class MenuScreen extends AbstractScreen {
         buttonG.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                hitSound.play(0.4f);
+                hitSound.play(0.2f);
                 app.type = GameScreen.CHARACTER_CLASS.GOBLIN;
                 gsm.setScreen(GameScreenManager.STATES.PLAY_STAGE);
             }

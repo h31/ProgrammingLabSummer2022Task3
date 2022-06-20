@@ -12,6 +12,7 @@ import static com.dasher.game.DasherMain.gsm;
 
 public class CollListener implements ContactListener {
     private final Sound damageSound = Gdx.audio.newSound(Gdx.files.internal("damage.mp3"));
+    private final Vector2 addTarget = new Vector2();
 
     /**
      * This method activates when some fixtures collide
@@ -22,13 +23,13 @@ public class CollListener implements ContactListener {
         Fixture fB = contact.getFixtureB();
 
         if (isEdge(fA, fB)) {
-            damageSound.play(0.4f);
-            gsm.app.player.takeDmg((byte) 5);
+            damageSound.play(0.2f);
+            gsm.app.player.takeDmg((byte) 10);
         }
         // Damage system
         if (isAttack(fA, fB)) {
             if (!gsm.app.player.isDash) {
-                damageSound.play(0.4f);
+                damageSound.play(0.2f);
                 switch ((GameScreen.COLLISIONS) fB.getBody().getUserData()) {
                     case KNIGHT:
                         gsm.app.player.takeDmg(GameScreen.COLLISIONS.KNIGHT.dmg);
@@ -40,6 +41,9 @@ public class CollListener implements ContactListener {
             } else {
                 for (Enemy enemy : gsm.app.enemyList) {
                     if (enemy.body.equals(fB.getBody())) {
+                        addTarget.set(GameScreen.target).nor();
+                        addTarget.set(addTarget.x * 100f, addTarget.y * 100f);
+                        gsm.app.player.body.applyForceToCenter(addTarget, true);
                         enemy.takeDmg(1);
                         gsm.app.score += enemy.type.dmg;
                     }

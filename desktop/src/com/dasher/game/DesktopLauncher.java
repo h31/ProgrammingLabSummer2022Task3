@@ -11,8 +11,7 @@ public class DesktopLauncher {
         config.setTitle("DasherSlasher");
         config.setWindowIcon("Goblin.png");
         config.setWindowedMode(1280, 720);
-        config.setForegroundFPS(120);
-        config.useVsync(true);
+        config.setForegroundFPS(60);
         config.setResizable(false);
         new Lwjgl3Application(new DasherMain(), config);
     }

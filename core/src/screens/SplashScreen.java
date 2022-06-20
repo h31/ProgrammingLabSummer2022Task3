@@ -31,19 +31,22 @@ public class SplashScreen extends AbstractScreen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+
         text.setPosition(stage.getWidth() / 2 - text.getWidth() / 2, stage.getHeight() / 2 - 55);
         text.addAction(sequence(alpha(0f), fadeIn(1.5f), fadeOut(1f)));
+        stage.addActor(text);
+
         image.setPosition(stage.getWidth() / 2 - 28, stage.getHeight() / 2 - 32);
         image.addAction(sequence(alpha(0f), fadeIn(1.5f), fadeOut(1f)));
         stage.addActor(image);
-        stage.addActor(text);
-        startSound.play(0.4f);
+
+        startSound.play(0.2f);
     }
 
     @Override
     public void update(float delta) {
         stage.act(delta);
-        if (i++ > 300) gsm.setScreen(GameScreenManager.STATES.MAIN_MENU);
+        if (i++ > 150) gsm.setScreen(GameScreenManager.STATES.MAIN_MENU);
         if (Gdx.input.isTouched()) gsm.setScreen(GameScreenManager.STATES.MAIN_MENU);
     }
 

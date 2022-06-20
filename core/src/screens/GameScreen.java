@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.dasher.game.DasherMain;
@@ -29,7 +30,8 @@ public class GameScreen extends AbstractScreen {
         PLAYER, KNIGHT((byte) 1), WARRIOR((byte) 2), DEATHZONE;
         public byte dmg;
 
-        COLLISIONS() {}
+        COLLISIONS() {
+        }
 
         COLLISIONS(byte dmg) {
             this.dmg = dmg;
@@ -44,17 +46,18 @@ public class GameScreen extends AbstractScreen {
     private long lastDashTime, lastEnemySpawn;
     private byte enemyCounter;
     // libGDX objects
-    public World world;
+    private World world;
     private final OrthographicCamera camera;
     private final Sound dashSound;
+    private final Image earth;
+    private final BitmapFont text;
     private Body deathZoneLeft, deathZoneRight, deathZoneTop, deathZoneBottom;
-    private Texture pTex, kTex, wTex, earth;
-    private BitmapFont text;
+    private Texture playerTex, knightTex, warriorTex;
+
     // All vectors
     private final Vector3 touchPos;
-    private final Vector2 target;
-    private final Vector2 enemyTarget;
-    private final Vector2 enemyDistance;
+    private final Vector2 enemyDistance, enemyTarget;
+    public static final Vector2 target = new Vector2();
 
     public GameScreen(final DasherMain app) {
         super(app);
@@ -64,15 +67,17 @@ public class GameScreen extends AbstractScreen {
         camera.position.set(0, 0, 0);
         camera.update();
         // Assets setting
-        earth = new Texture("earthBack.png");
-        kTex = new Texture("Knight.png");
-        wTex = new Texture("Warrior.png");
+        earth = new Image(new Texture("earthBack.png"));
+        knightTex = new Texture("Knight.png");
+        warriorTex = new Texture("Warrior.png");
         dashSound = Gdx.audio.newSound(Gdx.files.internal("dash.mp3"));
+        text = new BitmapFont();
+        text.setColor(Color.WHITE);
         // Movement vectors
         touchPos = new Vector3();
-        target = new Vector2();
         enemyTarget = new Vector2();
         enemyDistance = new Vector2();
+
     }
 
     @Override
@@ -92,8 +97,8 @@ public class GameScreen extends AbstractScreen {
         // Enemies and player creation
         app.enemyList = new ArrayList<>();
         app.player = new Player(app.type, createBox
-                (0.4f, 0.5f, 22, 28, COLLISIONS.PLAYER, BodyDef.BodyType.DynamicBody, 10f, false));
-        pTex = app.type.equals(CHARACTER_CLASS.GOBLIN) ? new Texture("Goblin.png") : new Texture("Hobgoblin.png");
+                (0.4f, 0.5f, 22, 28, COLLISIONS.PLAYER, BodyDef.BodyType.DynamicBody, 10f, true));
+        playerTex = app.type.equals(CHARACTER_CLASS.GOBLIN) ? new Texture("Goblin.png") : new Texture("Hobgoblin.png");
 
         // Map edges
         deathZoneTop = createBox
@@ -105,9 +110,8 @@ public class GameScreen extends AbstractScreen {
         deathZoneRight = createBox
                 (8.6f, -0.43f, 16, 350, COLLISIONS.DEATHZONE, BodyDef.BodyType.StaticBody, 0f, true);
 
-        text = new BitmapFont();
-        text.setColor(Color.valueOf("010101"));
         world.setContactListener(new CollListener());
+        stage.addActor(earth);
     }
 
     /**
@@ -116,8 +120,8 @@ public class GameScreen extends AbstractScreen {
     @Override
     public void update(float delta) {
         stage.act(delta);
-        world.step(1 / 120f, 12, 4);
-
+        world.step(1 / 60f, 12, 4);
+        System.out.println(app.player.isDash);
         playerAlive();
         enemyMove();
 
@@ -138,24 +142,24 @@ public class GameScreen extends AbstractScreen {
 
         stage.draw();
         app.batch.begin();
-        app.batch.draw(earth, -earth.getWidth() / 2f, -earth.getHeight() / 2f);
-        app.batch.draw(pTex, app.player.body.getPosition().x * PPM - (pTex.getWidth() / 2f),
-                app.player.body.getPosition().y * PPM - (pTex.getHeight() / 2f));
+        app.batch.draw(playerTex, app.player.body.getPosition().x * PPM - (playerTex.getWidth() / 2f),
+                app.player.body.getPosition().y * PPM - (playerTex.getHeight() / 2f));
 
         for (Enemy enemy : app.enemyList) {
             switch (enemy.type) {
                 case KNIGHT:
-                    app.batch.draw(kTex, enemy.body.getPosition().x * PPM - 26,
-                            enemy.body.getPosition().y * PPM - 32);
+                    app.batch.draw(knightTex, enemy.body.getPosition().x * PPM - (knightTex.getWidth() / 2f),
+                            enemy.body.getPosition().y * PPM - (knightTex.getHeight() / 2f));
                     break;
                 case WARRIOR:
-                    app.batch.draw(wTex, enemy.body.getPosition().x * PPM - 26,
-                            enemy.body.getPosition().y * PPM - 32);
+                    app.batch.draw(warriorTex, enemy.body.getPosition().x * PPM - (warriorTex.getWidth() / 2f),
+                            enemy.body.getPosition().y * PPM - (warriorTex.getHeight() / 2f));
                     break;
             }
         }
         text.draw(app.batch, "Score : " + gsm.app.score, -640f, 360f);
-        text.draw(app.batch, "HighScore : " + gsm.app.highScore, -640f, 340f);
+        text.draw(app.batch, "High Score : " + gsm.app.highScore, -640f, 340f);
+        text.draw(app.batch, "Hit points : " + app.player.getHp(), -640f, 320f);
         app.batch.end();
     }
 
@@ -165,10 +169,10 @@ public class GameScreen extends AbstractScreen {
     @Override
     public void dispose() {
         super.dispose();
-        earth.dispose();
-        pTex.dispose();
-        kTex.dispose();
-        wTex.dispose();
+        text.dispose();
+        playerTex.dispose();
+        knightTex.dispose();
+        warriorTex.dispose();
         dashSound.dispose();
         world.dispose();
     }
@@ -193,17 +197,16 @@ public class GameScreen extends AbstractScreen {
      * Player movement
      */
     private void inputUpdate() {
-        long DASH_DELAY = 800000000; // dash delay 0.8 sec
-        app.player.isDash = !(TimeUtils.nanoTime() - lastDashTime >= 250000000); // 0.25 sec
-        if (TimeUtils.nanoTime() - lastDashTime > DASH_DELAY) {
+        app.player.isDash = !(TimeUtils.nanoTime() - lastDashTime >= app.player.dashLength);
+        if (TimeUtils.nanoTime() - lastDashTime > app.player.dashDelay) {
             if (Gdx.input.isTouched()) {
                 lastDashTime = TimeUtils.nanoTime();
                 app.player.isDash = true;
-                dashSound.play(0.4f);
+                dashSound.play(0.2f);
                 touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
                 camera.unproject(touchPos);
-                target.set(touchPos.x / PPM - app.player.body.getPosition().x, touchPos.y / PPM - app.player.body.getPosition().y);
-                target.nor();
+                target.set
+                        (touchPos.x / PPM - app.player.body.getPosition().x, touchPos.y / PPM - app.player.body.getPosition().y).nor();
                 target.set(target.x * app.player.moveSpeed, target.y * app.player.moveSpeed);
                 app.player.body.setLinearVelocity(target);
                 lastDashTime = TimeUtils.nanoTime();
@@ -227,6 +230,7 @@ public class GameScreen extends AbstractScreen {
         shape.setAsBox(width / PPM, height / PPM);
 
         FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.filter.groupIndex = 1;
         fixtureDef.density = 1.0f;
         fixtureDef.shape = shape;
         fixtureDef.isSensor = isSensor;
@@ -242,15 +246,15 @@ public class GameScreen extends AbstractScreen {
      */
     private void enemySpawner() {
         // Calculating distance
-        int type = MathUtils.random(1, 4);
+        double type = MathUtils.random();
         enemyDistance.set(MathUtils.random(-7f, 8f), MathUtils.random(-4.5f, 3.5f));
         while (app.player.body.getPosition().dst(enemyDistance) < 3.5f) {
             enemyDistance.set(MathUtils.random(-7f, 8f), MathUtils.random(-4.5f, 3.5f));
         }
         // Creating enemy
-        Enemy enemy = new Enemy(type == 1 ? COLLISIONS.WARRIOR : COLLISIONS.KNIGHT,
+        Enemy enemy = new Enemy(type < 0.25 ? COLLISIONS.WARRIOR : COLLISIONS.KNIGHT,
                 createBox(enemyDistance.x, enemyDistance.y, 22, 28, type == 1 ? COLLISIONS.WARRIOR : COLLISIONS.KNIGHT,
-                        BodyDef.BodyType.DynamicBody, 10f, true));
+                        BodyDef.BodyType.DynamicBody, 10f, false));
 
         app.enemyList.add(enemy);
         lastEnemySpawn = TimeUtils.nanoTime();

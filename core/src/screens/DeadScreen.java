@@ -26,12 +26,14 @@ public class DeadScreen extends AbstractScreen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+
         stage.clear();
         earth.setPosition(0, 0);
+        stage.addActor(earth);
+
         gameOverText.setScale(0.5f);
         gameOverText.setPosition(400, 100);
-        gameOverText.addAction(sequence(alpha(0f), fadeIn(1.5f)));
-        stage.addActor(earth);
+        gameOverText.addAction(sequence(alpha(0f), fadeIn(1f)));
         stage.addActor(gameOverText);
         i = 0;
     }
@@ -42,7 +44,7 @@ public class DeadScreen extends AbstractScreen {
     @Override
     public void update(float delta) {
         stage.act(delta);
-        if (i++ > 500) {
+        if (i++ > 150) {
             gsm.setScreen(GameScreenManager.STATES.MAIN_MENU);
         }
     }

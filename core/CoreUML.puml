@@ -1,0 +1,78 @@
+@startuml
+skinparam class {
+    BackgroundColor<<com.dasher.game>> eabbad
+    BackgroundColor<<managers>> ffe2d3
+    BackgroundColor<<screens>> b4ded8
+}
+class DesktopLauncher <<com.dasher.game>> {
+    App launcher
+}
+class DasherMain <<com.dasher.game>> {
+    Application
+    inputUpdate()
+    playerAlive()
+    createBox()
+    enemySpawner()
+    enemyMove()
+}
+class Enemy <<com.dasher.game>> {
+    isAlive()
+    takeDmg()
+}
+class Player <<com.dasher.game>> {
+    isAlive()
+    takeDmg()
+}
+class CollListener <<managers>> {
+    Collision detection
+    isEdge()
+    isAttack()
+}
+class GameScreenManager <<managers>> {
+    Screen manager
+    initScreens()
+    setScreen()
+}
+
+abstract class AbstractScreen <<screens>> {
+    Stage, app
+    update()
+}
+class SplashScreen <<screens>> {
+    Logo
+}
+class MenuScreen <<screens>> {
+    Buttons
+    initBtn()
+}
+class ForestScreen <<screens>> {
+    First stage
+}
+class WaterScreen <<screens>> {
+    Second stage
+}
+class DeadScreen <<screens>> {
+    Game over
+}
+
+DesktopLauncher --> DasherMain
+DasherMain -left- Player
+DasherMain -up- Enemy
+DasherMain -- CollListener
+DasherMain --> GameScreenManager
+GameScreenManager --> SplashScreen
+SplashScreen --> MenuScreen
+MenuScreen -right-> ForestScreen
+ForestScreen -> WaterScreen
+ForestScreen -> DeadScreen
+WaterScreen -up-> DeadScreen
+DeadScreen -> MenuScreen
+
+AbstractScreen . SplashScreen
+AbstractScreen . MenuScreen
+AbstractScreen . ForestScreen
+AbstractScreen . WaterScreen
+AbstractScreen . DeadScreen
+
+@enduml
+

@@ -7,7 +7,10 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.dasher.game.Enemy;
 import screens.GameScreen;
 
+import java.util.logging.Level;
+
 import static com.dasher.game.DasherMain.gsm;
+import static com.dasher.game.DasherMain.logger;
 
 
 public class CollListener implements ContactListener {
@@ -24,7 +27,8 @@ public class CollListener implements ContactListener {
 
         if (isEdge(fA, fB)) {
             damageSound.play(0.2f);
-            gsm.app.player.takeDmg((byte) 10);
+            gsm.app.player.takeDmg(gsm.app.player.getHp());
+            logger.log(Level.INFO, "Player touched edge");
         }
         // Damage system
         if (isAttack(fA, fB)) {
@@ -33,9 +37,13 @@ public class CollListener implements ContactListener {
                 switch ((GameScreen.COLLISIONS) fB.getBody().getUserData()) {
                     case KNIGHT:
                         gsm.app.player.takeDmg(GameScreen.COLLISIONS.KNIGHT.dmg);
+                        logger.log(Level.INFO, "Player take " + GameScreen.COLLISIONS.KNIGHT.dmg +
+                                " dmg, Hp remains: " + gsm.app.player.getHp());
                         break;
                     case WARRIOR:
                         gsm.app.player.takeDmg(GameScreen.COLLISIONS.WARRIOR.dmg);
+                        logger.log(Level.INFO, "Player take " + GameScreen.COLLISIONS.WARRIOR.dmg +
+                                " dmg, Hp remains: " + gsm.app.player.getHp());
                         break;
                 }
             } else {

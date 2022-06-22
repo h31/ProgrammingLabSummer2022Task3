@@ -21,9 +21,9 @@ import com.dasher.game.managers.GameScreenManager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
 
-import static com.dasher.game.DasherMain.PPM;
-import static com.dasher.game.DasherMain.gsm;
+import static com.dasher.game.DasherMain.*;
 
 public class GameScreen extends AbstractScreen {
     public enum COLLISIONS {
@@ -121,7 +121,7 @@ public class GameScreen extends AbstractScreen {
     public void update(float delta) {
         stage.act(delta);
         world.step(1 / 60f, 12, 4);
-        System.out.println(app.player.isDash);
+
         playerAlive();
         enemyMove();
 
@@ -183,6 +183,7 @@ public class GameScreen extends AbstractScreen {
     private void playerAlive() {
         if (app.player.isAlive()) inputUpdate();
         else {
+            logger.log(Level.INFO, "Player is dead");
             if (app.score > app.highScore) {
                 app.prefs.putInteger("highScore", app.score);
                 app.prefs.flush();

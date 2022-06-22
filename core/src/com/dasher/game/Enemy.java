@@ -34,4 +34,11 @@ public class Enemy {
     public void takeDmg(int dmg) {
         hp -= dmg;
     }
+
+    /**
+     * Only for tests
+     */
+    byte getHp() {
+        return hp;
+    }
 }

@@ -9,8 +9,10 @@ import com.dasher.game.managers.GameScreenManager;
 import screens.GameScreen;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class DasherMain extends Game {
+    public static final Logger logger = Logger.getLogger(DasherMain.class.getName());
     public static final float PPM = 64; // Pixel Per Meter need to convert big bodies to small
     public static GameScreenManager gsm;
 

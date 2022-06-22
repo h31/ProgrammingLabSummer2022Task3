@@ -11,9 +11,12 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.dasher.game.DasherMain;
 import com.dasher.game.managers.GameScreenManager;
 
+import java.util.logging.Level;
+
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
 import static com.dasher.game.DasherMain.gsm;
+import static com.dasher.game.DasherMain.logger;
 
 
 public class SplashScreen extends AbstractScreen {

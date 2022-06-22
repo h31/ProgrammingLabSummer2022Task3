@@ -26,8 +26,8 @@ public class SeaBattle extends Application {
 
     public static Pane group = new Pane();
     private final Scene scene = new Scene(group, 700,400);
-    private final int[][] table1 = new int[10][10];
-    private final int[][] table2 = new int[10][10];
+    private final int[][] tableShipsPosition1 = new int[10][10];
+    private final int[][] tableShipsPosition2 = new int[10][10];
     private final int[][] aroundShip1 = new int[10][10];
     private final int[][] aroundShip2 = new int[10][10];
     private final int[][] tableOfHits1 = new int[12][12];
@@ -63,8 +63,8 @@ public class SeaBattle extends Application {
         error.setY(300);
         error.setStroke(Color.RED);
         error.setStyle("-fx-font: 13 arial;");
-        Water water1 = new Water(SIZE, SIZE);
-        group.getChildren().add(water1);
+        FieldOfPlay fieldOfPlay = new FieldOfPlay(SIZE, SIZE);
+        group.getChildren().add(fieldOfPlay);
         ArrayList<Ship> ships = new ArrayList<>();
         Ship shipFourDecks = new Ship(SIZE * 22, SIZE, 4);
         ships.add(shipFourDecks);
@@ -96,7 +96,7 @@ public class SeaBattle extends Application {
     // Обработка нажатия кнопки начала игры, добавление объектов для расстановки кораблей первого игрока на экран
     private void pressStartButton(Button beginButton) {
         beginButton.setOnAction(event -> {
-            declareShips(table1, aroundShip1);
+            declareShips(tableShipsPosition1, aroundShip1);
             Text participant1 = new Text("Участник1 установите корабли");
             participant1.setX(25);
             participant1.setY(350);
@@ -115,7 +115,7 @@ public class SeaBattle extends Application {
                 int score = 0;
                 for (int i = 0; i <= 9; i++) {
                     for (int j = 0; j <= 9; j++) {
-                        score += table1[i][j];
+                        score += tableShipsPosition1[i][j];
                     }
                 }
                 if (score != 20) {
@@ -135,7 +135,7 @@ public class SeaBattle extends Application {
 
     //Добавление объектов для расстановки кораблей второго игрока на экран
     void pressShipPlacementButton() {
-        declareShips(table2, aroundShip2);
+        declareShips(tableShipsPosition2, aroundShip2);
         Text participant2 = new Text("Участник2 установите корабли");
         participant2.setX(25);
         participant2.setY(350);
@@ -152,7 +152,7 @@ public class SeaBattle extends Application {
             int score1 = 0;
             for (int i = 0; i <= 9; i++) {
                 for (int j = 0; j <= 9; j++) {
-                    score1 += table2[i][j];
+                    score1 += tableShipsPosition2[i][j];
                 }
             }
             if (score1 != 20) {
@@ -162,9 +162,9 @@ public class SeaBattle extends Application {
                     buttonSecondPlayer.setDisable(false);
                     buttonSecondPlayer.setVisible(false);
                     group.getChildren().clear();
-                    Water water1 = new Water(SIZE, SIZE);
-                    Water water2 = new Water(SIZE * 13, SIZE);
-                    group.getChildren().addAll(water1, water2);
+                    FieldOfPlay fieldOfPlay1 = new FieldOfPlay(SIZE, SIZE);
+                    FieldOfPlay fieldOfPlay2 = new FieldOfPlay(SIZE * 13, SIZE);
+                    group.getChildren().addAll(fieldOfPlay1, fieldOfPlay2);
                     group.getChildren().remove(error);
                     Text player1 = new Text("Поле участника1");
                     player1.setX(SIZE);
@@ -191,9 +191,9 @@ public class SeaBattle extends Application {
                 for (int j = 0; j <= 9; j++) {
                     if (e.getSceneX() >= SIZE * 12 + SIZE * (i + 1) && e.getSceneX() < SIZE * 12 + SIZE * (i + 2) &&
                             e.getSceneY() >= SIZE * (j + 1) && e.getSceneY() < SIZE * (j + 2) &&
-                            table2[i][j] == 1 && tableOfHits2[i + 1][j + 1] != 1 && endGame) {
+                            tableShipsPosition2[i][j] == 1 && tableOfHits2[i + 1][j + 1] != 1 && endGame) {
                         tableOfHits2[i + 1][j + 1] = 1;
-                        shipKilled(i, j, table2, SIZE * 12, 2);
+                        shipKilled(i, j, tableShipsPosition2, SIZE * 12, 2);
                         score1++;
                         if (score1 == 20) {
                             endGame = false;
@@ -207,7 +207,7 @@ public class SeaBattle extends Application {
                         }
                     } else if (e.getSceneX() >= SIZE * 12 + SIZE * (i + 1) && e.getSceneX() < SIZE * 12 + SIZE * (i + 2) &&
                             e.getSceneY() >= SIZE * (j + 1) && e.getSceneY() < SIZE * (j + 2) &&
-                            table2[i][j] == 0 && tableOfHits2[i + 1][j + 1] != 1 && endGame) {
+                            tableShipsPosition2[i][j] == 0 && tableOfHits2[i + 1][j + 1] != 1 && endGame) {
                         tableOfHits2[i + 1][j + 1] = 1;
                         drawRectangleBlue(SIZE * 12 + SIZE * (i + 1), SIZE * (j + 1));
                         addImage("/ArrowLeft.jpg", SIZE * 11 + (int) (SIZE * 0.2), SIZE * 6, (int) (SIZE * 1.6), (int) (SIZE * 1.6));
@@ -225,9 +225,9 @@ public class SeaBattle extends Application {
                 for (int j = 0; j <= 9; j++) {
                     if (e.getSceneX() >= SIZE * (i + 1) && e.getSceneX() < SIZE * (i + 2) &&
                             e.getSceneY() >= SIZE * (j + 1) && e.getSceneY() < SIZE * (j + 2) &&
-                            table1[i][j] == 1 && tableOfHits1[i + 1][j + 1] != 1 && endGame) {
+                            tableShipsPosition1[i][j] == 1 && tableOfHits1[i + 1][j + 1] != 1 && endGame) {
                         tableOfHits1[i + 1][j + 1] = 1;
-                        shipKilled(i, j, table1, 0, 1);
+                        shipKilled(i, j, tableShipsPosition1, 0, 1);
                         score++;
                         if (score == 20) {
                             endGame = false;
@@ -241,7 +241,7 @@ public class SeaBattle extends Application {
                         }
                     } else if (e.getSceneX() >= SIZE * (i + 1) && e.getSceneX() < SIZE * (i + 2) &&
                             e.getSceneY() >= SIZE * (j + 1) && e.getSceneY() < SIZE * (j + 2) &&
-                            table1[i][j] == 0 && tableOfHits1[i + 1][j + 1] != 1 && endGame) {
+                            tableShipsPosition1[i][j] == 0 && tableOfHits1[i + 1][j + 1] != 1 && endGame) {
                         tableOfHits1[i + 1][j + 1] = 1;
                         drawRectangleBlue(SIZE * (i + 1), SIZE * (j + 1));
                         addImage("/ArrowRight.jpg", SIZE * 11 + (int) (SIZE * 0.2), SIZE * 6, (int) (SIZE * 1.6), (int) (SIZE * 1.6));

@@ -4,9 +4,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.layout.Pane;
 
-public class Water extends Pane {
+public class FieldOfPlay extends Pane {
 
-    Water(int x, int y) {
+    FieldOfPlay(int x, int y) {
         for (int i = 0; i <= 10; i++) {
             addHorizontallyLine(x, y + SeaBattle.SIZE * i);
         }

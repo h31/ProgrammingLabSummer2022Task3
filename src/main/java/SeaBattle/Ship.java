@@ -42,12 +42,12 @@ public class Ship extends Rectangle {
     }
 
     // Обработка переворота корабля
-    public static void mouseClickedRight(Ship ship, int[][] table, int[][] tableAroundShip) {
+    public static void mouseClickedRight(Ship ship, int[][] tableShipsPosition, int[][] tableAroundShip) {
         if (ship.size != 1) {
             if (ship.getTranslateX() != 0 || ship.getTranslateY() != 0) {
                 ship.setTranslateX(0);
                 ship.setTranslateY(0);
-                mouseDragged(ship, table, tableAroundShip);
+                mouseDragged(ship, tableShipsPosition, tableAroundShip);
             } else {
                 ship.position = !ship.position;
                 Rotate rotate = new Rotate();
@@ -68,10 +68,10 @@ public class Ship extends Rectangle {
     }
 
     // Очистка местонахождения кораблей
-    public static void mouseDragged(Ship ship, int[][] table, int[][] tableAroundShip) {
+    public static void mouseDragged(Ship ship, int[][] tableShipsPosition, int[][] tableAroundShip) {
         for (int i = 0; i <= ship.listX.size() - 1; i++) {
             for (int j = 0; j <= ship.listY.size() - 1; j++) {
-                table[ship.listX.get(i)][ship.listY.get(j)] = 0;
+                tableShipsPosition[ship.listX.get(i)][ship.listY.get(j)] = 0;
                 if (tableAroundShip[ship.aroundShipX.get(i)][ship.listY.get(j)] > 0) {
                     tableAroundShip[ship.aroundShipY.get(i)][ship.listY.get(j)] -= 1;
                 }
@@ -83,7 +83,7 @@ public class Ship extends Rectangle {
         ship.aroundShipY.clear();
     }
 
-    public static void mouseReleased(Ship ship, int[][] table, int[][] tableAroundShip) {
+    public static void mouseReleased(Ship ship, int[][] tableShipsPosition, int[][] tableAroundShip) {
         // Возврат кораблей на начальную позицию при выходе его за границу
         if (ship.position &&
                 (ship.getX() + ship.getTranslateX() < SeaBattle.SIZE ||
@@ -117,7 +117,7 @@ public class Ship extends Rectangle {
                 int secondY1 = (int)((ship.getY() + ship.getTranslateY()) / SeaBattle.SIZE + ship.size - 1);
                 int secondY = secondY1;
                 if (secondY1 > 9) secondY = secondY1 - 1;
-                recordPositionsOfShips(ship, table, tableAroundShip, firstX1, secondX1, firstY1, secondY1,
+                recordPositionsOfShips(ship, tableShipsPosition, tableAroundShip, firstX1, secondX1, firstY1, secondY1,
                 firstX, secondX, firstY, secondY);
             }
 
@@ -138,7 +138,7 @@ public class Ship extends Rectangle {
                 int secondY = secondY1;
                 if (secondY1 > 9) secondY = secondY1 - 1;
 
-                recordPositionsOfShips(ship, table, tableAroundShip, firstX1, secondX1, firstY1, secondY1,
+                recordPositionsOfShips(ship, tableShipsPosition, tableAroundShip, firstX1, secondX1, firstY1, secondY1,
                         firstX, secondX, firstY, secondY);
             }
         }

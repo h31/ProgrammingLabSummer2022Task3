@@ -10,14 +10,14 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class TestSeaBattle {
-    int[][] table = new int[10][10];
+    int[][] tableShipsPosition = new int[10][10];
     int[][] tableAroundShip = new int[10][10];
 
     @Test
     public void testMouseClickedRight1(){
         Ship ship = new Ship(325, 25, 3);
         ship.setTranslateX(300);
-        Ship.mouseClickedRight(ship, table, tableAroundShip);
+        Ship.mouseClickedRight(ship, tableShipsPosition, tableAroundShip);
         assertEquals(0, ship.getTranslateX(), 0);
     }
 
@@ -31,7 +31,7 @@ public class TestSeaBattle {
         rotate.setPivotY(ship.getY() + 25);
         rotate.setAngle(270);
         ship.getTransforms().add(rotate);
-        Ship.mouseClickedRight(ship1, table, tableAroundShip);
+        Ship.mouseClickedRight(ship1, tableShipsPosition, tableAroundShip);
         assertEquals(ship.getTransforms().toString(), ship1.getTransforms().toString());
     }
 
@@ -45,7 +45,7 @@ public class TestSeaBattle {
         rotate.setPivotY(ship.getY() + 25);
         rotate.setAngle(90);
         ship.getTransforms().add(rotate);
-        Ship.mouseClickedRight(ship1, table, tableAroundShip);
+        Ship.mouseClickedRight(ship1, tableShipsPosition, tableAroundShip);
         assertEquals(ship.getTransforms().toString(), ship1.getTransforms().toString());
     }
 
@@ -62,11 +62,11 @@ public class TestSeaBattle {
         ship.setListY(listY);
         ship.setAroundShipX(listX);
         ship.setAroundShipY(listY);
-        int[][] table1 = new int[10][10];
-        table[0][0] = 1;
-        table[0][1] = 1;
-        Ship.mouseDragged(ship, table, tableAroundShip);
-        assertArrayEquals(table, table1);
+        int[][] tableShipsPosition1 = new int[10][10];
+        tableShipsPosition[0][0] = 1;
+        tableShipsPosition[0][1] = 1;
+        Ship.mouseDragged(ship, tableShipsPosition, tableAroundShip);
+        assertArrayEquals(tableShipsPosition, tableShipsPosition1);
     }
 
     @Test
@@ -74,7 +74,7 @@ public class TestSeaBattle {
         Ship ship = new Ship(325, 25, 2);
         ship.setPosition(true);
         ship.setTranslateX(-325);
-        Ship.mouseReleased(ship, table, tableAroundShip);
+        Ship.mouseReleased(ship, tableShipsPosition, tableAroundShip);
         assertEquals(0, ship.getTranslateX(), 0);
     }
 
@@ -83,7 +83,7 @@ public class TestSeaBattle {
         Ship ship = new Ship(325, 25, 2);
         ship.setPosition(false);
         ship.setTranslateY(280);
-        Ship.mouseReleased(ship, table, tableAroundShip);
+        Ship.mouseReleased(ship, tableShipsPosition, tableAroundShip);
         assertEquals(0, ship.getTranslateY(), 0);
     }
 
@@ -95,11 +95,11 @@ public class TestSeaBattle {
         ship.setListY(new LinkedList<>());
         ship.setAroundShipX(new LinkedList<>());
         ship.setAroundShipY(new LinkedList<>());
-        int[][] table1 = new int[10][10];
-        table1[0][0] = 1;
-        table1[0][1] = 1;
-        Ship.mouseReleased(ship, table, tableAroundShip);
-        assertArrayEquals(table, table1);
+        int[][] tableShipsPosition1 = new int[10][10];
+        tableShipsPosition1[0][0] = 1;
+        tableShipsPosition1[0][1] = 1;
+        Ship.mouseReleased(ship, tableShipsPosition, tableAroundShip);
+        assertArrayEquals(tableShipsPosition, tableShipsPosition1);
     }
 
     @Test
@@ -110,11 +110,11 @@ public class TestSeaBattle {
         ship.setListY(new LinkedList<>());
         ship.setAroundShipX(new LinkedList<>());
         ship.setAroundShipY(new LinkedList<>());
-        int[][] table1 = new int[10][10];
-        table1[0][0] = 1;
-        table1[1][0] = 1;
-        Ship.mouseReleased(ship, table, tableAroundShip);
-        assertArrayEquals(table, table1);
+        int[][] tableShipsPosition1 = new int[10][10];
+        tableShipsPosition1[0][0] = 1;
+        tableShipsPosition1[1][0] = 1;
+        Ship.mouseReleased(ship, tableShipsPosition, tableAroundShip);
+        assertArrayEquals(tableShipsPosition, tableShipsPosition1);
     }
 
     @Test
@@ -126,9 +126,9 @@ public class TestSeaBattle {
         ship.setListY(new LinkedList<>());
         ship.setAroundShipX(new LinkedList<>());
         ship.setAroundShipY(new LinkedList<>());
-        int[][] table1 = new int[10][10];
-        table1[0][0] = 1;
-        Ship.mouseReleased(ship, table1, tableAroundShip);
+        int[][] tableShipsPosition1 = new int[10][10];
+        tableShipsPosition1[0][0] = 1;
+        Ship.mouseReleased(ship, tableShipsPosition1, tableAroundShip);
         assertEquals(0, ship.getTranslateY(), 0);
     }
 
@@ -141,9 +141,9 @@ public class TestSeaBattle {
         ship.setListY(new LinkedList<>());
         ship.setAroundShipX(new LinkedList<>());
         ship.setAroundShipY(new LinkedList<>());
-        int[][] table1 = new int[10][10];
-        table1[0][0] = 1;
-        Ship.mouseReleased(ship, table1, tableAroundShip);
+        int[][] tableShipsPosition1 = new int[10][10];
+        tableShipsPosition1[0][0] = 1;
+        Ship.mouseReleased(ship, tableShipsPosition1, tableAroundShip);
         assertEquals(0, ship.getTranslateY(), 0);
     }
 }

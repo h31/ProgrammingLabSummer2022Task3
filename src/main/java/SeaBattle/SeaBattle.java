@@ -58,7 +58,7 @@ public class SeaBattle extends Application {
     }
 
     // Объявление кораблей и добавление их на экран
-    void declareShips(int[][] table, int[][] aroundShip) {
+    void declareShips(int[][] tableShipsPosition, int[][] aroundShip) {
         error.setX(450);
         error.setY(300);
         error.setStroke(Color.RED);
@@ -88,7 +88,7 @@ public class SeaBattle extends Application {
         ships.add(simpleShip4);
 
         for (Ship ship: ships) {
-            installation(ship, table, aroundShip);
+            installation(ship, tableShipsPosition, aroundShip);
             group.getChildren().add(ship);
         }
     }
@@ -253,7 +253,7 @@ public class SeaBattle extends Application {
     }
 
     // Проверка в корабль попали или корабль убили
-    void shipKilled(int i, int j, int[][] table, int segment, int participant) {
+    void shipKilled(int i, int j, int[][] tableShipsPosition, int segment, int participant) {
         boolean borderX0 = i == 0;
         boolean borderY0 = j == 0;
         boolean borderX9 = i == 9;
@@ -264,35 +264,35 @@ public class SeaBattle extends Application {
         int minY = j;
         boolean shipHasBeenKilled = false;
         int x = i + 1;
-        while (x <= 9 && table[x][j] != 0) {
+        while (x <= 9 && tableShipsPosition[x][j] != 0) {
             if (x < minX) minX = x;
             if (x == 0) borderX0 = true;
             if (x == 9) borderX9 = true;
             if (j == 0) borderY0 = true;
             if (j == 9) borderY9 = true;
             size++;
-            if (table[x][j] == 1) {
+            if (tableShipsPosition[x][j] == 1) {
                 shipHasBeenKilled = true;
                 break;
             }
             x++;
         }
         x = i - 1;
-        while (!shipHasBeenKilled && x >= 0 && table[x][j] != 0) {
+        while (!shipHasBeenKilled && x >= 0 && tableShipsPosition[x][j] != 0) {
             if (x < minX) minX = x;
             if (x == 0) borderX0 = true;
             if (x == 9) borderX9 = true;
             if (j == 0) borderY0 = true;
             if (j == 9) borderY9 = true;
             size++;
-            if (table[x][j] == 1) {
+            if (tableShipsPosition[x][j] == 1) {
                 shipHasBeenKilled = true;
                 break;
             }
             x--;
         }
         int y = j + 1;
-        while (!shipHasBeenKilled && y <= 9 && table[i][y] != 0) {
+        while (!shipHasBeenKilled && y <= 9 && tableShipsPosition[i][y] != 0) {
             horizontallyVertically = true;
             if (i == 0) borderX0 = true;
             if (i == 9) borderX9 = true;
@@ -300,14 +300,14 @@ public class SeaBattle extends Application {
             if (y == 9) borderY9 = true;
             if (y < minY) minY = y;
             size++;
-            if (table[i][y] == 1) {
+            if (tableShipsPosition[i][y] == 1) {
                 shipHasBeenKilled = true;
                 break;
             }
             y++;
         }
         y = j - 1;
-        while (!shipHasBeenKilled && y >= 0 && table[i][y] != 0) {
+        while (!shipHasBeenKilled && y >= 0 && tableShipsPosition[i][y] != 0) {
             horizontallyVertically = true;
             if (i == 0) borderX0 = true;
             if (i == 9) borderX9 = true;
@@ -315,7 +315,7 @@ public class SeaBattle extends Application {
             if (y == 9) borderY9 = true;
             if (y < minY) minY = y;
             size++;
-            if (table[i][y] == 1) {
+            if (tableShipsPosition[i][y] == 1) {
                 shipHasBeenKilled = true;
                 break;
             }
@@ -328,7 +328,7 @@ public class SeaBattle extends Application {
         }
         else {
             drawCross(segment + SIZE * (i + 1), SIZE * (j + 1));
-            table[i][j] = 2;
+            tableShipsPosition[i][j] = 2;
         }
     }
 
@@ -588,11 +588,11 @@ public class SeaBattle extends Application {
     }
 
     // Установление кораблей
-    private void installation(Ship ship, int[][] table, int[][] tableAroundShip) {
+    private void installation(Ship ship, int[][] tableShipsPosition, int[][] tableAroundShip) {
         // Переворот корабля
         ship.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
-                Ship.mouseClickedRight(ship, table, tableAroundShip);
+                Ship.mouseClickedRight(ship, tableShipsPosition, tableAroundShip);
             }
         });
         // Перемещение корабля
@@ -606,12 +606,12 @@ public class SeaBattle extends Application {
             if (e.getButton().equals(MouseButton.PRIMARY)) {
                 ship.setTranslateX(oldX + e.getSceneX() - (oldX + e.getSceneX()) % SIZE);
                 ship.setTranslateY(oldY + e.getSceneY() - (oldY + e.getSceneY()) % SIZE);
-                Ship.mouseDragged(ship, table, tableAroundShip);
+                Ship.mouseDragged(ship, tableShipsPosition, tableAroundShip);
             }
         });
         ship.setOnMouseReleased(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY)) {
-                Ship.mouseReleased(ship, table, tableAroundShip);
+                Ship.mouseReleased(ship, tableShipsPosition, tableAroundShip);
             }
         });
     }

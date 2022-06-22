@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class GameScreenManager {
     public final DasherMain app;
-    private final Map<STATES, AbstractScreen> gameScreens = new EnumMap<>(STATES.class);;
+    private final Map<STATES, AbstractScreen> gameScreens = new EnumMap<>(STATES.class);
 
     /**
      * Keys of screens in EnumMap

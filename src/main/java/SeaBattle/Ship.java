@@ -7,7 +7,6 @@ import java.util.LinkedList;
 
 public class Ship extends Rectangle {
     private boolean position = true;
-    private final Rectangle rect;
     private final int size;
     private LinkedList<Integer> listX = new LinkedList<>();
     private LinkedList<Integer> listY = new LinkedList<>();
@@ -20,10 +19,6 @@ public class Ship extends Rectangle {
 
     public void setAroundShipX(LinkedList<Integer> aroundShipX) {
         this.aroundShipX = aroundShipX;
-    }
-
-    public Rectangle getRect() {
-        return rect;
     }
 
     public void setListX(LinkedList<Integer> listX) {
@@ -40,35 +35,39 @@ public class Ship extends Rectangle {
 
 
     public Ship(int x, int y, int size) {
+        super(x, y,SeaBattle.SIZE,SeaBattle.SIZE + SeaBattle.SIZE * (size - 1));
         this.size = size;
-        rect = new Rectangle(x, y,25,25 + 25 * (size - 1));
-        rect.setFill(Color.BLUE);
-        rect.setStroke(Color.BLACK);
+        setFill(Color.BLUE);
+        setStroke(Color.BLACK);
     }
 
+    // Обработка переворота корабля
     public static void mouseClickedRight(Ship ship, int[][] table, int[][] tableAroundShip) {
-        if (ship.rect.getTranslateX() != 0 || ship.rect.getTranslateY() != 0) {
-            ship.rect.setTranslateX(0);
-            ship.rect.setTranslateY(0);
-            mouseDragged(ship, table, tableAroundShip);
-        } else {
-            ship.position = !ship.position;
-            Rotate rotate = new Rotate();
-            if (!ship.position) {
-                rotate.setPivotX(ship.rect.getX());
-                rotate.setPivotY(ship.rect.getY() + 25);
-                rotate.setAngle(270);
-
+        if (ship.size != 1) {
+            if (ship.getTranslateX() != 0 || ship.getTranslateY() != 0) {
+                ship.setTranslateX(0);
+                ship.setTranslateY(0);
+                mouseDragged(ship, table, tableAroundShip);
             } else {
-                rotate.setPivotX(ship.rect.getX());
-                rotate.setPivotY(ship.rect.getY() + 25);
-                rotate.setAngle(90);
-            }
-            ship.rect.getTransforms().add(rotate);
+                ship.position = !ship.position;
+                Rotate rotate = new Rotate();
+                if (!ship.position) {
+                    rotate.setPivotX(ship.getX());
+                    rotate.setPivotY(ship.getY() + SeaBattle.SIZE);
+                    rotate.setAngle(270);
 
+                } else {
+                    rotate.setPivotX(ship.getX());
+                    rotate.setPivotY(ship.getY() + SeaBattle.SIZE);
+                    rotate.setAngle(90);
+                }
+                ship.getTransforms().add(rotate);
+
+            }
         }
     }
 
+    // Очистка местонахождения кораблей
     public static void mouseDragged(Ship ship, int[][] table, int[][] tableAroundShip) {
         for (int i = 0; i <= ship.listX.size() - 1; i++) {
             for (int j = 0; j <= ship.listY.size() - 1; j++) {
@@ -85,92 +84,77 @@ public class Ship extends Rectangle {
     }
 
     public static void mouseReleased(Ship ship, int[][] table, int[][] tableAroundShip) {
+        // Возврат кораблей на начальную позицию при выходе его за границу
         if (ship.position &&
-                (ship.rect.getX() + ship.rect.getTranslateX() < 25 ||
-                        ship.rect.getX() + ship.rect.getTranslateX() + 25 > 275 ||
-                        ship.rect.getY() + ship.rect.getTranslateY() < 25 ||
-                        ship.rect.getY() + ship.rect.getTranslateY() + (ship.size) * 25 > 275)) {
-            ship.rect.setTranslateX(0);
-            ship.rect.setTranslateY(0);
+                (ship.getX() + ship.getTranslateX() < SeaBattle.SIZE ||
+                        ship.getX() + ship.getTranslateX() + SeaBattle.SIZE > SeaBattle.SIZE + SeaBattle.SIZE * 10 ||
+                        ship.getY() + ship.getTranslateY() < SeaBattle.SIZE ||
+                        ship.getY() + ship.getTranslateY() + (ship.size) * SeaBattle.SIZE > SeaBattle.SIZE + SeaBattle.SIZE * 10)) {
+            ship.setTranslateX(0);
+            ship.setTranslateY(0);
         } else if (!ship.position &&
-                (ship.rect.getX() + ship.rect.getTranslateX() - 25 < 25 ||
-                        ship.rect.getX() + ship.rect.getTranslateX() + (ship.size - 1) * 25 > 275 ||
-                        ship.rect.getY() + ship.rect.getTranslateY() < 25 ||
-                        ship.rect.getY() + ship.rect.getTranslateY() + 25 > 275)) {
-            ship.rect.setTranslateX(0);
-            ship.rect.setTranslateY(0);
+                (ship.getX() + ship.getTranslateX() - SeaBattle.SIZE < SeaBattle.SIZE ||
+                        ship.getX() + ship.getTranslateX() + (ship.size - 1) * SeaBattle.SIZE > SeaBattle.SIZE + SeaBattle.SIZE * 10 ||
+                        ship.getY() + ship.getTranslateY() < SeaBattle.SIZE ||
+                        ship.getY() + ship.getTranslateY() + SeaBattle.SIZE > SeaBattle.SIZE + SeaBattle.SIZE * 10)) {
+            ship.setTranslateX(0);
+            ship.setTranslateY(0);
         } else {
 
             if (ship.position) {
-                int firstX10 = (int) ((ship.rect.getX() + ship.rect.getTranslateX()) / 25 - 2);
-                int firstX20 = (int) ((ship.rect.getX() + ship.rect.getTranslateX()) / 25 - 1);
-                int firstX30;
-                if (firstX10 >= 0) firstX30 = firstX10;
-                else firstX30 = firstX20;
+                int firstX1 = (int) ((ship.getX() + ship.getTranslateX()) / SeaBattle.SIZE - 2);
+                int firstX = firstX1;
+                if (firstX1 < 0) firstX = firstX1 + 1;
 
-                int secondX10 = (int) ((ship.rect.getX() + ship.rect.getTranslateX()) / 25);
-                int secondX20 = (int) ((ship.rect.getX() + ship.rect.getTranslateX()) / 25 - 1);
-                int secondX30;
-                if (secondX10 <= 9) secondX30 = secondX10;
-                else secondX30 = secondX20;
+                int secondX1 = (int) ((ship.getX() + ship.getTranslateX()) / SeaBattle.SIZE);
+                int secondX = secondX1;
+                if (secondX1 > 9) secondX = secondX1 - 1;
 
-                int firstY10 = (int) ((ship.rect.getY() + ship.rect.getTranslateY()) / 25 - 2);
-                int firstY20 = (int) ((ship.rect.getY() + ship.rect.getTranslateY()) / 25 - 1);
-                int firstY30;
-                if (firstY10 >= 0) firstY30 = firstY10;
-                else firstY30 = firstY20;
+                int firstY1 = (int) ((ship.getY() + ship.getTranslateY()) / SeaBattle.SIZE - 2);
+                int firstY = firstY1;
+                if (firstY1 < 0) firstY = firstY1 + 1;
 
-                int secondY10 = (int)((ship.rect.getY() + ship.rect.getTranslateY()) / 25 + ship.size - 1);
-                int secondY20 = (int)((ship.rect.getY() + ship.rect.getTranslateY()) / 25 + ship.size - 2);
-                int secondY30;
-                if (secondY10 <= 9) secondY30 = secondY10;
-                else secondY30 = secondY20;
-                cycleForMouseReleased(ship, table, tableAroundShip, firstX10, secondX10, firstY10, secondY10,
-                firstX30, secondX30, firstY30, secondY30);
+                int secondY1 = (int)((ship.getY() + ship.getTranslateY()) / SeaBattle.SIZE + ship.size - 1);
+                int secondY = secondY1;
+                if (secondY1 > 9) secondY = secondY1 - 1;
+                recordPositionsOfShips(ship, table, tableAroundShip, firstX1, secondX1, firstY1, secondY1,
+                firstX, secondX, firstY, secondY);
             }
 
-
             if (!ship.position) {
-                int firstX10 = (int) ((ship.rect.getX() + ship.rect.getTranslateX()) / 25 - 3);
-                int firstX20 = (int) ((ship.rect.getX() + ship.rect.getTranslateX()) / 25 - 2);
-                int firstX30;
-                if (firstX10 >= 0) firstX30 = firstX10;
-                else firstX30 = firstX20;
+                int firstX1 = (int) ((ship.getX() + ship.getTranslateX()) / SeaBattle.SIZE - 3);
+                int firstX = firstX1;
+                if (firstX1 < 0) firstX = firstX1 + 1;
 
-                int secondX10 = (int) ((ship.rect.getX() + ship.rect.getTranslateX()) / 25 + ship.size - 2);
-                int secondX20 = (int) ((ship.rect.getX() + ship.rect.getTranslateX()) / 25 + ship.size - 3);
-                int secondX30;
-                if (secondX10 <= 9) secondX30 = secondX10;
-                else secondX30 = secondX20;
+                int secondX1 = (int) ((ship.getX() + ship.getTranslateX()) / SeaBattle.SIZE + ship.size - 2);
+                int secondX = secondX1;
+                if (secondX1 > 9) secondX = secondX1 - 1;
 
-                int firstY10 = (int) ((ship.rect.getY() + ship.rect.getTranslateY()) / 25 - 2);
-                int firstY20 = (int) ((ship.rect.getY() + ship.rect.getTranslateY()) / 25 - 1);
-                int firstY30;
-                if (firstY10 >= 0) firstY30 = firstY10;
-                else firstY30 = firstY20;
+                int firstY1 = (int) ((ship.getY() + ship.getTranslateY()) / SeaBattle.SIZE - 2);
+                int firstY = firstY1;
+                if (firstY1 < 0) firstY = firstY1 + 1;
 
-                int secondY10 = (int)((ship.rect.getY() + ship.rect.getTranslateY()) / 25);
-                int secondY20 = (int)((ship.rect.getY() + ship.rect.getTranslateY()) / 25 - 1);
-                int secondY30;
-                if (secondY10 <= 9) secondY30 = secondY10;
-                else secondY30 = secondY20;
-                cycleForMouseReleased(ship, table, tableAroundShip, firstX10, secondX10, firstY10, secondY10,
-                        firstX30, secondX30, firstY30, secondY30);
+                int secondY1 = (int)((ship.getY() + ship.getTranslateY()) / SeaBattle.SIZE);
+                int secondY = secondY1;
+                if (secondY1 > 9) secondY = secondY1 - 1;
+
+                recordPositionsOfShips(ship, table, tableAroundShip, firstX1, secondX1, firstY1, secondY1,
+                        firstX, secondX, firstY, secondY);
             }
         }
     }
 
-    private static void cycleForMouseReleased(Ship ship, int[][] table, int[][] tableAroundShip, int firstX10,
-                                              int secondX10, int firstY10, int secondY10, int firstX30, int secondX30,
-                                              int firstY30, int secondY30) {
+    // Возврат при надвижении одного корабля на другой и запись их позиций при установке
+    private static void recordPositionsOfShips(Ship ship, int[][] table, int[][] tableAroundShip, int firstX1,
+                                               int secondX1, int firstY1, int secondY1, int firstX, int secondX,
+                                               int firstY, int secondY) {
         cycle:
-        for (int i = firstX30; i <= secondX30; i++) {
-            for (int j = firstY30; j <= secondY30; j++) {
-
-                if (i == firstX10 || i == secondX10 || j == firstY10 || j == secondY10) {
+        for (int i = firstX; i <= secondX; i++) {
+            for (int j = firstY; j <= secondY; j++) {
+                if (i == firstX1 || i == secondX1 || j == firstY1 || j == secondY1) {
                     if (table[i][j] >= 1) {
-                        ship.rect.setTranslateX(0);
-                        ship.rect.setTranslateY(0);
+                        ship.setTranslateX(0);
+                        ship.setTranslateY(0);
                         break cycle;
                     } else {
                         ship.aroundShipX.add(i);
@@ -180,8 +164,8 @@ public class Ship extends Rectangle {
                 }
                 else {
                     if (table[i][j] == 1) {
-                        ship.rect.setTranslateX(0);
-                        ship.rect.setTranslateY(0);
+                        ship.setTranslateX(0);
+                        ship.setTranslateY(0);
                         break cycle;
                     } else {
                         ship.listX.add(i);

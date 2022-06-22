@@ -1,17 +1,16 @@
 package com.dasher.game;
 
 import com.badlogic.gdx.physics.box2d.Body;
-import screens.GameScreen;
 
 public class Player {
     private byte hp;
-    public final Body body;
+    public Body body;
     public final byte moveSpeed;
     public final long dashDelay;
     public final long dashLength;
     public boolean isDash = false;
 
-    public Player(GameScreen.CHARACTER_CLASS type, Body body) {
+    public Player(DasherMain.CharacterClass type, Body body) {
         this.body = body;
         switch (type) {
             case GOBLIN:

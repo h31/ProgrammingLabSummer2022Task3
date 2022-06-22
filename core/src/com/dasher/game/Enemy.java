@@ -1,15 +1,14 @@
 package com.dasher.game;
 
 import com.badlogic.gdx.physics.box2d.Body;
-import screens.GameScreen;
 
 public class Enemy {
     private byte hp;
     public final float moveSpeed;
-    public final GameScreen.COLLISIONS type;
+    public final DasherMain.Collisions type;
     public final Body body;
 
-    public Enemy(GameScreen.COLLISIONS type, Body body) {
+    public Enemy(DasherMain.Collisions type, Body body) {
         this.body = body;
         switch (type) {
             case KNIGHT:

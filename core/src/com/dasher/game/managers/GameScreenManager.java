@@ -8,38 +8,40 @@ import java.util.Map;
 
 public class GameScreenManager {
     public final DasherMain app;
-    private final Map<STATES, AbstractScreen> gameScreens = new EnumMap<>(STATES.class);
+    private final Map<States, AbstractScreen> gameScreens = new EnumMap<>(States.class);
 
     /**
      * Keys of screens in EnumMap
      */
-    public enum STATES {
+    public enum States {
         SPLASH,
         MAIN_MENU,
-        PLAY_STAGE,
+        FOREST_STAGE,
+        WATER_STAGE,
         DEAD_STAGE
     }
 
     public GameScreenManager(final DasherMain app) {
         this.app = app;
         initScreens();
-        setScreen(STATES.SPLASH); // First screen
+        setScreen(States.SPLASH); // First screen
     }
 
     /**
      * Screens initialization
      */
     private void initScreens() {
-        gameScreens.put(STATES.SPLASH, new SplashScreen(app));
-        gameScreens.put(STATES.MAIN_MENU, new MenuScreen(app));
-        gameScreens.put(STATES.PLAY_STAGE, new GameScreen(app));
-        gameScreens.put(STATES.DEAD_STAGE, new DeadScreen(app));
+        gameScreens.put(States.SPLASH, new SplashScreen(app));
+        gameScreens.put(States.MAIN_MENU, new MenuScreen(app));
+        gameScreens.put(States.FOREST_STAGE, new ForestScreen(app));
+        gameScreens.put(States.WATER_STAGE, new WaterScreen(app));
+        gameScreens.put(States.DEAD_STAGE, new DeadScreen(app));
     }
 
     /**
      * Set screen from EnumMap
      */
-    public void setScreen(STATES next) {
+    public void setScreen(States next) {
         app.setScreen(gameScreens.get(next));
     }
 

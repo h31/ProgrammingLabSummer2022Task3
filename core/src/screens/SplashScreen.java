@@ -11,13 +11,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.dasher.game.DasherMain;
 import com.dasher.game.managers.GameScreenManager;
 
-import java.util.logging.Level;
-
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
-import static com.dasher.game.DasherMain.gsm;
-import static com.dasher.game.DasherMain.logger;
-
 
 public class SplashScreen extends AbstractScreen {
     private final Sound startSound = Gdx.audio.newSound(Gdx.files.internal("startSound.mp3"));
@@ -49,8 +43,8 @@ public class SplashScreen extends AbstractScreen {
     @Override
     public void update(float delta) {
         stage.act(delta);
-        if (i++ > 150) gsm.setScreen(GameScreenManager.STATES.MAIN_MENU);
-        if (Gdx.input.isTouched()) gsm.setScreen(GameScreenManager.STATES.MAIN_MENU);
+        if (i++ > 150) app.gsm.setScreen(GameScreenManager.States.MAIN_MENU);
+        if (Gdx.input.isTouched()) app.gsm.setScreen(GameScreenManager.States.MAIN_MENU);
     }
 
     @Override

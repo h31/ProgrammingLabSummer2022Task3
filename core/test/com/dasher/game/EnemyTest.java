@@ -1,7 +1,6 @@
 package com.dasher.game;
 
 import org.junit.jupiter.api.Test;
-import screens.GameScreen;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,7 +8,7 @@ public class EnemyTest {
 
     @Test
     public void deathTestKnight() {
-        Enemy enemy = new Enemy(GameScreen.COLLISIONS.KNIGHT, null);
+        Enemy enemy = new Enemy(DasherMain.Collisions.KNIGHT, null);
         enemy.takeDmg(enemy.getHp());
         assertEquals(0, enemy.getHp());
         assertFalse(enemy.isAlive());
@@ -17,7 +16,7 @@ public class EnemyTest {
 
     @Test
     public void noDeathTestKnight() {
-        Enemy enemy = new Enemy(GameScreen.COLLISIONS.KNIGHT, null);
+        Enemy enemy = new Enemy(DasherMain.Collisions.KNIGHT, null);
         enemy.takeDmg(enemy.getHp() - 1);
         assertEquals(1, enemy.getHp());
         assertTrue(enemy.isAlive());
@@ -25,7 +24,7 @@ public class EnemyTest {
 
     @Test
     public void deathTestWarrior() {
-        Enemy enemy = new Enemy(GameScreen.COLLISIONS.WARRIOR, null);
+        Enemy enemy = new Enemy(DasherMain.Collisions.WARRIOR, null);
         enemy.takeDmg(enemy.getHp());
         assertEquals(0, enemy.getHp());
         assertFalse(enemy.isAlive());
@@ -33,7 +32,7 @@ public class EnemyTest {
 
     @Test
     public void noDeathTestWarrior() {
-        Enemy enemy = new Enemy(GameScreen.COLLISIONS.WARRIOR, null);
+        Enemy enemy = new Enemy(DasherMain.Collisions.WARRIOR, null);
         enemy.takeDmg(enemy.getHp() - 1);
         assertEquals(1, enemy.getHp());
         assertTrue(enemy.isAlive());

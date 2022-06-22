@@ -9,18 +9,16 @@ import com.dasher.game.DasherMain;
 import com.dasher.game.managers.GameScreenManager;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
-import static com.dasher.game.DasherMain.gsm;
 
 
 public class DeadScreen extends AbstractScreen {
     private final Image gameOverText;
-    private final Image earth;
+    private Image back;
     private int i; // Simple counter create delay to give player some time to realize that game is over
 
     public DeadScreen(final DasherMain app) {
         super(app);
         gameOverText = new Image(new Texture("game_over.png"));
-        earth = new Image(new Texture("earthBack.png"));
     }
 
     @Override
@@ -28,8 +26,9 @@ public class DeadScreen extends AbstractScreen {
         Gdx.input.setInputProcessor(stage);
 
         stage.clear();
-        earth.setPosition(0, 0);
-        stage.addActor(earth);
+        back = app.score > 10 ? new Image(new Texture("waterBack.png")) : new Image(new Texture("earthBack.png"));
+        back.setPosition(0, 0);
+        stage.addActor(back);
 
         gameOverText.setScale(0.5f);
         gameOverText.setPosition(400, 100);
@@ -45,7 +44,7 @@ public class DeadScreen extends AbstractScreen {
     public void update(float delta) {
         stage.act(delta);
         if (i++ > 150) {
-            gsm.setScreen(GameScreenManager.STATES.MAIN_MENU);
+            app.gsm.setScreen(GameScreenManager.States.MAIN_MENU);
         }
     }
 

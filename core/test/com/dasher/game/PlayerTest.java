@@ -1,7 +1,6 @@
 package com.dasher.game;
 
 import org.junit.jupiter.api.Test;
-import screens.GameScreen;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,7 +8,7 @@ public class PlayerTest {
 
     @Test
     public void deathTestGoblin() {
-        Player player = new Player(GameScreen.CHARACTER_CLASS.GOBLIN, null);
+        Player player = new Player(DasherMain.CharacterClass.GOBLIN, null);
         player.takeDmg(player.getHp());
         assertEquals(0, player.getHp());
         assertFalse(player.isAlive());
@@ -17,7 +16,7 @@ public class PlayerTest {
 
     @Test
     public void noDeathTestGoblin() {
-        Player player = new Player(GameScreen.CHARACTER_CLASS.GOBLIN, null);
+        Player player = new Player(DasherMain.CharacterClass.GOBLIN, null);
         player.takeDmg(player.getHp() - 1);
         assertEquals(1, player.getHp());
         assertTrue(player.isAlive());
@@ -25,7 +24,7 @@ public class PlayerTest {
 
     @Test
     public void deathTestHobgoblin() {
-        Player player = new Player(GameScreen.CHARACTER_CLASS.HOBGOBLIN, null);
+        Player player = new Player(DasherMain.CharacterClass.HOBGOBLIN, null);
         player.takeDmg(player.getHp());
         assertEquals(0, player.getHp());
         assertFalse(player.isAlive());
@@ -33,7 +32,7 @@ public class PlayerTest {
 
     @Test
     public void noDeathTestHobgoblin() {
-        Player player = new Player(GameScreen.CHARACTER_CLASS.HOBGOBLIN, null);
+        Player player = new Player(DasherMain.CharacterClass.HOBGOBLIN, null);
         player.takeDmg(player.getHp() - 1);
         assertEquals(1, player.getHp());
         assertTrue(player.isAlive());

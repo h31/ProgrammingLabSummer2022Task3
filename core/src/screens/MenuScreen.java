@@ -16,8 +16,7 @@ import com.dasher.game.DasherMain;
 import com.dasher.game.managers.GameScreenManager;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
-import static com.dasher.game.DasherMain.gsm;
+
 
 
 public class MenuScreen extends AbstractScreen {
@@ -73,8 +72,8 @@ public class MenuScreen extends AbstractScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 hitSound.play(0.2f);
-                app.type = GameScreen.CHARACTER_CLASS.HOBGOBLIN;
-                gsm.setScreen(GameScreenManager.STATES.PLAY_STAGE);
+                app.type = DasherMain.CharacterClass.HOBGOBLIN;
+                app.gsm.setScreen(GameScreenManager.States.FOREST_STAGE);
             }
         });
 
@@ -85,8 +84,8 @@ public class MenuScreen extends AbstractScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 hitSound.play(0.2f);
-                app.type = GameScreen.CHARACTER_CLASS.GOBLIN;
-                gsm.setScreen(GameScreenManager.STATES.PLAY_STAGE);
+                app.type = DasherMain.CharacterClass.GOBLIN;
+                app.gsm.setScreen(GameScreenManager.States.FOREST_STAGE);
             }
         });
 
